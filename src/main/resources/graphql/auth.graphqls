@@ -1,0 +1,22 @@
+
+input AuthenticationInput {
+    phone: String!
+    otp: String!
+}
+
+type AuthenticationOutput {
+    accessToken: String!
+    refreshToken: String
+}
+
+
+extend type Query {
+    # Debugging
+    checkPhone(phone: String!) : Boolean!
+}
+
+extend type Mutation {
+    # Auth
+    sendOtp(phone : String!): Boolean!
+    authorize(input: AuthenticationInput!): AuthenticationOutput!
+}

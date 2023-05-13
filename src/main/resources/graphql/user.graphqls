@@ -1,0 +1,27 @@
+enum UserRole {
+    USER,
+    MANAGER,
+    ADMIN,
+}
+
+type User {
+    id: ID!
+    phone: String!
+    role: UserRole!
+    firstname: String
+    lastname: String
+}
+
+extend type Query {
+    getMe: User!
+    getUserById(userId: ID!): User!
+}
+
+extend type Mutation {
+    updateUser(input: UpdateUserInput!): User!
+}
+
+input UpdateUserInput {
+    firstname: String!
+    lastname:String!
+}

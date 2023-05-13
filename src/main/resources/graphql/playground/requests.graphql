@@ -1,0 +1,31 @@
+mutation send{
+    sendOtp(phone: "test")
+}
+
+mutation verify{
+    authorize(input: {
+        phone: "test",
+        otp: "973637",
+    }) {
+        accessToken
+        refreshToken
+    }
+}
+
+query me{
+    getMe{
+        id
+        firstname
+        lastname
+        phone
+    }
+}
+
+mutation UpdateUser {
+    updateUser(input: {
+        firstname: "test_name"
+        lastname: "test_lastname"
+    }) {
+        id firstname lastname
+    }
+}

@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/carapp_db}
+    username: ${SPRING_DATASOURCE_USERNAME:carapp_super_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:qweqsfzxvzsgsdvxcvwe}
+  #    hikari:
+  #      maximum-pool-size: 1 #maximum pool size
+  #      connection-timeout: 10000 #maximum number of milliseconds that a client will wait for a connection
+  #      max-lifetime: 30000 #maximum idle time for connection
+  #      connection-test-query: select 1
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: 'update'
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
+
+  graphql:
+    graphiql:
+      enabled: true
+
+  security:
+    user:
+      password: qweasd
+
+
+jwt:
+  secret: "655368566D597133743677397A244326452948404D635166546A576E5A723475"
+  issuer: "carapp"
+  expirationMinutes: 180
+  refreshExpirationMonth: 3
+
+server:
+  #  servlet:
+  #    context-path: /tech
+  port: 8080

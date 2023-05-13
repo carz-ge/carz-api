@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+#  techer-api:
+#    container_name: gateway-api
+#    hostname: gateway-api
+#    build:
+#      context: ../gateway-api/
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#      - "7000:7000"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/techer_db
+#    depends_on:
+#      - postgres-db
+
+  postgres-db:
+    image: postgres:15-bullseye
+    restart: unless-stopped
+    container_name: postgres-db
+    hostname: postgres-db
+    volumes:
+      - ./initsqls/:/docker-entrypoint-initdb.d/
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: carapp_super_user
+      POSTGRES_PASSWORD: qweqsfzxvzsgsdvxcvwe
+      POSTGRES_DB: carapp_db
+    ports:
+        - "5432:5432"

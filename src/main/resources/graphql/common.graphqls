@@ -1,0 +1,15 @@
+type LingualString {
+	ka: String!
+	en: String!
+}
+
+input LingualStringInput {
+	ka: String!
+	en: String!
+}
+
+enum Currency {
+	GEL
+	USD
+	EUR
+}
