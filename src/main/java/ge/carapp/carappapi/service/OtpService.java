@@ -45,17 +45,22 @@ public class OtpService {
                 log.warn("OTP was already sent to user: {}", user.getId());
                 return false;
             }
-            if (userOtp.getSendAttempts() >= MAX_MISSED_OTP_SEND &&
-                    userOtp.getCreatedAt()
-                            .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
-                            .isBefore(timeNow)) {
-                log.warn("User: {} exceeded max send attempts", user.getId());
-                return false;
+            if (userOtp.getSendAttempts() >= MAX_MISSED_OTP_SEND) {
+                if (userOtp.getCreatedAt()
+                        .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
+                        .isAfter(timeNow)) {
+                    log.warn("User: {} exceeded max send attempts", user.getId());
+                    return false;
+                } else {
+                    userOtp.setSendAttempts(0);
+                    userOtp.setCreatedAt(timeNow);
+                }
             }
         } else {
             userOtp = UserOtpEntity.builder()
                     .user(user)
                     .createdAt(timeNow)
+                    .sendAttempts(0)
                     .build();
         }
 

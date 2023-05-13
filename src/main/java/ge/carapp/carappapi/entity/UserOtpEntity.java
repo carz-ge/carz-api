@@ -37,7 +37,7 @@ public class UserOtpEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "OTP_STATUS", nullable = false)
-    private OtpStatus otpStatus = OtpStatus.CREATED;
+    private OtpStatus otpStatus;
 
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
@@ -49,10 +49,10 @@ public class UserOtpEntity {
     private LocalDateTime verifiedAt;
 
     @Column(name = "SEND_ATTEMPTS")
-    private int sendAttempts = 0;
+    private int sendAttempts;
 
     @Column(name = "VERIFICATIOn_ATTEMPTS")
-    private int verificationAttempts = 0;
+    private int verificationAttempts;
 
     @Column(name = "OTP_HASH")
     private String otpHash;

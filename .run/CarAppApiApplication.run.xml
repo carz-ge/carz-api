@@ -3,6 +3,11 @@
     <module name="car-app-api.main" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="ge.carapp.carappapi.CarAppApiApplication" />
     <option name="UPDATE_ACTION_UPDATE_POLICY" value="UpdateClassesAndTriggerFile" />
+    <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+      <option name="credential" />
+      <option name="region" />
+      <option name="useCurrentConnection" value="false" />
+    </extension>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
