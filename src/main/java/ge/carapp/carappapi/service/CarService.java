@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,38 +20,36 @@ import java.util.UUID;
 public class CarService {
     private final CarRepository carRepository;
 
-    @Transactional
     public List<CarSchema> getCars(UserEntity user) {
-        return user.getCarList().stream().map(CarSchema::convert).toList();
+        return carRepository.findAllByOwnerId(user.getId())
+            .stream().map(CarSchema::convert).toList();
     }
 
     @Transactional
     public CarSchema addCar(UserEntity user, CarInput carInput) {
-        List<CarEntity> carList = user.getCarList();
+        List<CarEntity> carList = carRepository.findAllByOwnerId(user.getId());
         List<CarEntity> existingCarsForUser = carList.stream().filter(
-                car -> car.getPlateNumber().equals(carInput.getPlateNumber())
+            car -> car.getPlateNumber().equals(carInput.getPlateNumber())
         ).toList();
 
 
-        if (existingCarsForUser.size() > 1) {
+        if (existingCarsForUser.size() > 0) {
             throw new GeneralException("car with plate number: %s already exists for user %s"
-                    .formatted(carInput.getPlateNumber(), user.getId()));
+                .formatted(carInput.getPlateNumber(), user.getId()));
         }
 
         // TODO: What to do if car with plate number already exists
 
         CarEntity carEntity = CarEntity.builder()
-                .owner(user)
-                .plateNumber(carInput.getPlateNumber())
-                .carType(carInput.getCarType())
-                .techPassportNumber(carInput.getTechPassportNumber())
-                .vin(carInput.getVin())
-                .make(carInput.getMake())
-                .model(carInput.getModel())
-                .year(carInput.getYear())
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+            .owner(user)
+            .plateNumber(carInput.getPlateNumber())
+            .carType(carInput.getCarType())
+            .techPassportNumber(carInput.getTechPassportNumber())
+            .vin(carInput.getVin())
+            .make(carInput.getMake())
+            .model(carInput.getModel())
+            .year(carInput.getYear())
+            .build();
 
         carRepository.save(carEntity);
 
@@ -60,10 +57,10 @@ public class CarService {
         return CarSchema.convert(carEntity);
     }
 
-    @Transactional
     public boolean removeCar(UserEntity user, UUID carId) {
-        List<CarEntity> existingCarsForUser = user.getCarList().stream().filter(
-                car -> car.getId().equals(carId)
+        List<CarEntity> carList = carRepository.findAllByOwnerId(user.getId());
+        List<CarEntity> existingCarsForUser = carList.stream().filter(
+            car -> car.getId().equals(carId)
         ).toList();
 
         if (existingCarsForUser.size() == 1) {
@@ -74,10 +71,10 @@ public class CarService {
         return false;
     }
 
-    @Transactional
     public CarSchema updateCar(UserEntity user, UUID carId, CarInput carInput) {
-        List<CarEntity> existingCarsForUser = user.getCarList().stream().filter(
-                car -> car.getId().equals(carId)
+        List<CarEntity> carList = carRepository.findAllByOwnerId(user.getId());
+        List<CarEntity> existingCarsForUser = carList.stream().filter(
+            car -> car.getId().equals(carId)
         ).toList();
 
         if (existingCarsForUser.size() != 1) {
@@ -95,8 +92,6 @@ public class CarService {
         carEntity.setMake(carInput.getMake());
         carEntity.setModel(carInput.getModel());
         carEntity.setYear(carInput.getYear());
-        carEntity.setCreatedAt(LocalDateTime.now());
-        carEntity.setUpdatedAt(LocalDateTime.now());
 
         carRepository.save(carEntity);
 

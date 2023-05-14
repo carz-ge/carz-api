@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -44,17 +43,18 @@ public class UserEntity implements Serializable {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserOtpEntity userOtp;
 
-    @OneToMany(fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            mappedBy = "owner"
-    )
-//    @JoinColumn(name = "OWNER_ID", referencedColumnName = "ID")
-    private List<CarEntity> carList;
+//    @OneToMany(fetch = FetchType.LAZY,
+////            cascade = CascadeType.ALL,
+////            orphanRemoval = true,
+//            mappedBy = "owner"
+//    )
+////    @JoinColumn(name = "OWNER_ID", referencedColumnName = "ID")
+//    private List<CarEntity> carList = new ArrayList<>();
 
     @PrePersist
     private void prePersist() {
         createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
     }
 
     @PreUpdate

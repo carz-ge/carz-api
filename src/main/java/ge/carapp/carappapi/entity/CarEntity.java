@@ -58,13 +58,14 @@ public class CarEntity implements Serializable {
     private LocalDateTime updatedAt;
 
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OWNER_ID", nullable = false)
     private UserEntity owner;
 
     @PrePersist
     private void prePersist() {
         createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
     }
 
     @PreUpdate

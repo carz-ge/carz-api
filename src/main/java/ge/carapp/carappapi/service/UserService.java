@@ -5,7 +5,6 @@ import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserRole;
 import ge.carapp.carappapi.repository.UserRepository;
 import ge.carapp.carappapi.schema.UserSchema;
-import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
