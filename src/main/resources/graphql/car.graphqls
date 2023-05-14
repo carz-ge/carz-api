@@ -1,0 +1,44 @@
+enum CarType {
+    ALL
+    SEDAN
+    HATCHBACK
+    SUV
+    VAN
+    TRUCK
+    MOTORCYCLE
+    OTHER
+}
+
+type Car {
+    id: ID!
+    plateNumber: String!
+    carType: CarType
+    techPassportNumber: String
+    vin: String
+    make: String
+    model: String
+    year: Int
+    createdAt: String
+    updatedAt: String
+}
+
+input CarInput {
+    plateNumber: String!
+    carType: CarType
+    techPassportNumber: String
+    vin: String
+    make: String
+    model: String
+    year: Int
+}
+
+
+extend type Mutation {
+    addCar(car: CarInput!): Car
+    removeCar(carId: ID!): Boolean
+    updateCar(carId: ID!, car: CarInput!): Car
+}
+
+extend type Query {
+    getCars: [Car]
+}

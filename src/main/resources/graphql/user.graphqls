@@ -10,6 +10,8 @@ type User {
     role: UserRole!
     firstname: String
     lastname: String
+    createdAt: String
+    updatedAt: String
 }
 
 extend type Query {

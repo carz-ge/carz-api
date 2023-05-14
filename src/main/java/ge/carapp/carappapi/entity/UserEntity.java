@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -17,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "USER")
+@Table(name = "USER") // TODO check serializable or transparent
 public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -33,12 +34,20 @@ public class UserEntity implements Serializable {
     @Column(name = "USER_ROLE", nullable = false)
     private UserRole userRole;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserOtpEntity userOtp;
-
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "UPDATED_AT", nullable = false)
     private LocalDateTime updatedAt;
+
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserOtpEntity userOtp;
+
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "owner")
+    private List<CarEntity> carList;
+
 }

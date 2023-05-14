@@ -5,7 +5,6 @@ import ge.carapp.carappapi.repository.filestorage.S3FileStorage;
 import ge.carapp.carappapi.schema.MediaFileSchema;
 import ge.carapp.carappapi.repository.filestorage.FileStorage;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

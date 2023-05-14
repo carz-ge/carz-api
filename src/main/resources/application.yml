@@ -18,8 +18,17 @@ spring:
         default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
 
   graphql:
+    path: "/graphql"
+    schema:
+      introspection:
+        enabled: true
+      file-extensions:
+        - ".graphqls"
+        - ".gqls"
+#        - ".graphql"
     graphiql:
       enabled: true
+      path: "/graphiql"
 
   security:
     user:
