@@ -2,7 +2,7 @@ spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/carapp_db}
     username: ${SPRING_DATASOURCE_USERNAME:carapp_super_user}
-    password: ${SPRING_DATASOURCE_PASSWORD:qweqsfzxvzsgsdvxcvwe}
+    password: ${SPRING_DATASOURCE_PASSWORD:test_db_password}
   #    hikari:
   #      maximum-pool-size: 1 #maximum pool size
   #      connection-timeout: 10000 #maximum number of milliseconds that a client will wait for a connection

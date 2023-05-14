@@ -29,3 +29,63 @@ mutation UpdateUser {
         id firstname lastname
     }
 }
+
+
+mutation AddCar {
+    addCar(carInput : {
+        carType: HATCHBACK,
+        plateNumber: "test_plateNumber"
+        techPassportNumber: "test_techPassportNumber"
+        vin: "test_vin"
+        make: "test_make"
+        model: "test_model"
+        year: 2012
+    }) {
+        id
+        plateNumber
+        carType
+        techPassportNumber
+        vin
+        make
+        model
+        year
+        createdAt
+        updatedAt
+    }
+}
+
+
+query getCars {
+    getCars {
+        id
+        plateNumber
+        carType
+        techPassportNumber
+        vin
+        make
+        model
+        year
+        createdAt
+        updatedAt
+    }
+}
+
+mutation Remove {
+    removeCar(carId: "test_car_id")
+}
+
+
+mutation UpdateCar {
+    updateCar(carId: "test_car_id", carInput: {
+        carType: SEDAN,
+        plateNumber: "test_plateNumber-1"
+        techPassportNumber: "test_techPassportNumber_1"
+        vin: "test_vin-1"
+        make: "test_make_1"
+        model: "test_model_1"
+        year: 2013
+    } ) {
+        id
+        carType
+    }
+}

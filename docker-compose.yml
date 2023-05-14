@@ -1,17 +1,17 @@
 version: '3.9'
 services:
-  car-api:
-    container_name: car-api
-    hostname: car-api
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/carapp_db
-    depends_on:
-      - postgres-db
+#  car-api:
+#    container_name: car-api
+#    hostname: car-api
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/carapp_db
+#    depends_on:
+#      - postgres-db
 
   postgres-db:
     image: postgres:15-bullseye
@@ -23,7 +23,7 @@ services:
       - ./data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: carapp_super_user
-      POSTGRES_PASSWORD: qweqsfzxvzsgsdvxcvwe
+      POSTGRES_PASSWORD: test_db_password
       POSTGRES_DB: carapp_db
     ports:
         - "5432:5432"

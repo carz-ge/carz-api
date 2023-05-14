@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,4 +57,14 @@ public class UserOtpEntity implements Serializable {
 
     @Column(name = "OTP_HASH")
     private String otpHash;
+
+    @PrePersist
+    private void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

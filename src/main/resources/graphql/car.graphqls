@@ -34,9 +34,9 @@ input CarInput {
 
 
 extend type Mutation {
-    addCar(car: CarInput!): Car
+    addCar(carInput: CarInput!): Car
     removeCar(carId: ID!): Boolean
-    updateCar(carId: ID!, car: CarInput!): Car
+    updateCar(carId: ID!, carInput: CarInput!): Car
 }
 
 extend type Query {

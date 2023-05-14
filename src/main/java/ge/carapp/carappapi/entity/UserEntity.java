@@ -46,8 +46,20 @@ public class UserEntity implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            mappedBy = "owner")
+            orphanRemoval = true
+//            mappedBy = "owner"
+    )
+    @JoinColumn(name = "OWNER_ID", referencedColumnName = "ID")
     private List<CarEntity> carList;
+
+    @PrePersist
+    private void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
 }
