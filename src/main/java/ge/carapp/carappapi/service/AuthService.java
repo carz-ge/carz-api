@@ -3,15 +3,12 @@ package ge.carapp.carappapi.service;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.exception.NotAuthorizedException;
 import ge.carapp.carappapi.jwt.JwtService;
-import ge.carapp.carappapi.schema.UserSchema;
 import ge.carapp.carappapi.schema.graphql.AuthenticationInput;
 import ge.carapp.carappapi.schema.graphql.AuthenticationOutput;
 import ge.carapp.carappapi.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -34,10 +31,10 @@ public class AuthService {
     }
 
     public AuthenticationOutput authorize(AuthenticationInput input) throws NotAuthorizedException {
-        UserEntity user = userService.getUserByPhone(input.getPhone())
+        UserEntity user = userService.getUserByPhone(input.phone())
                 .orElseThrow(NotAuthorizedException::new);
 
-        if (!otpService.verifyOtp(user, input.getOtp())) {
+        if (!otpService.verifyOtp(user, input.otp())) {
             throw new NotAuthorizedException();
         }
 
