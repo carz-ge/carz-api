@@ -11,6 +11,7 @@ plugins {
 group = "ge.carapp"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
 
 configurations {
     compileOnly {
@@ -44,10 +45,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     implementation("org.flywaydb:flyway-core")
+    // JWT
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
     implementation("commons-codec:commons-codec:1.15")
+    // AWS SDK
+    implementation(platform("software.amazon.awssdk:bom:2.20.65"))
+    implementation("software.amazon.awssdk:s3")
+    implementation("software.amazon.awssdk:sso")
+    implementation("software.amazon.awssdk:ssooidc")
+    implementation("software.amazon.awssdk:aws-crt-client")
+
 
 //    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
 //    implementation("org.springframework.integration:spring-integration-jdbc")

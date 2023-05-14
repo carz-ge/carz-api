@@ -36,3 +36,8 @@ server:
   #  servlet:
   #    context-path: /tech
   port: 8080
+
+aws-s3:
+  region: ${AWS_REGION:us-east-1}
+  mediaFilesBucket: ""
+  cloudfrontDistribution: ""
