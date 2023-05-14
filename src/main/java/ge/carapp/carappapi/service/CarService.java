@@ -6,6 +6,7 @@ import ge.carapp.carappapi.repository.CarRepository;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.schema.CarSchema;
 import ge.carapp.carappapi.schema.graphql.CarInput;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,15 @@ import java.util.UUID;
 public class CarService {
     private final CarRepository carRepository;
 
+    @Transactional
     public List<CarSchema> getCars(UserEntity user) {
         return user.getCarList().stream().map(CarSchema::convert).toList();
     }
 
+    @Transactional
     public CarSchema addCar(UserEntity user, CarInput carInput) {
-        List<CarEntity> existingCarsForUser = user.getCarList().stream().filter(
+        List<CarEntity> carList = user.getCarList();
+        List<CarEntity> existingCarsForUser = carList.stream().filter(
                 car -> car.getPlateNumber().equals(carInput.getPlateNumber())
         ).toList();
 
@@ -56,6 +60,7 @@ public class CarService {
         return CarSchema.convert(carEntity);
     }
 
+    @Transactional
     public boolean removeCar(UserEntity user, UUID carId) {
         List<CarEntity> existingCarsForUser = user.getCarList().stream().filter(
                 car -> car.getId().equals(carId)
@@ -69,6 +74,7 @@ public class CarService {
         return false;
     }
 
+    @Transactional
     public CarSchema updateCar(UserEntity user, UUID carId, CarInput carInput) {
         List<CarEntity> existingCarsForUser = user.getCarList().stream().filter(
                 car -> car.getId().equals(carId)
