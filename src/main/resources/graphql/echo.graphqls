@@ -1,0 +1,9 @@
+
+type Echo {
+	text: String!
+}
+
+extend type Query {
+	 echo(echoText: String): Echo!
+	 echoAuthorized(echoText: String): Echo!
+}

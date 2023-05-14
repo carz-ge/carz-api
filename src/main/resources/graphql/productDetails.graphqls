@@ -1,0 +1,44 @@
+type ProductDetailsCarPrice {
+    id: ID
+    carType: CarType!
+    price: Int
+}
+
+type ProductDetails {
+    id: ID
+    productId: ID
+    name: LingualString!
+    description: LingualString
+    pricesForCarTypes: [ProductDetailsCarPrice!]
+    availableServices: [LingualString!]!
+    notAvailableServices: [LingualString]!
+    generalPrice: Int!
+    currency: Currency
+    averageDurationMinutes: Int
+}
+
+input ProductDetailsCarPriceInput {
+    carType: CarType!
+    price: Int!
+}
+
+input ProductDetailsInput {
+    productId: ID
+    name: LingualStringInput!
+    description: LingualStringInput
+    pricesForCarTypes: [ProductDetailsCarPriceInput!]!
+    availableServices: [LingualStringInput!]!
+    notAvailableServices: [LingualStringInput]!
+    currency: Currency
+    averageDurationMinutes: Int
+}
+
+extend type Query {
+    listProductDetailsByProductId(productId: ID): [ProductDetails]
+}
+
+extend type Mutation {
+    createProductDetails(input: ProductDetailsInput): ProductDetails
+    updateProductDetails(input: ProductDetailsInput): ProductDetails
+    removeProductDetails(productDetailsId: ID): Boolean
+}

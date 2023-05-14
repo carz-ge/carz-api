@@ -1,0 +1,43 @@
+
+type Provider {
+    id: ID!
+    name: String!
+    phone: String
+    email: String
+    logo: String # image
+    website: String
+    workingHours: [WorkingHours]
+}
+
+
+input ProviderInput {
+    id: ID!
+    name: String!
+    phone: String
+    email: String
+    logo: String # image
+    website: String
+    workingHours: [WorkingHoursInput]
+}
+
+type WorkingHours {
+    dayOfWeek: DayOfWeek!
+    startTime: String!
+    endTime: String!
+}
+
+input WorkingHoursInput {
+    dayOfWeek: DayOfWeek!
+    startTime: String!
+    endTime: String!
+}
+
+extend type Query {
+    listProviders: [Provider]!
+}
+
+extend type Mutation {
+    createProvider(input: ProviderInput!): Provider!
+    updateProvider(input: ProviderInput!): Provider!
+    removeProvider(providerId: ID!): Boolean!
+}

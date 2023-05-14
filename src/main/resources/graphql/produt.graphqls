@@ -1,0 +1,45 @@
+type Product {
+    id: ID!
+    name: LingualString!
+    categoryId: ID!
+    description: LingualString
+    location: Location
+    mainImage: String!
+    images: [String!]
+    tags: [String!]
+
+    reviewRate: Float
+    reviewCount: Int
+}
+
+input ProductInput {
+    name: LingualStringInput!
+    categoryId: ID!
+    description: LingualStringInput
+    location: LocationInput
+    mainImage: String!
+    images: [String!]
+    tags: [String!]
+}
+
+input ProductFilterInput {
+    categoryId: ID
+    carType: CarType
+    date: String
+    time: String
+}
+
+extend type Query {
+    listProducts: [Product]!
+    listProductByCategoryId(categoryId: ID!): [Product]!
+    listProductByProviderId(providerId: ID!): [Product]!
+
+    filterProducts(filter: ProductFilterInput!): [Product]!
+}
+
+extend type Mutation {
+    createProduct(input: ProductInput!): Product!
+    updateProduct(input: ProductInput!): Product!
+    removeProduct(productId: ID!): Boolean!
+}
+

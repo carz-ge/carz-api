@@ -1,0 +1,45 @@
+type Address {
+	street: String!
+	district: String!
+	city: String!
+}
+
+type Coordinates {
+	lat: Float!
+	lng: Float!
+}
+
+type Location {
+	address: Address!
+#	addressEn: Address!
+	coordinates: Coordinates!
+}
+
+input LocationInput {
+	address: AddressInput!
+#	addressEn: AddressInput!
+	coordinates: CoordinatesInput!
+}
+
+input AddressInput {
+	street: String!
+	district: String!
+	city: String!
+}
+
+input CoordinatesInput {
+	lat: Float!
+	lng: Float!
+}
+
+#input SearchByAddressInput {
+#	street: String
+#	district: String
+#	city: String
+#}
+#
+#input SearchByLocationInput {
+#	address: AddressInput
+#	coordinates: CoordinatesInput
+#	distance: Int
+#}

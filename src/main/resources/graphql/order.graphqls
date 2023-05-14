@@ -1,0 +1,47 @@
+enum OrderStatus {
+    NEW
+    PROCESSING
+    SHIPPED
+    DELIVERED
+    CANCELLED
+    REJECTED
+    REIMBURSED
+}
+
+type OrderedProduct {
+    productId: ID!
+    quantity: Int
+}
+
+type Order {
+    id: ID!
+    userId: ID!
+    categoryId: ID!
+    providerId: ID
+    products: [OrderedProduct]
+    orderStatus: OrderStatus
+}
+
+input OrderInput {
+    id: ID
+    userId: ID!
+    products: [OrderedProductInput!]!
+}
+
+input OrderedProductInput {
+    id: ID!
+    quantity: Int!
+}
+
+extend type Query {
+    listOrders: [Order]
+    getOrder(id: ID!): Order
+    listOrdersByUserId(userId: ID!): [Order]
+}
+
+extend type Mutation {
+    # create a new order
+    createOrder(order: OrderInput!): Order
+
+    # TODO: lock product for checkout
+}

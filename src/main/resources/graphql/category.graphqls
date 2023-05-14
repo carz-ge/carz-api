@@ -1,0 +1,21 @@
+type Category {
+    id: ID!
+    name: LingualString!
+}
+
+
+input CategoryInput {
+    name: LingualStringInput!
+}
+
+extend type Query {
+    listCategories: [Category]!
+}
+
+
+extend type Mutation {
+    # accessible only by admin
+    createCategory(input: CategoryInput!): Category!
+    updateCategory(categoryId: ID!, input: CategoryInput!): Category!
+    removeCategory(categoryId: ID!): Boolean!
+}
