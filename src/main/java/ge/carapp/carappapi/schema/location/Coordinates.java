@@ -1,9 +1,3 @@
 package ge.carapp.carappapi.schema.location;
 
-import lombok.Data;
-
-@Data
-public class Coordinates {
-    double lat;
-    double lng;
-}
+public record Coordinates(double lat, double lng) { }

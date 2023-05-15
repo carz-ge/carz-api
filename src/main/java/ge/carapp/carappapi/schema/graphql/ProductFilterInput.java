@@ -1,14 +1,15 @@
 package ge.carapp.carappapi.schema.graphql;
 
-import ge.carapp.carappapi.schema.graphql.CarType;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
-@Data
-public class ProductFilterInput {
-    UUID categoryId;
-    CarType carType;
-    String date;
-    String time;
+public record ProductFilterInput(
+    UUID categoryId,
+    CarType carType,
+    LocalDate date,
+    LocalTime time
+) {
 }

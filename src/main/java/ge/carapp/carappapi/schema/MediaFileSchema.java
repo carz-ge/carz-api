@@ -1,8 +1,4 @@
 package ge.carapp.carappapi.schema;
 
-import lombok.Data;
-
-@Data
-public class MediaFileSchema {
-    private final String fileUrl;
+public record MediaFileSchema(String fileUrl) {
 }

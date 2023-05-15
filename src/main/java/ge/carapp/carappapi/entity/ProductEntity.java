@@ -39,18 +39,29 @@ public class ProductEntity {
     @JoinColumn(name = "CATEGORY_ID")
     private CategoryEntity category;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "PROVIDER_ID")
+//    private ProviderEntity provider;
+//
     private String description;
     @JoinColumn(name = "DESCRIPTION_KA")
     private String descriptionKa;
 
-    // TODO
-//    location: LocationInput
+
     private String mainImage;
     @Convert(converter = ListStringConverter.class)
     private List<String> images;
+
     @Convert(converter = ListStringConverter.class)
     private List<String> tags;
 
-//    reviewRate: Float
-//    reviewCount: Int
+    // address
+    private String street;
+    private String district;
+    private String city;
+    // coordinates
+    private double lat;
+    private double lng;
+
+    private int capacity;
 }

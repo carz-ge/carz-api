@@ -27,15 +27,15 @@ public class CategoryService {
         List<CategoryEntity> allCategories = categoryRepository.findAll();
         Optional<CategoryEntity> filtered = allCategories.stream()
             .filter(category -> category.getName()
-                .equals(input.name().getEn()))
+                .equals(input.name().en()))
             .findFirst();
         if (filtered.isPresent()) {
             return CategorySchema.convert(filtered.get());
         }
 
         CategoryEntity category = CategoryEntity.builder()
-            .name(input.name().getEn())
-            .nameKa(input.name().getKa())
+            .name(input.name().en())
+            .nameKa(input.name().ka())
             .build();
 
         categoryRepository.save(category);
@@ -48,8 +48,8 @@ public class CategoryService {
             return null;
         }
         CategoryEntity category = categoryEntity.get();
-        category.setName(input.name().getEn());
-        category.setNameKa(input.name().getKa());
+        category.setName(input.name().en());
+        category.setNameKa(input.name().ka());
         categoryRepository.save(category);
         return CategorySchema.convert(category);
     }

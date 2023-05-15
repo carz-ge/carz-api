@@ -29,26 +29,26 @@ public class CarService {
     public CarSchema addCar(UserEntity user, CarInput carInput) {
         List<CarEntity> carList = carRepository.findAllByOwnerId(user.getId());
         List<CarEntity> existingCarsForUser = carList.stream().filter(
-            car -> car.getPlateNumber().equals(carInput.getPlateNumber())
+            car -> car.getPlateNumber().equals(carInput.plateNumber())
         ).toList();
 
 
         if (existingCarsForUser.size() > 0) {
             throw new GeneralException("car with plate number: %s already exists for user %s"
-                .formatted(carInput.getPlateNumber(), user.getId()));
+                .formatted(carInput.plateNumber(), user.getId()));
         }
 
         // TODO: What to do if car with plate number already exists
 
         CarEntity carEntity = CarEntity.builder()
             .owner(user)
-            .plateNumber(carInput.getPlateNumber())
-            .carType(carInput.getCarType())
-            .techPassportNumber(carInput.getTechPassportNumber())
-            .vin(carInput.getVin())
-            .make(carInput.getMake())
-            .model(carInput.getModel())
-            .year(carInput.getYear())
+            .plateNumber(carInput.plateNumber())
+            .carType(carInput.carType())
+            .techPassportNumber(carInput.techPassportNumber())
+            .vin(carInput.vin())
+            .make(carInput.make())
+            .model(carInput.model())
+            .year(carInput.year())
             .build();
 
         carRepository.save(carEntity);
@@ -85,13 +85,13 @@ public class CarService {
         CarEntity carEntity = existingCarsForUser.get(0);
 
 
-        carEntity.setPlateNumber(carInput.getPlateNumber());
-        carEntity.setCarType(carInput.getCarType());
-        carEntity.setTechPassportNumber(carInput.getTechPassportNumber());
-        carEntity.setVin(carInput.getVin());
-        carEntity.setMake(carInput.getMake());
-        carEntity.setModel(carInput.getModel());
-        carEntity.setYear(carInput.getYear());
+        carEntity.setPlateNumber(carInput.plateNumber());
+        carEntity.setCarType(carInput.carType());
+        carEntity.setTechPassportNumber(carInput.techPassportNumber());
+        carEntity.setVin(carInput.vin());
+        carEntity.setMake(carInput.make());
+        carEntity.setModel(carInput.model());
+        carEntity.setYear(carInput.year());
 
         carRepository.save(carEntity);
 

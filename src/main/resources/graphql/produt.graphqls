@@ -1,20 +1,19 @@
 type Product {
     id: ID!
     name: LingualString!
+    providerId: ID!
     categoryId: ID!
     description: LingualString
     location: Location
     mainImage: String!
     images: [String!]
     tags: [String!]
-
-    reviewRate: Float
-    reviewCount: Int
 }
 
 input ProductInput {
     name: LingualStringInput!
     categoryId: ID!
+    providerId: ID!
     description: LingualStringInput
     location: LocationInput
     mainImage: String!
