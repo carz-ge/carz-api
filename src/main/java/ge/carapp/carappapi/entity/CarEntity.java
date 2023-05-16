@@ -1,6 +1,6 @@
 package ge.carapp.carappapi.entity;
 
-import ge.carapp.carappapi.schema.graphql.CarType;
+import ge.carapp.carappapi.schema.CarType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

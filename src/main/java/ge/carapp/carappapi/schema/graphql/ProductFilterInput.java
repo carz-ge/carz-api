@@ -1,6 +1,6 @@
 package ge.carapp.carappapi.schema.graphql;
 
-import lombok.Data;
+import ge.carapp.carappapi.schema.CarType;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

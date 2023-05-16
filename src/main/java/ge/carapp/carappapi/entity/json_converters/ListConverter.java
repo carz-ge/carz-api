@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @Converter
-public class ListConverter<T> implements AttributeConverter<List<T>, String> {
+public abstract class ListConverter<T> implements AttributeConverter<List<T>, String> {
     ObjectMapper objectMapper = new ObjectMapper(); // TODO DI
 
     @Override

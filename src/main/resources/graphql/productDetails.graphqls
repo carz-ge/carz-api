@@ -1,12 +1,12 @@
 type ProductDetailsCarPrice {
-    id: ID
+    order: ID
     carType: CarType!
     price: Int
 }
 
 type ProductDetails {
-    id: ID
-    productId: ID
+    id: ID!
+    productId: ID!
     name: LingualString!
     description: LingualString
     pricesForCarTypes: [ProductDetailsCarPrice!]
@@ -23,7 +23,7 @@ input ProductDetailsCarPriceInput {
 }
 
 input ProductDetailsInput {
-    productId: ID
+    productId: ID!
     name: LingualStringInput!
     description: LingualStringInput
     pricesForCarTypes: [ProductDetailsCarPriceInput!]!
@@ -34,11 +34,11 @@ input ProductDetailsInput {
 }
 
 extend type Query {
-    listProductDetailsByProductId(productId: ID): [ProductDetails]
+    listProductDetailsByProductId(productId: ID!): [ProductDetails]!
 }
 
 extend type Mutation {
-    createProductDetails(input: ProductDetailsInput): ProductDetails
-    updateProductDetails(input: ProductDetailsInput): ProductDetails
-    removeProductDetails(productDetailsId: ID): Boolean
+    createProductDetails(input: ProductDetailsInput!): ProductDetails!
+    updateProductDetails(productDetailsId: ID!, input: ProductDetailsInput): ProductDetails!
+    removeProductDetails(productDetailsId: ID!): Boolean!
 }

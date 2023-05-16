@@ -1,5 +1,8 @@
 package ge.carapp.carappapi.service;
 
+import ge.carapp.carappapi.repository.ProductDetailsRepository;
+import ge.carapp.carappapi.schema.graphql.ProductDetailsInput;
+import ge.carapp.carappapi.schema.ProductDetailsSchema;
 import ge.carapp.carappapi.entity.CategoryEntity;
 import ge.carapp.carappapi.entity.ProductEntity;
 import ge.carapp.carappapi.exception.GeneralException;
@@ -23,7 +26,7 @@ import java.util.UUID;
 public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-
+    private final ProductDetailsRepository productDetailsRepository;
     public List<ProductSchema> getProducts() {
         return productRepository.findAll().stream().map(ProductSchema::convert).toList();
     }
@@ -96,5 +99,24 @@ public class ProductService {
     public List<ProductSchema> filterProducts(ProductFilterInput filter) {
         // TODOOOOOOOO
         return null;
+    }
+
+
+
+    public List<ProductDetailsSchema> getProductDetailsByProductId(UUID productId) {
+
+        return productDetailsRepository.findAllByProductId(productId).stream().map(ProductDetailsSchema::convert).toList();
+    }
+
+    public ProductDetailsSchema createProductDetails(UserEntity authenticatedUser, ProductDetailsInput input) {
+        return null;
+    }
+
+    public ProductSchema updateProductDetails(UserEntity authenticatedUser, UUID productDetailsId, ProductDetailsInput input) {
+        return null;
+    }
+
+    public boolean removeProductDetails(UserEntity authenticatedUser, UUID productId) {
+        return false;
     }
 }

@@ -1,6 +1,8 @@
 package ge.carapp.carappapi.schema.graphql;
 
 
+import ge.carapp.carappapi.schema.CarType;
+
 public record CarInput(
     String plateNumber,
     CarType carType,

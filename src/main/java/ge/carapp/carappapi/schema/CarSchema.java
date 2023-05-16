@@ -1,10 +1,7 @@
 package ge.carapp.carappapi.schema;
 
 import ge.carapp.carappapi.entity.CarEntity;
-import ge.carapp.carappapi.schema.graphql.CarType;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -1,6 +1,8 @@
 package ge.carapp.carappapi.entity;
 
 import ge.carapp.carappapi.entity.json_converters.ListStringConverter;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +47,7 @@ public class ProductEntity {
 //    private ProviderEntity provider;
 //
     private String description;
-    @JoinColumn(name = "DESCRIPTION_KA")
+    @Column(name = "DESCRIPTION_KA")
     private String descriptionKa;
 
 
@@ -64,4 +67,12 @@ public class ProductEntity {
     private double lng;
 
     private int capacity;
+
+
+    @OneToMany(cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
+    private List<ProductDetailsEntity> productDetailsList;
+
 }
