@@ -89,3 +89,51 @@ mutation UpdateCar {
         carType
     }
 }
+
+query ListCategories {
+    listCategories {
+        id
+        name {
+            en ka
+        }
+    }
+}
+
+
+mutation CreateCategory{
+    # accessible only by admin
+    createCategory(input: {
+        name: {
+            en: "Car Wash",
+            ka: "სამრეცხაო"
+        }
+    }) {
+        id name {ka en}
+    }
+
+}
+
+
+query ListProducts {
+    listProducts {
+        id
+        name {ka en}
+        providerId
+        categoryId
+        description {ka en}
+        location {
+            address {
+                city
+                district
+                street
+            }
+            coordinates {
+                lat
+                lng
+            }
+        }
+        mainImage
+        images
+        tags
+    }
+}
