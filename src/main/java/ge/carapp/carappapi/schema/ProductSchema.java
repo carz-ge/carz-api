@@ -34,6 +34,7 @@ public record ProductSchema(
         return ProductSchema.builder()
             .id(productEntity.getId())
             .name(new LingualString(productEntity.getName(), productEntity.getNameKa()))
+            .description(new LingualString(productEntity.getDescription(), productEntity.getDescriptionKa()))
             .categoryId(productEntity.getCategory().getId())
             .name(new LingualString(productEntity.getDescription(), productEntity.getDescriptionKa()))
             .location(location)

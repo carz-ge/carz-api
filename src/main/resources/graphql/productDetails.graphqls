@@ -10,8 +10,8 @@ type ProductDetails {
     name: LingualString!
     description: LingualString
     pricesForCarTypes: [ProductDetailsCarPrice!]
-    availableServices: [LingualString!]!
-    notAvailableServices: [LingualString]!
+    availableServices: [LingualString!]
+    notAvailableServices: [LingualString]
     generalPrice: Int!
     currency: Currency
     averageDurationMinutes: Int
@@ -27,8 +27,8 @@ input ProductDetailsInput {
     name: LingualStringInput!
     description: LingualStringInput
     pricesForCarTypes: [ProductDetailsCarPriceInput!]!
-    availableServices: [LingualStringInput!]!
-    notAvailableServices: [LingualStringInput]!
+    availableServices: [LingualStringInput!]
+    notAvailableServices: [LingualStringInput]
     currency: Currency
     averageDurationMinutes: Int
 }
@@ -39,6 +39,7 @@ extend type Query {
 
 extend type Mutation {
     createProductDetails(input: ProductDetailsInput!): ProductDetails!
-    updateProductDetails(productDetailsId: ID!, input: ProductDetailsInput): ProductDetails!
+    updateProductDetails(productDetailsId: ID!,
+                         input: ProductDetailsInput): ProductDetails!
     removeProductDetails(productDetailsId: ID!): Boolean!
 }

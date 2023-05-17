@@ -137,3 +137,136 @@ query ListProducts {
         tags
     }
 }
+
+
+mutation CreateProductDetails {
+    createProductDetails(input: {
+        productId: "c19a0e4b-4f40-4656-9346-3e9be39e3b0e",
+        name: {
+            en: "FULL Wash",
+            ka: "სრული რეცხვა"
+        },
+        description:  {
+            en: "FULL Wash",
+            ka: "სრული რეცხვა"
+        }
+        pricesForCarTypes :{
+            carType: ALL
+            price: 10000
+        }
+        availableServices: [ {
+            en: "wash from up"
+            ka: "რეხვა ზემოდან"
+        }]
+        notAvailableServices: [ {
+            en: "wash from down"
+            ka: "რეხვა ქვემოდან"
+        }]
+        currency: GEL
+        averageDurationMinutes: 15
+    }) {
+        id
+        productId
+        name {
+            en
+            ka
+        }
+        description  {
+            en
+            ka
+        }
+        pricesForCarTypes {
+            order, carType, price
+        }
+        availableServices {
+            en
+            ka
+        }
+        notAvailableServices {
+            en ka
+        }
+        generalPrice
+        currency
+        averageDurationMinutes
+    }
+}
+
+
+query listProductDetails {
+    listProductDetailsByProductId(productId: "c19a0e4b-4f40-4656-9346-3e9be39e3b0e") {
+        id
+        productId
+        name {
+            en
+            ka
+        }
+        description  {
+            en
+            ka
+        }
+        pricesForCarTypes {
+            order, carType, price
+        }
+        availableServices {
+            en
+            ka
+        }
+        notAvailableServices {
+            en ka
+        }
+        currency
+        averageDurationMinutes
+    }
+}
+
+mutation CreateProductDetails {
+    createProductDetails(input: {
+        productId: "c19a0e4b-4f40-4656-9346-3e9be39e3b0e",
+        name: {
+            en: "Wash FROM DOWN1",
+            ka: "ქვემოდან რეცხვა1"
+        },
+        description:  {
+            en: "Wash FROM DOWN",
+            ka: "ქვემოდან რეცხვა"
+        }
+        pricesForCarTypes :{
+            carType: ALL
+            price: 5000
+        }
+        availableServices: [ {
+            en: "wash from down"
+            ka: "რეხვა ქვემოდან"
+
+        }]
+        notAvailableServices: [ {
+            en: "wash from up"
+            ka: "რეხვა ზემოდან"
+        }]
+        currency: GEL
+        averageDurationMinutes: 15
+    }) {
+        id
+        productId
+        name {
+            en
+            ka
+        }
+        description  {
+            en
+            ka
+        }
+        pricesForCarTypes {
+            order, carType, price
+        }
+        availableServices {
+            en
+            ka
+        }
+        notAvailableServices {
+            en ka
+        }
+        currency
+        averageDurationMinutes
+    }
+}

@@ -1,5 +1,7 @@
 package ge.carapp.carappapi.service;
 
+import ge.carapp.carappapi.entity.ProductDetailsCarPrice;
+import ge.carapp.carappapi.entity.ProductDetailsEntity;
 import ge.carapp.carappapi.repository.ProductDetailsRepository;
 import ge.carapp.carappapi.schema.graphql.ProductDetailsInput;
 import ge.carapp.carappapi.schema.ProductDetailsSchema;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductDetailsRepository productDetailsRepository;
+
     public List<ProductSchema> getProducts() {
         return productRepository.findAll().stream().map(ProductSchema::convert).toList();
     }
@@ -102,14 +106,51 @@ public class ProductService {
     }
 
 
-
     public List<ProductDetailsSchema> getProductDetailsByProductId(UUID productId) {
 
         return productDetailsRepository.findAllByProductId(productId).stream().map(ProductDetailsSchema::convert).toList();
     }
 
     public ProductDetailsSchema createProductDetails(UserEntity authenticatedUser, ProductDetailsInput input) {
-        return null;
+        Optional<ProductEntity> productEntityOpt = productRepository.findById(input.productId());
+        if (productEntityOpt.isEmpty()) {
+            throw new GeneralException("Product not found");
+        }
+        ProductEntity productEntity = productEntityOpt.get();
+        List<ProductDetailsEntity> productDetailsList = productEntity.getProductDetailsList();
+
+        // check if product details with same name already exists
+        if (productDetailsList.stream()
+            .anyMatch(productDetailsEntity -> productDetailsEntity.getName().equals(input.name().en()))) {
+            throw new GeneralException("Product details with same name already exists");
+        }
+        var convertedCarType = IntStream.range(0, input.pricesForCarTypes().size())
+            .mapToObj(i -> {
+                var carTypeAndPrice = input.pricesForCarTypes().get(i);
+                return new ProductDetailsCarPrice(
+                    i,
+                    carTypeAndPrice.carType(),
+                    carTypeAndPrice.price());
+            }).toList();
+
+        // create product details and add them to the product details list
+        ProductDetailsEntity productDetailsEntity = ProductDetailsEntity.builder()
+            .product(productEntity)
+            .name(input.name().en())
+            .nameKa(input.name().ka())
+            .description(input.description().en())
+            .descriptionKa(input.description().ka())
+            .availableServices(input.availableServices())
+            .notAvailableServices(input.notAvailableServices())
+            .pricesForCarTypes(convertedCarType)
+            .currency(input.currency())
+            .averageDurationMinutes(input.averageDurationMinutes())
+            .build();
+        productDetailsRepository.save(productDetailsEntity);
+
+        productEntity.getProductDetailsList().add(productDetailsEntity);
+
+        return ProductDetailsSchema.convert(productDetailsEntity);
     }
 
     public ProductSchema updateProductDetails(UserEntity authenticatedUser, UUID productDetailsId, ProductDetailsInput input) {
