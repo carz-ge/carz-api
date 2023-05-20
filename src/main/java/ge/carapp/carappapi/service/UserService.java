@@ -3,7 +3,7 @@ package ge.carapp.carappapi.service;
 import ge.carapp.carappapi.schema.graphql.UpdateUserInput;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserRole;
-import ge.carapp.carappapi.repository.UserRepository;
+import ge.carapp.carappapi.repository.jpa.UserRepository;
 import ge.carapp.carappapi.schema.UserSchema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

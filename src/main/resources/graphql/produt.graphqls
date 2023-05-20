@@ -34,6 +34,7 @@ extend type Query {
     listProductByProviderId(providerId: ID!): [Product]!
 
     filterProducts(filter: ProductFilterInput!): [Product]!
+    searchProducts(filter: ProductFilterInput!): [Product]!
 }
 
 extend type Mutation {

@@ -3,7 +3,7 @@ package ge.carapp.carappapi.service;
 import ge.carapp.carappapi.entity.OtpStatus;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserOtpEntity;
-import ge.carapp.carappapi.repository.OtpRepository;
+import ge.carapp.carappapi.repository.jpa.OtpRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;

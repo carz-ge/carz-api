@@ -3,7 +3,7 @@ package ge.carapp.carappapi.service;
 import ge.carapp.carappapi.schema.graphql.CategoryInput;
 import ge.carapp.carappapi.entity.CategoryEntity;
 import ge.carapp.carappapi.entity.UserEntity;
-import ge.carapp.carappapi.repository.CategoryRepository;
+import ge.carapp.carappapi.repository.jpa.CategoryRepository;
 import ge.carapp.carappapi.schema.CategorySchema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

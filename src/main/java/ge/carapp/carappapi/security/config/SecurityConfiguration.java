@@ -1,40 +1,41 @@
 package ge.carapp.carappapi.security.config;
 
-import ge.carapp.carappapi.security.JwtAuthenticationFilter;
 import ge.carapp.carappapi.security.CustomUserDetailsService;
+import ge.carapp.carappapi.security.WebFluxJwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
-@EnableMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true)
+//@EnableMethodSecurity(
+//        securedEnabled = true,
+//        jsr250Enabled = true)
+@EnableReactiveMethodSecurity
+@EnableWebFluxSecurity
 public class SecurityConfiguration {
     private final CustomUserDetailsService userDetailsService;
-    private final JwtAuthenticationFilter jwtFilter;
+    private final WebFluxJwtAuthenticationFilter webFluxJwtAuthenticationFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http
-//            .cors() todo
+    SecurityWebFilterChain webHttpSecurity(ServerHttpSecurity http) {
+        http
             .csrf().disable()
-            .userDetailsService(userDetailsService)
-            .authorizeHttpRequests()
-            .anyRequest().permitAll()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .addFilterBefore(jwtFilter, RequestHeaderAuthenticationFilter.class);
+            .authorizeExchange(exchanges -> exchanges
+                .anyExchange().permitAll()
+            )
+            .httpBasic(withDefaults())
+            .addFilterBefore(webFluxJwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+        ;
 
         return http.build();
     }
+    
 }

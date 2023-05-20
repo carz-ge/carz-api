@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.repository;
+package ge.carapp.carappapi.repository.jpa;
 
 import ge.carapp.carappapi.entity.ProductDetailsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

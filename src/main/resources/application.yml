@@ -1,13 +1,25 @@
+debug: true
+
 spring:
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: reactive
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/carapp_db}
     username: ${SPRING_DATASOURCE_USERNAME:carapp_super_user}
     password: ${SPRING_DATASOURCE_PASSWORD:test_db_password}
+    driver-class-name: org.postgresql.Driver
   #    hikari:
   #      maximum-pool-size: 1 #maximum pool size
   #      connection-timeout: 10000 #maximum number of milliseconds that a client will wait for a connection
   #      max-lifetime: 30000 #maximum idle time for connection
   #      connection-test-query: select 1
+  r2dbc:
+
+      url: ${SPRING_DATASOURCE_URL:r2dbc:postgresql://localhost:5432/carapp_db}
+      username: ${SPRING_DATASOURCE_USERNAME:carapp_super_user}
+      password: ${SPRING_DATASOURCE_PASSWORD:test_db_password}
+
   jpa:
     show-sql: false
     hibernate:
@@ -16,6 +28,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
+
+  webflux:
+
 
   graphql:
     path: "/graphql"
@@ -34,6 +49,9 @@ spring:
     user:
       password: qweasd
 
+#  mvc:
+#      problemdetails:
+#          enabled: true
 
 jwt:
   secret: "655368566D597133743677397A244326452948404D635166546A576E5A723475"
@@ -45,6 +63,10 @@ server:
   #  servlet:
   #    context-path: /tech
   port: 8080
+
+logging:
+    level:
+        web: DEBUG
 
 aws-s3:
   region: ${AWS_REGION:us-east-1}
