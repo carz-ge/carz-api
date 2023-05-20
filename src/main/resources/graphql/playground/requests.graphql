@@ -137,10 +137,59 @@ query ListProducts {
     }
 }
 
+mutation createProduct {
+    createProduct(input: {
+        name: {
+            ka: "გიას სამრეცხაო"
+            en: "GIA's car wash"
+        }
+        categoryId: "9dd844fb-63aa-47fb-98b6-b3057394e28c"
+        providerId: "492b413d-fba1-433e-a29d-504dfe9a9c6e"
+        description: {
+            ka: "გიას სამრეცხაო - აღწერა"
+            en: "GIA's car wash - description"
+        }
+        location: {
+            address: {
+                city: "tbilisi"
+                district: "gldani"
+                street: "test Street"
+            }
+            coordinates: {
+                lat: 48.1
+                lng: 47.2
+            }
+        }
+        mainImage: "image_test"
+        images: ["images"]
+        tags: ["test tag"]
+
+    }) {
+        id
+        name {ka en}
+        categoryId
+        description {ka en}
+        location {
+            address {
+                city
+                district
+                street
+            }
+            coordinates {
+                lat
+                lng
+            }
+        }
+        mainImage
+        images
+        tags
+    }
+}
+
 
 mutation CreateProductDetails {
     createProductDetails(input: {
-        productId: "c19a0e4b-4f40-4656-9346-3e9be39e3b0e",
+        productId: "50682b82-1291-472a-b3c1-309e25e188ec",
         name: {
             en: "FULL Wash",
             ka: "სრული რეცხვა"
@@ -184,7 +233,6 @@ mutation CreateProductDetails {
         notAvailableServices {
             en ka
         }
-        generalPrice
         currency
         averageDurationMinutes
     }
@@ -192,7 +240,7 @@ mutation CreateProductDetails {
 
 
 query listProductDetails {
-    listProductDetailsByProductId(productId: "c19a0e4b-4f40-4656-9346-3e9be39e3b0e") {
+    listProductDetailsByProductId(productId: "50682b82-1291-472a-b3c1-309e25e188ec") {
         id
         productId
         name {
@@ -235,5 +283,31 @@ query Search {
             en
             ka
         }
+    }
+}
+
+query listProviders {
+    listProviders {
+        id name phone
+        email
+        logo
+        website
+    }
+}
+
+mutation createProvider {
+    createProvider(input: {
+        name: "Gia",
+        phone: "test_phone",
+        email: "a@a.com",
+        logo: "test_logo",
+        website: "test_website",
+    }) {
+        id
+        name
+        phone
+        email
+        logo
+        website
     }
 }

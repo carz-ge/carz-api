@@ -44,7 +44,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
-    implementation("org.flywaydb:flyway-core")
+    // DB migrations
+//    implementation("org.flywaydb:flyway-core")
+//    compileOnly("org.flywaydb:flyway-mysql")
     // JWT
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
@@ -74,7 +76,10 @@ dependencies {
 //    implementation("org.springframework.session:spring-session-jdbc")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    runtimeOnly("org.postgresql:postgresql")
+
+    // DB drivers
+    runtimeOnly("mysql:mysql-connector-java:8.0.33")
+//    runtimeOnly("org.postgresql:postgresql")
 //    runtimeOnly("org.postgresql:r2dbc-postgresql")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")

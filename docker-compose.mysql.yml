@@ -1,0 +1,31 @@
+version: '3.9'
+name: "car-app-api-mysql"
+services:
+#  car-api-mysql:
+#    container_name: car-api
+#    hostname: car-api
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/carapp_db
+#    depends_on:
+#      - mysql-db
+
+  mysql-db:
+    image: mysql:8.0.33
+    restart: unless-stopped
+    container_name: mysql-db
+    hostname: mysql-db
+    volumes:
+      - ./initsqls/:/docker-entrypoint-initdb.d/
+      - ./data-mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: test_db_password
+      MYSQL_USER: carapp_super_user
+      MYSQL_PASSWORD: test_db_password
+      MYSQL_DATABASE: carapp_db
+    ports:
+        - "3306:3306"
