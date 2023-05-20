@@ -39,7 +39,7 @@ public class SearchService {
             products =
                 products.filter(product -> {
                     Boolean isFreeTimeSlot =
-                        scheduleRepository.findAllByProductIdAndSchedulingDateAndSchedulingTimeGreaterThan(
+                        scheduleRepository.hasCapacity(
                             product.getId(),
                             filter.date(),
                             filter.time(),

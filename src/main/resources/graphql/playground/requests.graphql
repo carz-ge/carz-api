@@ -5,7 +5,7 @@ mutation send{
 mutation verify{
     authorize(input: {
         phone: "test",
-        otp: "973637",
+        otp: "970916",
     }) {
         accessToken
         refreshToken
@@ -118,7 +118,6 @@ query ListProducts {
     listProducts {
         id
         name {ka en}
-        providerId
         categoryId
         description {ka en}
         location {
@@ -219,35 +218,15 @@ query listProductDetails {
     }
 }
 
-mutation CreateProductDetails {
-    createProductDetails(input: {
-        productId: "c19a0e4b-4f40-4656-9346-3e9be39e3b0e",
-        name: {
-            en: "Wash FROM DOWN1",
-            ka: "ქვემოდან რეცხვა1"
-        },
-        description:  {
-            en: "Wash FROM DOWN",
-            ka: "ქვემოდან რეცხვა"
-        }
-        pricesForCarTypes :{
-            carType: ALL
-            price: 5000
-        }
-        availableServices: [ {
-            en: "wash from down"
-            ka: "რეხვა ქვემოდან"
 
-        }]
-        notAvailableServices: [ {
-            en: "wash from up"
-            ka: "რეხვა ზემოდან"
-        }]
-        currency: GEL
-        averageDurationMinutes: 15
-    }) {
+query Search {
+    searchProducts(filter: {
+        carType: ALL,
+        categoryId: "9dd844fb-63aa-47fb-98b6-b3057394e28c"
+        time: "14:00"
+        date: "2023-02-05"
+    }){
         id
-        productId
         name {
             en
             ka
@@ -256,17 +235,5 @@ mutation CreateProductDetails {
             en
             ka
         }
-        pricesForCarTypes {
-            order, carType, price
-        }
-        availableServices {
-            en
-            ka
-        }
-        notAvailableServices {
-            en ka
-        }
-        currency
-        averageDurationMinutes
     }
 }

@@ -1,19 +1,20 @@
 package ge.carapp.carappapi.entity.json_converters;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
-import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.ParameterizedType;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
 @Converter
 public abstract class ListConverter<T> implements AttributeConverter<List<T>, String> {
-    ObjectMapper objectMapper = new ObjectMapper(); // TODO DI
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public String convertToDatabaseColumn(List<T> attribute) {
@@ -30,11 +31,17 @@ public abstract class ListConverter<T> implements AttributeConverter<List<T>, St
     @Override
     public List<T> convertToEntityAttribute(String dbData) {
         try {
-            return objectMapper.readValue(dbData, new TypeReference<List<T>>() {
-            });
+            JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, getTypeParameterClass());
+            return objectMapper.readValue(dbData, type);
         } catch (JsonProcessingException e) {
             log.error("JSON reading error", e);
             return Collections.emptyList();
         }
     }
+
+    private Class<T> getTypeParameterClass() {
+        ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
+        return (Class<T>) parameterizedType.getActualTypeArguments()[0];
+    }
+
 }
