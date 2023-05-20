@@ -7,7 +7,6 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,7 +30,8 @@ public abstract class ListConverter<T> implements AttributeConverter<List<T>, St
     @Override
     public List<T> convertToEntityAttribute(String dbData) {
         try {
-            JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, getTypeParameterClass());
+            JavaType type = objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, getTypeParameterClass());
             return objectMapper.readValue(dbData, type);
         } catch (JsonProcessingException e) {
             log.error("JSON reading error", e);
@@ -39,9 +39,11 @@ public abstract class ListConverter<T> implements AttributeConverter<List<T>, St
         }
     }
 
-    private Class<T> getTypeParameterClass() {
-        ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
-        return (Class<T>) parameterizedType.getActualTypeArguments()[0];
-    }
 
+    protected abstract Class<T> getTypeParameterClass();
+
+    //    private Class<T> getTypeParameterClass() {
+    //        ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
+    //        return (Class<T>) parameterizedType.getActualTypeArguments()[0];
+    //    }
 }

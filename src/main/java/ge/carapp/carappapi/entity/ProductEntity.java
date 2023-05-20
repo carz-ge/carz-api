@@ -66,7 +66,7 @@ public class ProductEntity {
     private double lat;
     private double lng;
 
-    private int capacity = 1;
+    private int capacity;
 
 
     @OneToMany(cascade = CascadeType.ALL,

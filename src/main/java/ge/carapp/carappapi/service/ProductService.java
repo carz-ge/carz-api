@@ -83,6 +83,7 @@ public class ProductService {
         productEntity.setStreet(input.location().address().street());
         productEntity.setLat(input.location().coordinates().lat());
         productEntity.setLng(input.location().coordinates().lng());
+        productEntity.setCapacity(1);
         productRepository.save(productEntity);
         return ProductSchema.convert(productEntity);
     }
