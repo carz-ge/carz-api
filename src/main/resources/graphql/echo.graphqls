@@ -1,9 +1,6 @@
 
-type Echo {
-	text: String!
-}
-
 extend type Query {
-	 echo(echoText: String): Echo!
-	 echoAuthorized(echoText: String): Echo!
+    echo(message: String): String
+    echoAuthorized(message: String): String
+    echoMono(message: String): String
 }

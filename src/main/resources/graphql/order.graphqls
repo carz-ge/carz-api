@@ -11,6 +11,8 @@ enum OrderStatus {
 type OrderedProduct {
     productId: ID!
     quantity: Int
+    schedulingDate: String
+    schedulingTime: String
 }
 
 type Order {
@@ -29,8 +31,10 @@ input OrderInput {
 }
 
 input OrderedProductInput {
-    id: ID!
-    quantity: Int!
+    productId: ID!,
+    productDetailsId: ID!
+    schedulingDay: String
+    schedulingTime: String
 }
 
 extend type Query {
