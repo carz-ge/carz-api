@@ -78,8 +78,8 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     // DB drivers
-    runtimeOnly("mysql:mysql-connector-java:8.0.33")
-//    runtimeOnly("org.postgresql:postgresql")
+//    runtimeOnly("mysql:mysql-connector-java:8.0.33")
+    runtimeOnly("org.postgresql:postgresql")
 //    runtimeOnly("org.postgresql:r2dbc-postgresql")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")

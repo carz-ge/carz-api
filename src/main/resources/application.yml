@@ -1,8 +1,8 @@
 debug: true
 spring:
   datasource:
-    driver-class-name: "com.mysql.cj.jdbc.Driver"
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql-db:3306/carapp_db}
+#    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/carapp_db}
     username: ${SPRING_DATASOURCE_USERNAME:carapp_super_user}
     password: ${SPRING_DATASOURCE_PASSWORD:test_db_password}
   #    hikari:
@@ -16,8 +16,8 @@ spring:
       ddl-auto: 'update'
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
 
   graphql:
     path: "/graphql"
