@@ -1,15 +1,15 @@
 plugins {
     java
-    checkstyle
     id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
 //    id("org.graalvm.buildtools.native") version "0.9.20"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
-    id("com.github.spotbugs") version "5.0.14"
+//    checkstyle
+//    id("com.github.spotbugs") version "5.0.14"
 }
 
 group = "ge.carapp"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
 

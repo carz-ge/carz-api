@@ -9,6 +9,8 @@ import java.util.UUID;
 public record ProductInput(
     LingualString name,
     UUID categoryId,
+    UUID providerId,
+
     LingualString description,
     LocationSchema location,
     String mainImage,

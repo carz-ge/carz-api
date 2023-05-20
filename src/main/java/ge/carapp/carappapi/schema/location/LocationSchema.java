@@ -1,5 +1,5 @@
 package ge.carapp.carappapi.schema.location;
 
-public record LocationSchema(Address address,
-                             Coordinates coordinates) {
+public record LocationSchema(AddressSchema address,
+                             CoordinatesSchema coordinates) {
 }

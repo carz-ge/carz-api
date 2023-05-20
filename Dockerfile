@@ -1,16 +1,24 @@
-# ---- Building phase ----
-FROM ghcr.io/graalvm/native-image:22.2.0 AS builder
-RUN mkdir -p /tmp/export/lib64 \
-    && cp /usr/lib64/libstdc++.so.6.0.25 /tmp/export/lib64/libstdc++.so.6 \
-    && cp /usr/lib64/libz.so.1 /tmp/export/lib64/libz.so.1
-COPY --chown=gradle:gradle .. /home/gradle/src
-WORKDIR /home/gradle/src
-RUN ./gradlew clean nativeCompile --no-daemon --debug
 
-# ---- Release ----
-FROM gcr.io/distroless/base AS release
-COPY --from=builder /tmp/export/lib64 /lib64
-COPY --from=builder /home/gradle/src/build/native/nativeCompile/otp_graalvm_service app
-ENV LD_LIBRARY_PATH /lib64
+FROM gradle:7.6.1-jdk17-alpine AS build
+WORKDIR /workspace/app
+
+COPY gradle gradle
+COPY gradlew .
+COPY settings.gradle.kts .
+# RUN ./gradlew wrapper
+
+COPY build.gradle.kts .
+COPY src src
+
+# TODO check this- > https://stackoverflow.com/questions/58593661/slow-gradle-build-in-docker-caching-gradle-build
+RUN gradle bootJar -i --scan --stacktrace --no-daemon
+
+FROM eclipse-temurin:17-jre-alpine
+VOLUME /tmp
+#ENV ARTIFACT_NAME=car-app-api-0.0.1-SNAPSHOT.jar
+ARG BUILD_DIR=/workspace/app/build
+COPY --from=build ${BUILD_DIR}/libs/ /app
 EXPOSE 8080
-ENTRYPOINT ["/app"]
+ENTRYPOINT ["java","-jar","/app/car-app-api-0.0.1.jar"]
+#ENTRYPOINT exec java -jar ${ARTIFACT_NAME}
+

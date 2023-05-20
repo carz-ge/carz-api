@@ -33,7 +33,6 @@ extend type Query {
     listProductByCategoryId(categoryId: ID!): [Product]!
     listProductByProviderId(providerId: ID!): [Product]!
 
-    filterProducts(filter: ProductFilterInput!): [Product]!
     searchProducts(filter: ProductFilterInput!): [Product]!
 }
 

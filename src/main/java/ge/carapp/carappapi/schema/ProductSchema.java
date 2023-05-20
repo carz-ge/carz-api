@@ -1,8 +1,8 @@
 package ge.carapp.carappapi.schema;
 
 import ge.carapp.carappapi.entity.ProductEntity;
-import ge.carapp.carappapi.schema.location.Address;
-import ge.carapp.carappapi.schema.location.Coordinates;
+import ge.carapp.carappapi.schema.location.AddressSchema;
+import ge.carapp.carappapi.schema.location.CoordinatesSchema;
 import ge.carapp.carappapi.schema.location.LocationSchema;
 import lombok.Builder;
 
@@ -23,10 +23,10 @@ public record ProductSchema(
 ) {
     public static ProductSchema convert(ProductEntity productEntity) {
         LocationSchema location = new LocationSchema(
-            new Address(productEntity.getStreet(),
+            new AddressSchema(productEntity.getStreet(),
                 productEntity.getDistrict(),
                 productEntity.getCity()),
-            new Coordinates(productEntity.getLat(),
+            new CoordinatesSchema(productEntity.getLat(),
                 productEntity.getLng())
         );
 
@@ -36,6 +36,7 @@ public record ProductSchema(
             .name(new LingualString(productEntity.getName(), productEntity.getNameKa()))
             .description(new LingualString(productEntity.getDescription(), productEntity.getDescriptionKa()))
             .categoryId(productEntity.getCategory().getId())
+            .providerId(productEntity.getProvider().getId())
             .name(new LingualString(productEntity.getDescription(), productEntity.getDescriptionKa()))
             .location(location)
             .mainImage(productEntity.getMainImage())

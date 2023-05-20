@@ -39,13 +39,13 @@ public class ProductEntity {
     private String nameKa;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CATEGORY_ID")
+    @JoinColumn(name = "CATEGORY_ID", nullable = false)
     private CategoryEntity category;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "PROVIDER_ID")
-//    private ProviderEntity provider;
-//
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PROVIDER_ID", nullable = false)
+    private ProviderEntity provider;
+
     private String description;
     @Column(name = "DESCRIPTION_KA")
     private String descriptionKa;

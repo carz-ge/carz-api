@@ -39,12 +39,6 @@ public class ProductController {
         return productService.listProductByProviderId(providerId);
     }
 
-    @QueryMapping
-    @PreAuthorize("isAuthenticated()")
-    public List<ProductSchema> filterProducts(@Argument ProductFilterInput filter) {
-        return productService.filterProducts(filter);
-    }
-
     @MutationMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ProductSchema createProduct(@Argument ProductInput input) {

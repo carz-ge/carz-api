@@ -33,7 +33,7 @@ public class CarService {
         ).toList();
 
 
-        if (existingCarsForUser.size() > 0) {
+        if (!existingCarsForUser.isEmpty()) {
             throw new GeneralException("car with plate number: %s already exists for user %s"
                 .formatted(carInput.plateNumber(), user.getId()));
         }

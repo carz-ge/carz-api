@@ -44,11 +44,11 @@ public class CarEntity implements Serializable {
     private CarType carType;
 
     @Column(name = "TECH_PASS_NUMBER")
-    String techPassportNumber;
-    String vin;
-    String make;
-    String model;
-    int year;
+    private String techPassportNumber;
+    private String vin;
+    private String make;
+    private String model;
+    private int year;
 
 
     @Column(name = "CREATED_AT", nullable = false)

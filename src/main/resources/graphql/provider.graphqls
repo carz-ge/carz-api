@@ -6,18 +6,17 @@ type Provider {
     email: String
     logo: String # image
     website: String
-    workingHours: [WorkingHours]
+#    workingHours: [WorkingHours]
 }
 
 
 input ProviderInput {
-    id: ID!
     name: String!
     phone: String
     email: String
     logo: String # image
     website: String
-    workingHours: [WorkingHoursInput]
+#    workingHours: [WorkingHoursInput]
 }
 
 type WorkingHours {

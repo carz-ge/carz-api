@@ -2,7 +2,9 @@ package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.entity.ProductDetailsCarPrice;
 import ge.carapp.carappapi.entity.ProductDetailsEntity;
+import ge.carapp.carappapi.entity.ProviderEntity;
 import ge.carapp.carappapi.repository.ProductDetailsRepository;
+import ge.carapp.carappapi.repository.ProviderRepository;
 import ge.carapp.carappapi.schema.graphql.ProductDetailsInput;
 import ge.carapp.carappapi.schema.ProductDetailsSchema;
 import ge.carapp.carappapi.entity.CategoryEntity;
@@ -27,6 +29,7 @@ import java.util.stream.IntStream;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductService {
+    private final ProviderRepository providerRepository;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductDetailsRepository productDetailsRepository;
@@ -41,9 +44,15 @@ public class ProductService {
             throw new GeneralException("Category not found");
         }
 
+        Optional<ProviderEntity> provider = providerRepository.findById(input.providerId());
+        if (provider.isEmpty()) {
+            throw new GeneralException("Provider not found");
+        }
+
 
         ProductEntity productEntity = ProductEntity.builder()
             .category(category.get())
+            .provider(provider.get())
             .name(input.name().en())
             .nameKa(input.name().ka())
             .description(input.description().en())
@@ -56,6 +65,7 @@ public class ProductService {
             .street(input.location().address().street())
             .lat(input.location().coordinates().lat())
             .lng(input.location().coordinates().lng())
+            .capacity(1)
             .build();
 
         productRepository.save(productEntity);
@@ -98,14 +108,8 @@ public class ProductService {
     }
 
     public List<ProductSchema> listProductByProviderId(UUID providerId) {
-        return null;
+        return productRepository.findAllByProviderId(providerId).stream().map(ProductSchema::convert).toList();
     }
-
-    public List<ProductSchema> filterProducts(ProductFilterInput filter) {
-        // TODOOOOOOOO
-        return null;
-    }
-
 
     public List<ProductDetailsSchema> getProductDetailsByProductId(UUID productId) {
 
