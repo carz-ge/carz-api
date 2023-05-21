@@ -1,0 +1,311 @@
+schema { 
+  query: Query 
+  mutation: Mutation   
+}
+
+input AuthenticationInput {
+  phone: String!
+  otp: String!
+}
+
+type AuthenticationOutput {
+  accessToken: String!
+  refreshToken: String
+}
+
+type Query {
+  checkPhone(phone: String!): Boolean!
+  listCars: [Car!]!
+  listCategories: [Category!]!
+  echo(message: String): String
+  echoAuthorized(message: String): String
+  echoMono(message: String): String
+  listOrders: [Order!]!
+  getOrder(id: ID!): Order!
+  listOrdersByUserId(userId: ID!): [Order!]!
+  listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
+  listProducts: [Product!]!
+  listProductByCategoryId(categoryId: ID!): [Product!]!
+  listProductByProviderId(providerId: ID!): [Product!]!
+  searchProducts(filter: ProductFilterInput!): [Product!]!
+  listProviders: [Provider!]!
+  getMe: User!
+  getUserById(userId: ID!): User!
+}
+
+type Mutation {
+  sendOtp(phone: String!): Boolean!
+  authorize(input: AuthenticationInput!): AuthenticationOutput!
+  addCar(carInput: CarInput!): Car!
+  removeCar(carId: ID!): Boolean!
+  updateCar(carId: ID!, carInput: CarInput!): Car!
+  createCategory(input: CategoryInput!): Category!
+  updateCategory(categoryId: ID!, input: CategoryInput!): Category!
+  removeCategory(categoryId: ID!): Boolean!
+  createOrder(order: OrderInput!): Order!
+  createProductDetails(input: ProductDetailsInput!): ProductDetails!
+  updateProductDetails(productDetailsId: ID!, input: ProductDetailsInput!): ProductDetails!
+  removeProductDetails(productDetailsId: ID!): Boolean!
+  createProduct(input: ProductInput!): Product!
+  updateProduct(productId: ID!, input: ProductInput!): Product!
+  removeProduct(productId: ID!): Boolean!
+  createProvider(input: ProviderInput!): Provider!
+  updateProvider(input: ProviderInput!): Provider!
+  removeProvider(providerId: ID!): Boolean!
+  updateUser(input: UpdateUserInput!): User!
+}
+
+enum CarType {
+  ALL
+  SEDAN
+  HATCHBACK
+  SUV
+  VAN
+  TRUCK
+  MOTORCYCLE
+  OTHER
+}
+
+type Car {
+  id: ID!
+  plateNumber: String!
+  carType: CarType
+  techPassportNumber: String
+  vin: String
+  make: String
+  model: String
+  year: Int
+  createdAt: String
+  updatedAt: String
+}
+
+input CarInput {
+  plateNumber: String!
+  carType: CarType
+  techPassportNumber: String
+  vin: String
+  make: String
+  model: String
+  year: Int
+}
+
+type Category {
+  id: ID!
+  name: LingualString!
+}
+
+input CategoryInput {
+  name: LingualStringInput!
+}
+
+type LingualString {
+  ka: String!
+  en: String!
+}
+
+input LingualStringInput {
+  ka: String!
+  en: String!
+}
+
+enum Currency {
+  GEL
+  USD
+  EUR
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+type Address {
+  street: String!
+  district: String!
+  city: String!
+}
+
+type Coordinates {
+  lat: Float!
+  lng: Float!
+}
+
+type Location {
+  address: Address!
+  coordinates: Coordinates!
+}
+
+input LocationInput {
+  address: AddressInput!
+  coordinates: CoordinatesInput!
+}
+
+input AddressInput {
+  street: String!
+  district: String!
+  city: String!
+}
+
+input CoordinatesInput {
+  lat: Float!
+  lng: Float!
+}
+
+enum OrderStatus {
+  NEW
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REJECTED
+  REIMBURSED
+}
+
+type OrderedProduct {
+  productId: ID!
+  quantity: Int
+  schedulingDate: String
+  schedulingTime: String
+}
+
+type Order {
+  id: ID!
+  userId: ID!
+  categoryId: ID!
+  providerId: ID
+  products: [OrderedProduct]
+  orderStatus: OrderStatus
+}
+
+input OrderInput {
+  id: ID
+  userId: ID!
+  products: [OrderedProductInput!]!
+}
+
+input OrderedProductInput {
+  productId: ID!
+  productDetailsId: ID!
+  schedulingDay: String
+  schedulingTime: String
+}
+
+type ProductDetailsCarPrice {
+  order: ID
+  carType: CarType!
+  price: Int
+}
+
+type ProductDetails {
+  id: ID!
+  productId: ID!
+  name: LingualString!
+  description: LingualString
+  pricesForCarTypes: [ProductDetailsCarPrice!]
+  availableServices: [LingualString!]
+  notAvailableServices: [LingualString]
+  generalPrice: Int!
+  currency: Currency
+  averageDurationMinutes: Int
+}
+
+input ProductDetailsCarPriceInput {
+  carType: CarType!
+  price: Int!
+}
+
+input ProductDetailsInput {
+  productId: ID!
+  name: LingualStringInput!
+  description: LingualStringInput
+  pricesForCarTypes: [ProductDetailsCarPriceInput!]!
+  availableServices: [LingualStringInput!]
+  notAvailableServices: [LingualStringInput]
+  currency: Currency
+  averageDurationMinutes: Int
+}
+
+type Product {
+  id: ID!
+  name: LingualString!
+  providerId: ID!
+  categoryId: ID!
+  description: LingualString
+  location: Location
+  mainImage: String!
+  images: [String!]
+  tags: [String!]
+}
+
+input ProductInput {
+  name: LingualStringInput!
+  categoryId: ID!
+  providerId: ID!
+  description: LingualStringInput
+  location: LocationInput
+  mainImage: String!
+  images: [String!]
+  tags: [String!]
+}
+
+input ProductFilterInput {
+  categoryId: ID
+  carType: CarType
+  date: String
+  time: String
+}
+
+type Provider {
+  id: ID!
+  name: String!
+  phone: String
+  email: String
+  logo: String
+  website: String
+}
+
+input ProviderInput {
+  name: String!
+  phone: String
+  email: String
+  logo: String
+  website: String
+}
+
+type WorkingHours {
+  dayOfWeek: DayOfWeek!
+  startTime: String!
+  endTime: String!
+}
+
+input WorkingHoursInput {
+  dayOfWeek: DayOfWeek!
+  startTime: String!
+  endTime: String!
+}
+
+enum UserRole {
+  USER
+  MANAGER
+  ADMIN
+}
+
+type User {
+  id: ID!
+  phone: String!
+  role: UserRole!
+  firstname: String
+  lastname: String
+  createdAt: String
+  updatedAt: String
+}
+
+input UpdateUserInput {
+  firstname: String!
+  lastname: String!
+}

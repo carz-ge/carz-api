@@ -29,11 +29,11 @@ input ProductFilterInput {
 }
 
 extend type Query {
-    listProducts: [Product]!
-    listProductByCategoryId(categoryId: ID!): [Product]!
-    listProductByProviderId(providerId: ID!): [Product]!
+    listProducts: [Product!]!
+    listProductByCategoryId(categoryId: ID!): [Product!]!
+    listProductByProviderId(providerId: ID!): [Product!]!
 
-    searchProducts(filter: ProductFilterInput!): [Product]!
+    searchProducts(filter: ProductFilterInput!): [Product!]!
 }
 
 extend type Mutation {

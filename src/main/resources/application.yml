@@ -24,6 +24,8 @@ spring:
     schema:
       introspection:
         enabled: true
+      printer:
+          enabled: true
       file-extensions:
         - ".graphqls"
         - ".gqls"

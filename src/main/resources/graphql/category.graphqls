@@ -9,7 +9,7 @@ input CategoryInput {
 }
 
 extend type Query {
-    listCategories: [Category]!
+    listCategories: [Category!]!
 }
 
 

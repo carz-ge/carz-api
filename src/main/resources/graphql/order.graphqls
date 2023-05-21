@@ -38,14 +38,14 @@ input OrderedProductInput {
 }
 
 extend type Query {
-    listOrders: [Order]
-    getOrder(id: ID!): Order
-    listOrdersByUserId(userId: ID!): [Order]
+    listOrders: [Order!]!
+    getOrder(id: ID!): Order!
+    listOrdersByUserId(userId: ID!): [Order!]!
 }
 
 extend type Mutation {
     # create a new order
-    createOrder(order: OrderInput!): Order
+    createOrder(order: OrderInput!): Order!
 
     # TODO: lock product for checkout
 }

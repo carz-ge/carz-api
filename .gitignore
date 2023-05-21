@@ -39,3 +39,7 @@ data
 data-mysql
 
 .env
+
+graphql/node_modules
+#graphql/generated
+

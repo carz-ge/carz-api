@@ -1,0 +1,17 @@
+{
+    "name": "graphql-generation",
+    "version": "1.0.0",
+    "description": "",
+    "main": "generate.ts",
+    "scripts": {
+        "gen": "ts-node generate.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "graphql-schema-utilities": "^1.1.6",
+        "ts-node": "^10.9.1"
+    }
+}

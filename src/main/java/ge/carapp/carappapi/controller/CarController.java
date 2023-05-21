@@ -22,7 +22,7 @@ public class CarController {
 
     @QueryMapping
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public List<CarSchema> getCars() {
+    public List<CarSchema> listCars() {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return carService.getCars(authenticatedUser);
     }

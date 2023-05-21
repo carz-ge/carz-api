@@ -32,7 +32,7 @@ input WorkingHoursInput {
 }
 
 extend type Query {
-    listProviders: [Provider]!
+    listProviders: [Provider!]!
 }
 
 extend type Mutation {

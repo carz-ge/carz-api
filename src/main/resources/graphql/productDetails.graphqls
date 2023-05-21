@@ -34,12 +34,12 @@ input ProductDetailsInput {
 }
 
 extend type Query {
-    listProductDetailsByProductId(productId: ID!): [ProductDetails]!
+    listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
 }
 
 extend type Mutation {
     createProductDetails(input: ProductDetailsInput!): ProductDetails!
     updateProductDetails(productDetailsId: ID!,
-                         input: ProductDetailsInput): ProductDetails!
+                         input: ProductDetailsInput!): ProductDetails!
     removeProductDetails(productDetailsId: ID!): Boolean!
 }

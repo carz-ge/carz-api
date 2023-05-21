@@ -34,11 +34,11 @@ input CarInput {
 
 
 extend type Mutation {
-    addCar(carInput: CarInput!): Car
-    removeCar(carId: ID!): Boolean
-    updateCar(carId: ID!, carInput: CarInput!): Car
+    addCar(carInput: CarInput!): Car!
+    removeCar(carId: ID!): Boolean!
+    updateCar(carId: ID!, carInput: CarInput!): Car!
 }
 
 extend type Query {
-    getCars: [Car]
+    listCars: [Car!]!
 }
