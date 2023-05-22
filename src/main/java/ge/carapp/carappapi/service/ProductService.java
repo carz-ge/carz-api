@@ -165,4 +165,12 @@ public class ProductService {
     public boolean removeProductDetails(UserEntity authenticatedUser, UUID productId) {
         return false;
     }
+
+    public ProductSchema getProductsById(UUID productId) {
+        ProductEntity productEntity = productRepository
+            .findById(productId)
+            .orElseThrow(()-> new GeneralException("product by id not found"));
+
+        return ProductSchema.convert(productEntity);
+    }
 }

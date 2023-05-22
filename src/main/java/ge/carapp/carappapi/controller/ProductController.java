@@ -20,6 +20,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    @QueryMapping
+    @PreAuthorize("isAuthenticated()")
+    public ProductSchema getProduct(@Argument UUID productId) {
+        return productService.getProductsById(productId);
+    }
 
     @QueryMapping
     @PreAuthorize("isAuthenticated()")

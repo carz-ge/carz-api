@@ -29,6 +29,8 @@ input ProductFilterInput {
 }
 
 extend type Query {
+    getProduct(productId: ID): Product
+
     listProducts: [Product!]!
     listProductByCategoryId(categoryId: ID!): [Product!]!
     listProductByProviderId(providerId: ID!): [Product!]!

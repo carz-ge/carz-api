@@ -24,6 +24,7 @@ type Query {
   getOrder(id: ID!): Order!
   listOrdersByUserId(userId: ID!): [Order!]!
   listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
+  getProduct(productId: ID): Product
   listProducts: [Product!]!
   listProductByCategoryId(categoryId: ID!): [Product!]!
   listProductByProviderId(providerId: ID!): [Product!]!
