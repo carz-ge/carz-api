@@ -1,15 +1,19 @@
 package ge.carapp.carappapi.service;
 
+import ge.carapp.carappapi.core.DoubleTuple;
 import ge.carapp.carappapi.entity.UserEntity;
+import ge.carapp.carappapi.entity.datacontainers.UserContainer;
 import ge.carapp.carappapi.exception.NotAuthorizedException;
 import ge.carapp.carappapi.jwt.JwtService;
 import ge.carapp.carappapi.schema.graphql.AuthenticationInput;
 import ge.carapp.carappapi.schema.graphql.AuthenticationOutput;
+import ge.carapp.carappapi.schema.graphql.SendOptOutput;
 import ge.carapp.carappapi.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -24,10 +28,15 @@ public class AuthService {
     }
 
     //    @Transactional
-    public Boolean sendOtp(String phone) {
-        var userModel = userService.getUserOrCreateByPhone(phone);
-        return userModel.filter(otpService::sendOtpToUser).isPresent();
+    public SendOptOutput sendOtp(String phone) {
+        UserContainer userContainer = userService.getUserOrCreateByPhone(phone);
 
+        DoubleTuple<Boolean, LocalDateTime> sendOtpServiceResult = otpService.sendOtpToUser(userContainer.userEntity());
+        return SendOptOutput.builder()
+            .isRegistered(!userContainer.created())
+            .sent(sendOtpServiceResult.first())
+            .expiresAt(sendOtpServiceResult.second())
+            .build();
     }
 
     public AuthenticationOutput authorize(AuthenticationInput input) throws NotAuthorizedException {

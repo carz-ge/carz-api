@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.service;
 
+import ge.carapp.carappapi.core.DoubleTuple;
 import ge.carapp.carappapi.entity.OtpStatus;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserOtpEntity;
@@ -37,20 +38,20 @@ public class OtpService {
     private final OtpRepository otpRepository;
     private final NotificationService notificationService;
 
-    public boolean sendOtpToUser(UserEntity user) {
+    public DoubleTuple<Boolean, LocalDateTime> sendOtpToUser(UserEntity user) {
         UserOtpEntity userOtp = user.getUserOtp();
         LocalDateTime timeNow = LocalDateTime.now();
         if (Objects.nonNull(userOtp)) {
             if (userOtp.getOtpStatus().equals(OtpStatus.SENT)) {
                 log.warn("OTP was already sent to user: {}", user.getId());
-                return false;
+                return new DoubleTuple<>(false, userOtp.getExpiresAt());
             }
             if (userOtp.getSendAttempts() >= MAX_MISSED_OTP_SEND) {
                 if (userOtp.getCreatedAt()
                         .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
                         .isAfter(timeNow)) {
                     log.warn("User: {} exceeded max send attempts", user.getId());
-                    return false;
+                    return new DoubleTuple<>(false, userOtp.getExpiresAt());
                 } else {
                     userOtp.setSendAttempts(0);
                     userOtp.setCreatedAt(timeNow);
@@ -65,23 +66,24 @@ public class OtpService {
         }
 
         final String otp = generateOtpBasedOnUserPhone(user.getPhone());
+        LocalDateTime expiresAt = timeNow.plus(OTP_EXPIRATION_TIME_MINUTES, ChronoUnit.MINUTES);
         userOtp.setOtpStatus(OtpStatus.CREATED);
         userOtp.setOtpHash(hashOtp(otp));
         userOtp.setUpdatedAt(timeNow);
         userOtp.setSendAttempts(userOtp.getSendAttempts() + 1);
-        userOtp.setExpiresAt(timeNow.plus(OTP_EXPIRATION_TIME_MINUTES, ChronoUnit.MINUTES));
+        userOtp.setExpiresAt(expiresAt);
         userOtp.setVerificationAttempts(0);
 
         var notificationResult = notificationService.sendOtpNotification(user.getPhone(), otp);
         if (!notificationResult) {
             log.error("OTP send to user: {} failed", user.getId());
-            return false;
+            return new DoubleTuple<>(false, expiresAt);
         }
         userOtp.setOtpStatus(OtpStatus.SENT);
         user.setUserOtp(userOtp);
         otpRepository.save(userOtp);
+        return new DoubleTuple<>(true, expiresAt);
 
-        return true;
     }
 
     private String generateOtpBasedOnUserPhone(String phone) {

@@ -9,13 +9,19 @@ type AuthenticationOutput {
 }
 
 
+type SendOptOutput {
+    sent: Boolean!
+    expiresAt: String
+    isRegistered: Boolean
+}
+
 extend type Query {
     # Debugging
     checkPhone(phone: String!): Boolean!
 }
 
 extend type Mutation {
-    # Auth
-    sendOtp(phone : String!): Boolean!
+    # otp auth
+    sendOtp(phone : String!): SendOptOutput!
     authorize(input: AuthenticationInput!): AuthenticationOutput!
 }

@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.service;
 
+import ge.carapp.carappapi.entity.datacontainers.UserContainer;
 import ge.carapp.carappapi.schema.graphql.UpdateUserInput;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserRole;
@@ -31,12 +32,12 @@ public class UserService {
 
     public final Optional<UserSchema> getUserSchemaByPhone(String phone) {
         return this.getUserByPhone(phone)
-                .map(UserSchema::convert);
+            .map(UserSchema::convert);
     }
 
     public final Optional<UserSchema> getUserSchemaById(UUID userId) {
         return this.getUserById(userId)
-                .map(UserSchema::convert);
+            .map(UserSchema::convert);
     }
 
     public UserSchema updateUser(UserEntity authenticatedUser, UpdateUserInput input) {
@@ -57,23 +58,25 @@ public class UserService {
         return UserSchema.convert(authenticatedUser);
     }
 
-    public Optional<UserEntity> getUserOrCreateByPhone(String phone) {
-        Optional<UserEntity> user = userRepository
-                .findByPhone(phone)
-                .or(() -> {
-                    final var creationTime = LocalDateTime.now();
-                    UserEntity newUser = UserEntity.builder()
-                            .phone(phone)
-                            .userRole(UserRole.USER)
-                            .createdAt(creationTime)
-                            .updatedAt(creationTime)
-                            .build();
-                    return Optional.of(userRepository.save(newUser));
-                });
+    public UserContainer getUserOrCreateByPhone(String phone) {
+        log.info("getting user by phone {}", phone);
+        Optional<UserEntity> userEntityOptional = userRepository
+            .findByPhone(phone);
 
-        log.info("getting user {}", user);
-        return user;
+        if (userEntityOptional.isPresent()) {
+            return new UserContainer(userEntityOptional.get(), false);
+        }
+
+        final var creationTime = LocalDateTime.now();
+        UserEntity newUser = UserEntity.builder()
+            .phone(phone)
+            .userRole(UserRole.USER)
+            .createdAt(creationTime)
+            .updatedAt(creationTime)
+            .build();
+        newUser = userRepository.save(newUser);
+
+        return new UserContainer(newUser, true);
     }
-
 
 }

@@ -13,6 +13,12 @@ type AuthenticationOutput {
   refreshToken: String
 }
 
+type SendOptOutput {
+  sent: Boolean!
+  expiresAt: String
+  isRegistered: Boolean
+}
+
 type Query {
   checkPhone(phone: String!): Boolean!
   listCars: [Car!]!
@@ -35,7 +41,7 @@ type Query {
 }
 
 type Mutation {
-  sendOtp(phone: String!): Boolean!
+  sendOtp(phone: String!): SendOptOutput!
   authorize(input: AuthenticationInput!): AuthenticationOutput!
   addCar(carInput: CarInput!): Car!
   removeCar(carId: ID!): Boolean!
