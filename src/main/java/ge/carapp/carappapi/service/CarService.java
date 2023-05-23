@@ -51,7 +51,7 @@ public class CarService {
             .year(carInput.year())
             .build();
 
-        carRepository.save(carEntity);
+        carEntity = carRepository.save(carEntity);
 
         log.info("Added Car for User : {} ", user.getId());
         return CarSchema.convert(carEntity);
@@ -93,7 +93,7 @@ public class CarService {
         carEntity.setModel(carInput.model());
         carEntity.setYear(carInput.year());
 
-        carRepository.save(carEntity);
+        carEntity = carRepository.save(carEntity);
 
         log.info("Added Car for User : {} ", user.getId());
         return CarSchema.convert(carEntity);

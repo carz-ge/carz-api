@@ -23,3 +23,8 @@ enum DayOfWeek {
     SATURDAY
     SUNDAY
 }
+
+enum Language {
+    KA
+    EN
+}

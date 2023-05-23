@@ -37,7 +37,7 @@ public class ProviderService {
             .website(input.website())
             .build();
 
-        providerRepository.save(provider);
+        provider = providerRepository.save(provider);
 
         return ProviderSchema.convert(provider);
     }
@@ -57,7 +57,7 @@ public class ProviderService {
         provider.setEmail(input.email());
         provider.setWebsite(input.website());
 
-        providerRepository.save(provider);
+        provider = providerRepository.save(provider);
 
         return ProviderSchema.convert(provider);
     }

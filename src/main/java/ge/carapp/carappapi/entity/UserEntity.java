@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import ge.carapp.carappapi.core.Language;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,9 @@ public class UserEntity implements Serializable {
 
     private String firstname;
     private String lastname;
+
+    @Enumerated(EnumType.STRING)
+    private Language language;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "USER_ROLE", nullable = false)

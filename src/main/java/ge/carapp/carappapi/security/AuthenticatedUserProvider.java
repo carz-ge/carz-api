@@ -2,7 +2,6 @@ package ge.carapp.carappapi.security;
 
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.exception.NotAuthorizedException;
-import ge.carapp.carappapi.schema.UserSchema;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

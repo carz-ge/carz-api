@@ -68,8 +68,7 @@ public class ProductService {
             .capacity(1)
             .build();
 
-        productRepository.save(productEntity);
-
+        productEntity = productRepository.save(productEntity);
         return ProductSchema.convert(productEntity);
     }
 
@@ -94,7 +93,8 @@ public class ProductService {
         productEntity.setLat(input.location().coordinates().lat());
         productEntity.setLng(input.location().coordinates().lng());
         productEntity.setCapacity(1);
-        productRepository.save(productEntity);
+
+        productEntity = productRepository.save(productEntity);
         return ProductSchema.convert(productEntity);
     }
 
@@ -112,7 +112,6 @@ public class ProductService {
     }
 
     public List<ProductDetailsSchema> getProductDetailsByProductId(UUID productId) {
-
         return productDetailsRepository.findAllByProductId(productId).stream().map(ProductDetailsSchema::convert).toList();
     }
 
@@ -151,7 +150,7 @@ public class ProductService {
             .currency(input.currency())
             .averageDurationMinutes(input.averageDurationMinutes())
             .build();
-        productDetailsRepository.save(productDetailsEntity);
+        productDetailsEntity = productDetailsRepository.save(productDetailsEntity);
 
         productEntity.getProductDetailsList().add(productDetailsEntity);
 
@@ -159,10 +158,12 @@ public class ProductService {
     }
 
     public ProductSchema updateProductDetails(UserEntity authenticatedUser, UUID productDetailsId, ProductDetailsInput input) {
+       // TODO
         return null;
     }
 
     public boolean removeProductDetails(UserEntity authenticatedUser, UUID productId) {
+        // TODO
         return false;
     }
 

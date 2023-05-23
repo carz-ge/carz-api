@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.service;
 
+import ge.carapp.carappapi.core.Language;
 import ge.carapp.carappapi.entity.datacontainers.UserContainer;
 import ge.carapp.carappapi.schema.graphql.UpdateUserInput;
 import ge.carapp.carappapi.entity.UserEntity;
@@ -71,6 +72,7 @@ public class UserService {
         UserEntity newUser = UserEntity.builder()
             .phone(phone)
             .userRole(UserRole.USER)
+            .language(Language.KA)
             .createdAt(creationTime)
             .updatedAt(creationTime)
             .build();

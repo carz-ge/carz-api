@@ -10,8 +10,15 @@ type User {
     role: UserRole!
     firstname: String
     lastname: String
+    language: Language!
     createdAt: String
     updatedAt: String
+}
+
+input UpdateUserInput {
+    firstname: String!
+    lastname:String!
+    language: Language
 }
 
 extend type Query {
@@ -21,9 +28,4 @@ extend type Query {
 
 extend type Mutation {
     updateUser(input: UpdateUserInput!): User!
-}
-
-input UpdateUserInput {
-    firstname: String!
-    lastname:String!
 }

@@ -1,10 +1,12 @@
 package ge.carapp.carappapi.schema;
 
+import ge.carapp.carappapi.core.Language;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserRole;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Builder
@@ -14,6 +16,7 @@ public record UserSchema(
     String lastname,
     String phone,
     UserRole userRole,
+    Language language,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
@@ -24,6 +27,7 @@ public record UserSchema(
             .lastname(userEntity.getLastname())
             .phone(userEntity.getPhone())
             .userRole(userEntity.getUserRole())
+            .language(Objects.requireNonNullElse(userEntity.getLanguage(), Language.KA))
             .createdAt(userEntity.getCreatedAt())
             .updatedAt(userEntity.getUpdatedAt())
             .build();

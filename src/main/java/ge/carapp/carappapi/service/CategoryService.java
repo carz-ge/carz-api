@@ -38,7 +38,7 @@ public class CategoryService {
             .nameKa(input.name().ka())
             .build();
 
-        categoryRepository.save(category);
+        category = categoryRepository.save(category);
         return CategorySchema.convert(category);
     }
 
@@ -50,7 +50,8 @@ public class CategoryService {
         CategoryEntity category = categoryEntity.get();
         category.setName(input.name().en());
         category.setNameKa(input.name().ka());
-        categoryRepository.save(category);
+
+        category = categoryRepository.save(category);
         return CategorySchema.convert(category);
     }
 
