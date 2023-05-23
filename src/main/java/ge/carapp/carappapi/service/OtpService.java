@@ -42,10 +42,6 @@ public class OtpService {
         UserOtpEntity userOtp = user.getUserOtp();
         LocalDateTime timeNow = LocalDateTime.now();
         if (Objects.nonNull(userOtp)) {
-            if (userOtp.getOtpStatus().equals(OtpStatus.SENT)) {
-                log.warn("OTP was already sent to user: {}", user.getId());
-                return new DoubleTuple<>(false, userOtp.getExpiresAt());
-            }
             if (userOtp.getSendAttempts() >= MAX_MISSED_OTP_SEND) {
                 if (userOtp.getCreatedAt()
                         .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
