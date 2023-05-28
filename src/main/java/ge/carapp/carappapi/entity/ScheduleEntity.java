@@ -1,12 +1,13 @@
 package ge.carapp.carappapi.entity;
 
+import ge.carapp.carappapi.schema.TimeSlotStatus;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,19 +31,33 @@ public class ScheduleEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private UserEntity user;
+    @Column(nullable = false)
+    private String orderNumber;
 
-    private UUID carId;
+    @Column(nullable = false)
     private UUID categoryId;
+    @Column(nullable = false)
     private UUID productId;
+    @Column(nullable = false)
+    private UUID productDetailsId;
+    @Column(nullable = false)
+    private UUID providerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_DETAILS_ID")
-    private ProductDetailsEntity productDetails;
 
-
+    @Column(nullable = false)
     private LocalDate schedulingDate;
+    @Column(nullable = false)
     private LocalTime schedulingTime;
+
+    private UUID userId;
+    private UUID carId;
+
+    private String carPlateNumber;
+    private String phoneNumber;
+
+    // Presented if this time slot was scheduled by the manager manually.
+    private UUID managerId;
+
+    @Enumerated(EnumType.STRING)
+    private TimeSlotStatus status;
 }

@@ -1,0 +1,17 @@
+schema: '**/*.graphqls'
+documents: '**/*.graphql'
+extensions:
+    endpoints:
+        local:
+            url: http://localhost:8080/graphql
+        local-with-token:
+            url: http://localhost:8080/graphql
+            headers:
+                Authorization: bearer ${TOKEN}
+
+        remote:
+            url: https://car-app-api.up.railway.app/graphql
+        remote-with-token:
+            url: https://car-app-api.up.railway.app/graphql
+            headers:
+                Authorization: bearer ${TOKEN}

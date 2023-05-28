@@ -43,7 +43,7 @@ public class SearchService {
                             product.getId(),
                             filter.date(),
                             filter.time(),
-                            product.getCapacity() + 1
+                            product.getCapacity()
                         );
 
                     log.info("isFreeTimeSlot {}", isFreeTimeSlot);

@@ -77,7 +77,7 @@ public class UserService {
             .updatedAt(creationTime)
             .build();
         newUser = userRepository.save(newUser);
-
+        log.info("created new user for phone: {}", phone);
         return new UserContainer(newUser, true);
     }
 

@@ -1,0 +1,29 @@
+type ScheduledTimeSlotSchema {
+    orderNumber: String
+    carPlateNumber: String
+    timeSlot: String
+}
+
+extend type Query {
+    listQueue(providerId: ID): [ScheduledTimeSlotSchema]
+}
+
+
+input ScheduleCarForServiceInput {
+    productId: ID!,
+    carPlateNumber: String,
+    customerPhoneNumber: String,
+
+    schedulingDay: String
+    schedulingTime: String
+}
+
+extend type Mutation {
+    scheduleCarForService(input: ScheduleCarForServiceInput): [ScheduledTimeSlotSchema]
+}
+
+
+extend type Subscription {
+    subscribeToQueue(providerId: ID): [String]
+}
+
