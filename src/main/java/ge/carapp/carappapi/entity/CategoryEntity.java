@@ -44,6 +44,12 @@ public class CategoryEntity {
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
 
+    private String image;
+    private String internalName;
+
+    private int priority;
+    private boolean active;
+
     @PrePersist
     private void prePersist() {
         createdAt = LocalDateTime.now();

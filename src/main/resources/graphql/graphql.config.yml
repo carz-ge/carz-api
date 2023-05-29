@@ -7,11 +7,11 @@ extensions:
         local-with-token:
             url: http://localhost:8080/graphql
             headers:
-                Authorization: bearer ${TOKEN}
+                Authorization: Bearer ${TOKEN}
 
         remote:
             url: https://car-app-api.up.railway.app/graphql
         remote-with-token:
             url: https://car-app-api.up.railway.app/graphql
             headers:
-                Authorization: bearer ${TOKEN}
+                Authorization: Bearer ${TOKEN}

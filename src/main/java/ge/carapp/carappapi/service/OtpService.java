@@ -45,7 +45,7 @@ public class OtpService {
             if (userOtp.getSendAttempts() >= MAX_MISSED_OTP_SEND) {
                 if (userOtp.getCreatedAt()
                         .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
-                        .isAfter(timeNow)) {
+                        .isAfter(timeNow) && !userOtp.getOtpStatus().equals(OtpStatus.VERIFIED)) {
                     log.warn("User: {} exceeded max send attempts", user.getId());
                     return new DoubleTuple<>(false, userOtp.getExpiresAt());
                 } else {

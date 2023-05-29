@@ -74,7 +74,7 @@ query getCars {
     }
 }
 
-mutation Remove {
+mutation RemoveCar {
     removeCar(carId: "test_car_id")
 }
 
@@ -100,6 +100,7 @@ query ListCategories {
         name {
             en ka
         }
+        priority
     }
 }
 
@@ -108,9 +109,12 @@ mutation CreateCategory{
     # accessible only by admin
     createCategory(input: {
         name: {
-            en: "Car Wash",
-            ka: "სამრეცხაო"
+            en: "Car wash",
+            ka: "რეცხვა"
         }
+        active: true,
+        internalName: "CAR_WASH",
+        priority: 1,
     }) {
         id name {ka en}
     }

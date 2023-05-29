@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<CategorySchema> getCategories() {
-        return categoryRepository.findAll().stream().map(CategorySchema::convert).toList();
+        return categoryRepository.findAllByActiveOrderByPriorityDesc(true).stream().map(CategorySchema::convert).toList();
     }
 
     public CategorySchema createCategory(UserEntity authenticatedUser, CategoryInput input) {
@@ -36,6 +37,10 @@ public class CategoryService {
         CategoryEntity category = CategoryEntity.builder()
             .name(input.name().en())
             .nameKa(input.name().ka())
+            .internalName(input.internalName())
+            .image(input.image())
+            .priority(Objects.requireNonNullElse(input.priority(), 0))
+            .active(Objects.requireNonNullElse(input.active(), true))
             .build();
 
         category = categoryRepository.save(category);

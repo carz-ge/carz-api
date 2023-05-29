@@ -1,6 +1,7 @@
 schema { 
   query: Query 
-  mutation: Mutation   
+  mutation: Mutation 
+  subscription: Subscription  
 }
 
 input AuthenticationInput {
@@ -36,6 +37,7 @@ type Query {
   listProductByProviderId(providerId: ID!): [Product!]!
   searchProducts(filter: ProductFilterInput!): [Product!]!
   listProviders: [Provider!]!
+  listQueue(providerId: ID): [ScheduledTimeSlotSchema]
   getMe: User!
   getUserById(userId: ID!): User!
 }
@@ -59,6 +61,7 @@ type Mutation {
   createProvider(input: ProviderInput!): Provider!
   updateProvider(input: ProviderInput!): Provider!
   removeProvider(providerId: ID!): Boolean!
+  scheduleCarForService(input: ScheduleCarForServiceInput): [ScheduledTimeSlotSchema]
   updateUser(input: UpdateUserInput!): User!
 }
 
@@ -99,10 +102,18 @@ input CarInput {
 type Category {
   id: ID!
   name: LingualString!
+  internalName: String!
+  image: String
+  priority: Int!
+  active: Boolean!
 }
 
 input CategoryInput {
   name: LingualStringInput!
+  internalName: String!
+  image: String
+  priority: Int
+  active: Boolean
 }
 
 type LingualString {
@@ -129,6 +140,11 @@ enum DayOfWeek {
   FRIDAY
   SATURDAY
   SUNDAY
+}
+
+enum Language {
+  KA
+  EN
 }
 
 type Address {
@@ -296,6 +312,24 @@ input WorkingHoursInput {
   endTime: String!
 }
 
+type ScheduledTimeSlotSchema {
+  orderNumber: String
+  carPlateNumber: String
+  timeSlot: String
+}
+
+input ScheduleCarForServiceInput {
+  productId: ID!
+  carPlateNumber: String
+  customerPhoneNumber: String
+  schedulingDay: String
+  schedulingTime: String
+}
+
+type Subscription {
+  subscribeToQueue(providerId: ID): [String]
+}
+
 enum UserRole {
   USER
   MANAGER
@@ -308,6 +342,7 @@ type User {
   role: UserRole!
   firstname: String
   lastname: String
+  language: Language!
   createdAt: String
   updatedAt: String
 }
@@ -315,4 +350,5 @@ type User {
 input UpdateUserInput {
   firstname: String!
   lastname: String!
+  language: Language
 }

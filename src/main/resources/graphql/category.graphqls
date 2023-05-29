@@ -1,11 +1,19 @@
 type Category {
     id: ID!
     name: LingualString!
+    internalName: String!
+    image: String
+    priority: Int!
+    active: Boolean!
 }
 
 
 input CategoryInput {
     name: LingualStringInput!
+    internalName: String!
+    image: String
+    priority: Int
+    active: Boolean # by default the service is active
 }
 
 extend type Query {
