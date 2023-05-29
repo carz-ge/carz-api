@@ -42,19 +42,21 @@ public class UserService {
     }
 
     public UserSchema updateUser(UserEntity authenticatedUser, UpdateUserInput input) {
-        boolean updated = false;
+        boolean shouldUpdate = false;
         if (!ObjectUtils.isEmpty(input.firstname())) {
-            updated = true;
+            shouldUpdate = true;
             authenticatedUser.setFirstname(input.firstname());
         }
 
         if (!ObjectUtils.isEmpty(input.lastname())) {
-            updated = true;
+            shouldUpdate = true;
             authenticatedUser.setLastname(input.lastname());
         }
-        if (!updated) {
+        if (!shouldUpdate) {
             // todo throw exception
         }
+
+        authenticatedUser = userRepository.save(authenticatedUser);
 
         return UserSchema.convert(authenticatedUser);
     }

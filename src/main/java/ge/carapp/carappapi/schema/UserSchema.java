@@ -15,7 +15,7 @@ public record UserSchema(
     String firstname,
     String lastname,
     String phone,
-    UserRole userRole,
+    UserRole role,
     Language language,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
@@ -26,7 +26,7 @@ public record UserSchema(
             .firstname(userEntity.getFirstname())
             .lastname(userEntity.getLastname())
             .phone(userEntity.getPhone())
-            .userRole(userEntity.getUserRole())
+            .role(userEntity.getUserRole())
             .language(Objects.requireNonNullElse(userEntity.getLanguage(), Language.KA))
             .createdAt(userEntity.getCreatedAt())
             .updatedAt(userEntity.getUpdatedAt())
