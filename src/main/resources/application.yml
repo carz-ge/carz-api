@@ -41,9 +41,9 @@ spring:
 
 
 jwt:
-  secret: "655368566D597133743677397A244326452948404D635166546A576E5A723475"
+  secret: ${JWT_SECRET:"655368566D597133743677397A244326452948404D635166546A576E5A723475"}
   issuer: "carapp"
-  expirationMinutes: 180
+  expirationMinutes: 1440 # 1 DAY
   refreshExpirationMonth: 3
 
 server:

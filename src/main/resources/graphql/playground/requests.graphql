@@ -37,8 +37,8 @@ mutation UpdateUser {
 
 mutation AddCar {
     addCar(carInput : {
-        carType: HATCHBACK,
-        plateNumber: "test_plateNumber"
+        carType: SEDAN,
+        plateNumber: "AA-123-BB"
         techPassportNumber: "test_techPassportNumber"
         vin: "test_vin"
         make: "test_make"

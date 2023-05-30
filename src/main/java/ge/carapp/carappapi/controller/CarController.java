@@ -21,28 +21,28 @@ public class CarController {
     private final CarService carService;
 
     @QueryMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public List<CarSchema> listCars() {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return carService.getCars(authenticatedUser);
     }
 
     @MutationMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public CarSchema addCar(@Argument CarInput carInput) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return carService.addCar(authenticatedUser, carInput);
     }
 
     @MutationMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public boolean removeCar(@Argument UUID carId) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return carService.removeCar(authenticatedUser, carId);
     }
 
     @MutationMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
     public CarSchema updateCar( @Argument UUID carId, @Argument CarInput carInput) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return carService.updateCar(authenticatedUser, carId, carInput);
