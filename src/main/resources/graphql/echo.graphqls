@@ -3,4 +3,5 @@ extend type Query {
     echo(message: String): String
     echoAuthorized(message: String): String
     echoMono(message: String): String
+    echoFlux(message: String): [String]
 }

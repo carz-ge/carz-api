@@ -7,7 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Controller
 public class EchoController {
@@ -33,4 +38,21 @@ public class EchoController {
         return ResponseEntity.ok(message);
     }
 
+    @QueryMapping
+    public Flux<List<String>> echoFlux(@Argument String message) {
+
+        // A flux is the publisher of data
+        return Flux.fromStream(
+            Stream.generate(() -> {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    return List.of(message, Instant.now().toString());
+                })
+                .limit(5));
+
+    }
 }
