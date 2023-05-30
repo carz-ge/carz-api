@@ -60,3 +60,7 @@ aws-s3:
   mediaFilesBucket: ""
   cloudfrontDistribution: ""
 
+
+open-ai:
+    key: ${OPENAI_KEY:test_key}
+    url: https://api.openai.com
