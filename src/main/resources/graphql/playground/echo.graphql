@@ -1,0 +1,16 @@
+
+query echoFlux{
+    echoFlux(message: "test")
+}
+
+query echoMono{
+    echoMono(message: "test")
+}
+
+query Echo{
+    echo(message: "test")
+}
+
+query EchoAuth {
+    echoAuthorized(message: "test")
+}

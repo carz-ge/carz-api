@@ -2,7 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
-//    id("org.graalvm.buildtools.native") version "0.9.20"
+    id("org.graalvm.buildtools.native") version "0.9.20"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
 //    checkstyle
 //    id("com.github.spotbugs") version "5.0.14"
@@ -37,7 +37,7 @@ dependencies {
 //    implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("org.springframework.boot:spring-boot-starter-integration")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-mail")
+//    implementation("org.springframework.boot:spring-boot-starter-mail")
 //    implementation("org.springframework.boot:spring-boot-starter-rsocket")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -63,14 +63,14 @@ dependencies {
 
 //    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
 //    implementation("org.springframework.integration:spring-integration-jdbc")
-    implementation("org.springframework.integration:spring-integration-jpa")
-    implementation("org.springframework.integration:spring-integration-mail")
+//    implementation("org.springframework.integration:spring-integration-jpa")
+//    implementation("org.springframework.integration:spring-integration-mail")
 //    implementation("org.springframework.integration:spring-integration-r2dbc")
 //    implementation("org.springframework.integration:spring-integration-rsocket")
-    implementation("org.springframework.integration:spring-integration-security")
-    implementation("org.springframework.integration:spring-integration-stomp")
-    implementation("org.springframework.integration:spring-integration-webflux")
-    implementation("org.springframework.integration:spring-integration-websocket")
+//    implementation("org.springframework.integration:spring-integration-security")
+//    implementation("org.springframework.integration:spring-integration-stomp")
+//    implementation("org.springframework.integration:spring-integration-webflux")
+//    implementation("org.springframework.integration:spring-integration-websocket")
 //    implementation("org.springframework.security:spring-security-messaging")
 //    implementation("org.springframework.security:spring-security-rsocket")
 //    implementation("org.springframework.session:spring-session-jdbc")
@@ -83,6 +83,7 @@ dependencies {
 //    runtimeOnly("org.postgresql:r2dbc-postgresql")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.batch:spring-batch-test")
