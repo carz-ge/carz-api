@@ -4,6 +4,8 @@ type Product {
     providerId: ID!
     categoryId: ID!
     description: LingualString
+    packages: [ProductDetails!]
+    provider: Provider!
     location: Location
     mainImage: String!
     images: [String!]
@@ -29,7 +31,7 @@ input ProductFilterInput {
 }
 
 extend type Query {
-    getProduct(productId: ID): Product
+    getProduct(productId: ID!): Product!
 
     listProducts: [Product!]!
     listProductByCategoryId(categoryId: ID!): [Product!]!

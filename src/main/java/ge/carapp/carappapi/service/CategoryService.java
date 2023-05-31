@@ -21,7 +21,9 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<CategorySchema> getCategories() {
-        return categoryRepository.findAllByActiveOrderByPriorityDesc(true).stream().map(CategorySchema::convert).toList();
+        List<CategorySchema> categories = categoryRepository.findAllByActiveOrderByPriorityDesc(true).stream().map(CategorySchema::convert).toList();
+        log.info("Categories list: {}", categories);
+        return categories;
     }
 
     public CategorySchema createCategory(UserEntity authenticatedUser, CategoryInput input) {

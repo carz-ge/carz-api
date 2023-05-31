@@ -37,8 +37,8 @@ mutation UpdateUser {
 
 mutation AddCar {
     addCar(carInput : {
-        carType: SEDAN,
-        plateNumber: "AA-123-BB"
+        carType: HATCHBACK,
+        plateNumber: "BB-123-BB"
         techPassportNumber: "test_techPassportNumber"
         vin: "test_vin"
         make: "test_make"
@@ -139,6 +139,36 @@ query ListProducts {
                 lng
             }
         }
+        packages {
+            id
+            productId
+            name {
+                en
+                ka
+            }
+            description  {
+                en
+                ka
+            }
+            pricesForCarTypes {
+                order, carType, price
+            }
+            availableServices {
+                en
+                ka
+            }
+            notAvailableServices {
+                en ka
+            }
+            currency
+            averageDurationMinutes
+        }
+        provider {
+            id name phone
+            email
+            logo
+            website
+        }
         mainImage
         images
         tags
@@ -194,6 +224,70 @@ mutation createProduct {
     }
 }
 
+query getProduct {
+    getProduct(productId: "96219f5e-902f-41de-9bd7-5a63cd937c9f"){
+        id
+        name{
+            ka
+            en
+        }
+        providerId
+        categoryId
+        description{
+            ka
+            en
+        }
+        packages{
+            id
+            productId
+            name{
+                ka
+                en
+            }
+            description{
+                ka
+                en
+            }
+            pricesForCarTypes{
+                order
+                carType
+                price
+            }
+            availableServices{
+                ka
+                en
+            }
+            notAvailableServices{
+                ka
+                en
+            }
+            currency
+            averageDurationMinutes
+        }
+        provider{
+            id
+            name
+            phone
+            email
+            logo
+            website
+        }
+        location{
+            address{
+                street
+                district
+                city
+            }
+            coordinates{
+                lat
+                lng
+            }
+        }
+        mainImage
+        images
+        tags
+    }
+}
 
 mutation CreateProductDetails {
     createProductDetails(input: {

@@ -157,7 +157,7 @@ public class ProductService {
         return ProductDetailsSchema.convert(productDetailsEntity);
     }
 
-    public ProductSchema updateProductDetails(UserEntity authenticatedUser, UUID productDetailsId, ProductDetailsInput input) {
+    public ProductDetailsSchema updateProductDetails(UserEntity authenticatedUser, UUID productDetailsId, ProductDetailsInput input) {
        // TODO
         return null;
     }
@@ -167,11 +167,16 @@ public class ProductService {
         return false;
     }
 
-    public ProductSchema getProductsById(UUID productId) {
+    public ProductSchema getProductById(UUID productId) {
         ProductEntity productEntity = productRepository
             .findById(productId)
             .orElseThrow(()-> new GeneralException("product by id not found"));
 
         return ProductSchema.convert(productEntity);
+    }
+
+    public List<ProductDetailsSchema> batchGetProductDetails(List<UUID> productIds) {
+        return productDetailsRepository.findAllByProductIdIn(productIds).stream()
+            .map(ProductDetailsSchema::convert).toList();
     }
 }

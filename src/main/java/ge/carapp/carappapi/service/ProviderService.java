@@ -71,4 +71,9 @@ public class ProviderService {
             return false;
         }
     }
+
+    public List<ProviderSchema> batchGetProviders(List<UUID> providerIds) {
+        return providerRepository.findAllById(providerIds)
+            .stream().map(ProviderSchema::convert).toList();
+    }
 }

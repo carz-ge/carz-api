@@ -27,11 +27,12 @@ type Query {
   echo(message: String): String
   echoAuthorized(message: String): String
   echoMono(message: String): String
+  echoFlux(message: String): [String]
   listOrders: [Order!]!
   getOrder(id: ID!): Order!
   listOrdersByUserId(userId: ID!): [Order!]!
   listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
-  getProduct(productId: ID): Product
+  getProduct(productId: ID!): Product!
   listProducts: [Product!]!
   listProductByCategoryId(categoryId: ID!): [Product!]!
   listProductByProviderId(providerId: ID!): [Product!]!
@@ -232,7 +233,6 @@ type ProductDetails {
   pricesForCarTypes: [ProductDetailsCarPrice!]
   availableServices: [LingualString!]
   notAvailableServices: [LingualString]
-  generalPrice: Int!
   currency: Currency
   averageDurationMinutes: Int
 }
@@ -259,6 +259,8 @@ type Product {
   providerId: ID!
   categoryId: ID!
   description: LingualString
+  packages: [ProductDetails!]
+  provider: Provider!
   location: Location
   mainImage: String!
   images: [String!]

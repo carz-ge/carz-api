@@ -37,7 +37,6 @@ public record ProductSchema(
             .description(new LingualString(productEntity.getDescription(), productEntity.getDescriptionKa()))
             .categoryId(productEntity.getCategory().getId())
             .providerId(productEntity.getProvider().getId())
-            .name(new LingualString(productEntity.getDescription(), productEntity.getDescriptionKa()))
             .location(location)
             .mainImage(productEntity.getMainImage())
             .images(productEntity.getImages())

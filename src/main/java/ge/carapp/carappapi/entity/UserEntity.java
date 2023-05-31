@@ -44,7 +44,7 @@ public class UserEntity implements Serializable {
     private LocalDateTime updatedAt;
 
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserOtpEntity userOtp;
 
 //    @OneToMany(fetch = FetchType.LAZY,

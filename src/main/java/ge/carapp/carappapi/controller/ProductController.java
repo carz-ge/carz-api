@@ -2,7 +2,6 @@ package ge.carapp.carappapi.controller;
 
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.schema.ProductSchema;
-import ge.carapp.carappapi.schema.graphql.ProductFilterInput;
 import ge.carapp.carappapi.schema.graphql.ProductInput;
 import ge.carapp.carappapi.security.AuthenticatedUserProvider;
 import ge.carapp.carappapi.service.ProductService;
@@ -23,7 +22,7 @@ public class ProductController {
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
     public ProductSchema getProduct(@Argument UUID productId) {
-        return productService.getProductsById(productId);
+        return productService.getProductById(productId);
     }
 
     @QueryMapping
