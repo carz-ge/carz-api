@@ -2,7 +2,7 @@ package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.entity.CarEntity;
 import ge.carapp.carappapi.exception.GeneralException;
-import ge.carapp.carappapi.repository.CarRepository;
+import ge.carapp.carappapi.repository.jpa.CarRepository;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.schema.CarSchema;
 import ge.carapp.carappapi.schema.graphql.CarInput;

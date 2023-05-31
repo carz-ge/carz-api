@@ -4,17 +4,19 @@ import ge.carapp.carappapi.core.DoubleTuple;
 import ge.carapp.carappapi.entity.OtpStatus;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserOtpEntity;
-import ge.carapp.carappapi.repository.OtpRepository;
+import ge.carapp.carappapi.repository.jpa.OtpRepository;
+import ge.carapp.carappapi.repository.r2dbc.OtpReactiveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,23 +31,28 @@ public class OtpService {
     private static final SecureRandom random = new SecureRandom();
 
     private static final List<OtpStatus> INVALID_OTP_VERIFICATION_STATUSES = List.of(
-            OtpStatus.EXPIRED,
-            OtpStatus.VERIFIED,
-            OtpStatus.EXCEEDED_ATTEMPTS
+        OtpStatus.EXPIRED,
+        OtpStatus.VERIFIED,
+        OtpStatus.EXCEEDED_ATTEMPTS
     );
 
 
-    private final OtpRepository otpRepository;
+    //    private final OtpRepository otpRepository;
+    private final OtpReactiveRepository otpRepository;
+
     private final NotificationService notificationService;
 
     public DoubleTuple<Boolean, LocalDateTime> sendOtpToUser(UserEntity user) {
-        UserOtpEntity userOtp = user.getUserOtp();
+        Mono<UserOtpEntity> userMono = otpRepository.findByUserId(user.getId());
+        Optional<UserOtpEntity> userOtpOptional = userMono.blockOptional();
+        UserOtpEntity userOtp;
         LocalDateTime timeNow = LocalDateTime.now();
-        if (Objects.nonNull(userOtp)) {
+        if (userOtpOptional.isPresent()) {
+            userOtp = userOtpOptional.get();
             if (userOtp.getSendAttempts() >= MAX_MISSED_OTP_SEND) {
                 if (userOtp.getCreatedAt()
-                        .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
-                        .isAfter(timeNow) && !userOtp.getOtpStatus().equals(OtpStatus.VERIFIED)) {
+                    .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
+                    .isAfter(timeNow) && !userOtp.getOtpStatus().equals(OtpStatus.VERIFIED)) {
                     log.warn("User: {} exceeded max send attempts", user.getId());
                     return new DoubleTuple<>(false, userOtp.getExpiresAt());
                 } else {
@@ -55,10 +62,10 @@ public class OtpService {
             }
         } else {
             userOtp = UserOtpEntity.builder()
-                    .user(user)
-                    .createdAt(timeNow)
-                    .sendAttempts(0)
-                    .build();
+                .user(user)
+                .createdAt(timeNow)
+                .sendAttempts(0)
+                .build();
         }
 
         final String otp = generateOtpBasedOnUserPhone(user.getPhone());
@@ -76,10 +83,9 @@ public class OtpService {
             return new DoubleTuple<>(false, expiresAt);
         }
         userOtp.setOtpStatus(OtpStatus.SENT);
-        user.setUserOtp(userOtp);
+//        user.setUserOtp(userOtp);
         otpRepository.save(userOtp);
         return new DoubleTuple<>(true, expiresAt);
-
     }
 
     private String generateOtpBasedOnUserPhone(String phone) {
@@ -93,12 +99,15 @@ public class OtpService {
 
 
     public boolean verifyOtp(UserEntity user, String otp) {
-        UserOtpEntity userOtp = user.getUserOtp();
+        Mono<UserOtpEntity> userOtpMono = otpRepository.findByUserId(user.getId());
+        Optional<UserOtpEntity> userOtpOptional = userOtpMono.blockOptional();
         final var userId = user.getId();
-        if (Objects.isNull(userOtp)) {
+        if (userOtpOptional.isEmpty()) {
             log.warn("User: {} has no OTP", userId);
             return false;
         }
+
+        UserOtpEntity userOtp = userOtpOptional.get();
 
         if (INVALID_OTP_VERIFICATION_STATUSES.contains(userOtp.getOtpStatus())) {
             log.warn("User: {} OTP is invalid with saved status: {} ", userId, userOtp.getOtpStatus());

@@ -2,8 +2,7 @@ package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.entity.ScheduleEntity;
 import ge.carapp.carappapi.entity.UserEntity;
-import ge.carapp.carappapi.repository.ProviderRepository;
-import ge.carapp.carappapi.repository.ScheduleRepository;
+import ge.carapp.carappapi.repository.jpa.ScheduleRepository;
 import ge.carapp.carappapi.schema.ScheduledTimeSlotSchema;
 import ge.carapp.carappapi.schema.graphql.ScheduleCarForServiceInput;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
 package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.entity.ProductEntity;
-import ge.carapp.carappapi.repository.ProductRepository;
-import ge.carapp.carappapi.repository.ScheduleRepository;
+import ge.carapp.carappapi.repository.jpa.ProductRepository;
+import ge.carapp.carappapi.repository.jpa.ScheduleRepository;
 import ge.carapp.carappapi.schema.CarType;
 import ge.carapp.carappapi.schema.ProductSchema;
 import ge.carapp.carappapi.schema.graphql.ProductFilterInput;

@@ -2,7 +2,7 @@ package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.entity.ProviderEntity;
 import ge.carapp.carappapi.exception.GeneralException;
-import ge.carapp.carappapi.repository.ProviderRepository;
+import ge.carapp.carappapi.repository.jpa.ProviderRepository;
 import ge.carapp.carappapi.schema.ProviderSchema;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.schema.graphql.ProviderInput;
