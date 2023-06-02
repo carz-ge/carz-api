@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.service;
+package ge.carapp.carappapi.service.chat;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -31,7 +31,7 @@ public class OpenAIService {
     private static final int MAX_TOKENS = 20;
     private static final Double TEMPERATURE = 0.8;
 
-    // https://platform.openai.com/docs/api-reference/completions
+    // https://platform.openai.com/docs/api-reference/chat
     private static final String MODEL = "gpt-3.5-turbo";
 
 
@@ -60,14 +60,19 @@ public class OpenAIService {
     }
 
     public Flux<String> askGpt(String prompt) {
+        List<ChatMessage> messageList = List.of(
+            ChatMessage.builder()
+                .content(prompt)
+                .role("user")
+                .build()
+        );
+        return gptChat(messageList);
+    }
+
+    public Flux<String> gptChat(List<ChatMessage> messageList) {
         CompletionRequest request = CompletionRequest.builder()
             .model(MODEL)
-            .messages(List.of(
-                ChatMessage.builder()
-                    .content(prompt)
-                    .role("user")
-                    .build()
-            ))
+            .messages(messageList)
             .stream(true)
             .temperature(TEMPERATURE)
             .maxTokens(MAX_TOKENS)

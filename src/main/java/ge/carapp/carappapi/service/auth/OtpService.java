@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.service;
+package ge.carapp.carappapi.service.auth;
 
 import ge.carapp.carappapi.core.DoubleTuple;
 import ge.carapp.carappapi.entity.OtpStatus;

@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.service;
+package ge.carapp.carappapi.service.auth;
 
 import ge.carapp.carappapi.core.DoubleTuple;
 import ge.carapp.carappapi.entity.UserEntity;
@@ -9,6 +9,7 @@ import ge.carapp.carappapi.schema.graphql.AuthenticationInput;
 import ge.carapp.carappapi.schema.graphql.AuthenticationOutput;
 import ge.carapp.carappapi.schema.graphql.SendOptOutput;
 import ge.carapp.carappapi.security.CustomUserDetails;
+import ge.carapp.carappapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;

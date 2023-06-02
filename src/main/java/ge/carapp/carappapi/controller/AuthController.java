@@ -4,7 +4,7 @@ import ge.carapp.carappapi.exception.GeneralException;
 import ge.carapp.carappapi.schema.graphql.AuthenticationInput;
 import ge.carapp.carappapi.schema.graphql.AuthenticationOutput;
 import ge.carapp.carappapi.schema.graphql.SendOptOutput;
-import ge.carapp.carappapi.service.AuthService;
+import ge.carapp.carappapi.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;

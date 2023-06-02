@@ -1,0 +1,20 @@
+enum ChatMessageStatus {
+    SENT,
+    IN_PROGRESS,
+    SUCCESS,
+    FAIL,
+}
+
+type ChatMessage {
+    id: ID!
+    createdAt: String!
+    text: String!
+    isAnswer: Boolean!
+
+    status: ChatMessageStatus
+}
+
+extend type Query {
+    listChatMessages: [ChatMessage!]!
+}
+

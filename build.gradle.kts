@@ -61,6 +61,8 @@ dependencies {
     implementation("software.amazon.awssdk:aws-crt-client")
 
 
+    implementation("com.github.f4b6a3:ulid-creator:5.2.0")
+
 //    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
 //    implementation("org.springframework.integration:spring-integration-jdbc")
 //    implementation("org.springframework.integration:spring-integration-jpa")

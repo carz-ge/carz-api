@@ -62,5 +62,5 @@ aws-s3:
 
 
 open-ai:
-    key: ${OPENAI_KEY:test_key}
+    key: ${OPENAI_KEY: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}
     url: https://api.openai.com
