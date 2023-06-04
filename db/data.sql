@@ -83,3 +83,6 @@ INSERT INTO carapp_schema.car (id, car_type, created_at, make, model, plate_numb
 VALUES ('7d5cea24-17b5-4d50-bf8d-bbd342e7158f', 'SUV', '2023-05-30 00:56:33.247410', 'test_make', 'test_model',
         'AA-123-AA', 'test_techPassportNumber', '2023-05-30 00:56:33.247410', 'test_vin', 2012,
         '87710255-d8c4-407c-acbd-13d3c66305a5');
+
+
+INSERT INTO users (id, created_at, firstname, language, lastname, phone, updated_at, user_role) VALUES ('87710255-d8c4-407c-acbd-13d3c66305a5', '2023-05-31 15:39:59.614978', null, 'KA', null, '+995551553907', '2023-05-31 15:39:59.614978', 'USER');

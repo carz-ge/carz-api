@@ -73,7 +73,7 @@ dependencies {
 //    implementation("org.springframework.integration:spring-integration-stomp")
 //    implementation("org.springframework.integration:spring-integration-webflux")
 //    implementation("org.springframework.integration:spring-integration-websocket")
-//    implementation("org.springframework.security:spring-security-messaging")
+    implementation("org.springframework.security:spring-security-messaging")
 //    implementation("org.springframework.security:spring-security-rsocket")
 //    implementation("org.springframework.session:spring-session-jdbc")
     compileOnly("org.projectlombok:lombok")

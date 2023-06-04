@@ -16,7 +16,11 @@ public final class AuthenticatedUserProvider {
     public static CustomUserDetails getAuthenticatedUserDetails() {
         if (!isAuthenticated())
             throw new NotAuthorizedException();
-        return (CustomUserDetails) getAuthentication().getPrincipal();
+        return authenticatedUserDetails(getAuthentication());
+    }
+
+    public static CustomUserDetails authenticatedUserDetails(Authentication authentication) {
+        return (CustomUserDetails) authentication.getPrincipal();
     }
 
     public static UserEntity getAuthenticatedUser() {

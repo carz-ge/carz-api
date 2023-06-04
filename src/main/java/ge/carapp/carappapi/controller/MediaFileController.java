@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 //@CrossOrigin(origins = "", allowedHeaders = "")
 //@SecurityRequirement(name = "api-auth-bearer")
 public class MediaFileController {
-
     private final MediaService mediaService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

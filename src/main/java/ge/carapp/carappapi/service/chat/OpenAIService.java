@@ -28,7 +28,7 @@ import java.util.Objects;
 public class OpenAIService {
 
     private static final Duration TIMEOUT = Duration.ofSeconds(5L);
-    private static final int MAX_TOKENS = 20;
+    private static final int MAX_TOKENS = 50;
     private static final Double TEMPERATURE = 0.8;
 
     // https://platform.openai.com/docs/api-reference/chat

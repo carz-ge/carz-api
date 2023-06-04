@@ -6,18 +6,15 @@ import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.models.openai.AuthorRole;
 import ge.carapp.carappapi.models.openai.ChatMessage;
 import ge.carapp.carappapi.repository.ChatRepository;
-import ge.carapp.carappapi.repository.UserRepository;
 import ge.carapp.carappapi.schema.ChatMessageSchema;
 import ge.carapp.carappapi.schema.ChatMessageStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
@@ -26,8 +23,8 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 public class ChatService {
+    // TODO make reactive
     private final ChatRepository chatRepository;
-    private final UserRepository userRepository;
 
 
     private final OpenAIService openAIService;
@@ -39,9 +36,7 @@ public class ChatService {
          You use a tone that is knowledgeable and precise.
         """;
 
-    public Flux<ServerSentEvent<String>> askQuestion(UserEntity user1, String question) {
-        UUID userId = UUID.fromString("87710255-d8c4-407c-acbd-13d3c66305a5");
-        UserEntity user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+    public Flux<String> askQuestion(UserEntity user, String question) {
         log.info("Ask question {}, {}", user.getId(), question);
         ChatMessageEntity userMessage = ChatMessageEntity.builder()
             .id(UlidCreator.getMonotonicUlid().toString())
@@ -58,7 +53,7 @@ public class ChatService {
             .user(user)
             .build();
 
-        userMessage = chatRepository.save(userMessage); // batch save ?
+        chatRepository.save(userMessage); // batch save ?
         final ChatMessageEntity answerMessageRef = chatRepository.save(answerMessage);
 
 
@@ -81,31 +76,17 @@ public class ChatService {
                 .doOnComplete(() -> {
                     statusRef.set(ChatMessageStatus.SUCCESS);
                     answerMessageRef.setFinishedAt(LocalDateTime.now());
-                })
-                .map(chunks -> {
-
-                    log.info("Chunk ---->> {}", chunks);
-                    return ServerSentEvent.<String>builder()
-                        .id(answerId)
-                        .data(chunks)
-                        .build();
+                    log.info("answer -> {}", sb);
+                    answerMessageRef.setStatusChatMessageStatus(statusRef.get());
+                    answerMessageRef.setText(sb.toString());
+                    chatRepository.save(answerMessageRef);
                 });
 
 
         } catch (Exception e) {
             e.printStackTrace();
             statusRef.set(ChatMessageStatus.FAIL);
-            return Flux.just(ServerSentEvent.<String>builder()
-                .event("ERROR")
-                .data(e.getMessage())
-                .build());
-        } finally {
-            log.info("answer -> {}", sb);
-            userMessage.setStatusChatMessageStatus(statusRef.get());
-            answerMessageRef.setStatusChatMessageStatus(statusRef.get());
-            answerMessageRef.setText(sb.toString());
-            chatRepository.save(userMessage); // batch save ?
-            chatRepository.save(answerMessageRef);
+            return Flux.just(e.getMessage());
         }
     }
 
