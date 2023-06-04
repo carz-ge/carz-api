@@ -31,7 +31,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             )
             .take(2)
             .log();
-
     }
 
     @Override

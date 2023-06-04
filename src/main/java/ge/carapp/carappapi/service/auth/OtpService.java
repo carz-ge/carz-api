@@ -84,11 +84,11 @@ public class OtpService {
 
     private String generateOtpBasedOnUserPhone(String phone) {
         // special user
-        if (phone.equals("+995551553907")) {
+//        if (phone.equals("+995551553907")) {
             return "123456";
-        }
+//        }
 
-        return generateOtp();
+//        return generateOtp();
     }
 
 

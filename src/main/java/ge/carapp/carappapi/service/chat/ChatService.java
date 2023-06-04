@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
+import static ge.carapp.carappapi.utils.ListUtils.reverse;
+
 
 @Service
 @Slf4j
@@ -67,11 +69,11 @@ public class ChatService {
         try {
             Stream<ChatMessage> chatMessageStream = messages.stream().map(ChatMessage::convert);
             ChatMessage chatMessage = getSystemMessage();
-            List<ChatMessage> chatMessages = Stream.concat(Stream.of(chatMessage), chatMessageStream).toList();
+
+            List<ChatMessage> chatMessages = reverse(Stream.concat(chatMessageStream, Stream.of(chatMessage)).toList());
 
             return openAIService.gptChat(chatMessages)
                 .doOnEach(a -> sb.append(a.get()))
-                .doOnEach(a -> log.info("->>>>>>>>>>> {}", a.get()))
                 .doOnError(e -> statusRef.set(ChatMessageStatus.FAIL))
                 .doOnComplete(() -> {
                     statusRef.set(ChatMessageStatus.SUCCESS);
