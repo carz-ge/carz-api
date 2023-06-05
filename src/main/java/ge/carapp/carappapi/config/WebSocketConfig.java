@@ -2,6 +2,7 @@ package ge.carapp.carappapi.config;
 
 import ge.carapp.carappapi.controller.ws.ChatWebSocketHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -20,9 +21,13 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private final ChatWebSocketHandler chatWebSocketHandler;
 //    private final WebSocketAuthInterceptor interceptor;
 
+    @Value("${car-app.origins}")
+    private String[] allowedOrigins;
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(chatWebSocketHandler, "/chat");
+        registry.addHandler(chatWebSocketHandler, "/chat")
+            .setAllowedOrigins(allowedOrigins);
 //            .addInterceptors(interceptor);
     }
 

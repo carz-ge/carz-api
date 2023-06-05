@@ -43,6 +43,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     // DB migrations
 //    implementation("org.flywaydb:flyway-core")
@@ -59,7 +61,6 @@ dependencies {
     implementation("software.amazon.awssdk:sso")
     implementation("software.amazon.awssdk:ssooidc")
     implementation("software.amazon.awssdk:aws-crt-client")
-
 
     implementation("com.github.f4b6a3:ulid-creator:5.2.0")
 
