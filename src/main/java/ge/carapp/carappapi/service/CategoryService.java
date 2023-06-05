@@ -7,7 +7,6 @@ import ge.carapp.carappapi.repository.CategoryRepository;
 import ge.carapp.carappapi.schema.CategorySchema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +20,7 @@ import java.util.UUID;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    @Cacheable("getCategories")
+//    @Cacheable("getCategories")
     public List<CategorySchema> getCategories() {
         List<CategorySchema> categories = categoryRepository.findAllByActiveOrderByPriorityDesc(true).stream().map(CategorySchema::convert).toList();
         log.info("Categories list: {}", categories);
