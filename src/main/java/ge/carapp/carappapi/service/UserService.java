@@ -1,12 +1,16 @@
 package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.core.Language;
+import ge.carapp.carappapi.entity.UserAccessDeviceEntity;
 import ge.carapp.carappapi.entity.datacontainers.UserContainer;
+import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
+import ge.carapp.carappapi.schema.graphql.AddDeviceTokenInput;
 import ge.carapp.carappapi.schema.graphql.UpdateUserInput;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserRole;
 import ge.carapp.carappapi.repository.UserRepository;
 import ge.carapp.carappapi.schema.UserSchema;
+import ge.carapp.carappapi.service.notification.FirebaseMessagingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,8 @@ import java.util.UUID;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final UserAccessDeviceRepository userAccessDeviceRepository;
+    private final FirebaseMessagingService firebaseMessagingService;
 
 
     public final Optional<UserEntity> getUserByPhone(String phone) {
@@ -41,24 +47,24 @@ public class UserService {
             .map(UserSchema::convert);
     }
 
-    public UserSchema updateUser(UserEntity authenticatedUser, UpdateUserInput input) {
+    public UserSchema updateUser(UserEntity user, UpdateUserInput input) {
         boolean shouldUpdate = false;
         if (!ObjectUtils.isEmpty(input.firstname())) {
             shouldUpdate = true;
-            authenticatedUser.setFirstname(input.firstname());
+            user.setFirstname(input.firstname());
         }
 
         if (!ObjectUtils.isEmpty(input.lastname())) {
             shouldUpdate = true;
-            authenticatedUser.setLastname(input.lastname());
+            user.setLastname(input.lastname());
         }
         if (!shouldUpdate) {
             // todo throw exception
         }
 
-        authenticatedUser = userRepository.save(authenticatedUser);
+        user = userRepository.save(user);
 
-        return UserSchema.convert(authenticatedUser);
+        return UserSchema.convert(user);
     }
 
     public UserContainer getUserOrCreateByPhone(String phone) {
@@ -83,4 +89,28 @@ public class UserService {
         return new UserContainer(newUser, true);
     }
 
+    public void addDeviceToken(UserEntity user, AddDeviceTokenInput input) {
+        UserAccessDeviceEntity userAccessDeviceEntity = UserAccessDeviceEntity.builder()
+            .deviceToken(input.deviceToken())
+            .user(user)
+            .build();
+
+        try {
+            userAccessDeviceRepository.save(userAccessDeviceEntity);
+
+        } catch (Exception e) {
+            log.error("could not save device token {}", user.getId());
+            e.printStackTrace();
+            throw e;
+        }
+
+        firebaseMessagingService.sendPushNotification(
+            CreatePushNotificationRequestModel.builder()
+                .token(input.deviceToken())
+                .text("Super duper - სატესტო ტექსტი")
+                .title("გამარჯობები სიხარულები")
+                .build()
+
+        );
+    }
 }

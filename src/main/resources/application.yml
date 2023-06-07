@@ -19,7 +19,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-#        default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
+        default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
 
   graphql:
     path: "/graphql"

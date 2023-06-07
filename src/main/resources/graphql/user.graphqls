@@ -21,6 +21,10 @@ input UpdateUserInput {
     language: Language
 }
 
+input AddDeviceTokenInput {
+    deviceToken: String!
+}
+
 extend type Query {
     getMe: User!
     getUserById(userId: ID!): User!
@@ -29,4 +33,5 @@ extend type Query {
 extend type Mutation {
     updateUser(input: UpdateUserInput!): User!
     removeUser: Boolean
+    addDeviceToken(input: AddDeviceTokenInput!): Boolean
 }

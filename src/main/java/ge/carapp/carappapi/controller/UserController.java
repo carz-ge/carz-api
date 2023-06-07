@@ -2,6 +2,7 @@ package ge.carapp.carappapi.controller;
 
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.schema.UserSchema;
+import ge.carapp.carappapi.schema.graphql.AddDeviceTokenInput;
 import ge.carapp.carappapi.schema.graphql.UpdateUserInput;
 import ge.carapp.carappapi.security.AuthenticatedUserProvider;
 import ge.carapp.carappapi.service.UserService;
@@ -36,5 +37,14 @@ public class UserController {
     public UserSchema updateUser(@Argument UpdateUserInput input) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return userService.updateUser(authenticatedUser, input);
+    }
+
+    @MutationMapping
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public Boolean addUserToken(@Argument AddDeviceTokenInput input) {
+        UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
+
+        userService.addDeviceToken(authenticatedUser, input);
+        return true;
     }
 }

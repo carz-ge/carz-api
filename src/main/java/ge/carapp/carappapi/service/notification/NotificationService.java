@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.service.auth;
+package ge.carapp.carappapi.service.notification;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;

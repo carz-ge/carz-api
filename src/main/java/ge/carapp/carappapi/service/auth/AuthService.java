@@ -42,12 +42,16 @@ public class AuthService {
 
     public AuthenticationOutput authorize(AuthenticationInput input) throws NotAuthorizedException {
         UserEntity user = userService.getUserByPhone(input.phone())
-                .orElseThrow(NotAuthorizedException::new);
+            .orElseThrow(NotAuthorizedException::new);
 
         if (!otpService.verifyOtp(user, input.otp())) {
             throw new NotAuthorizedException();
         }
 
+        return getAuthenticationToken(user);
+    }
+
+    private AuthenticationOutput getAuthenticationToken(UserEntity user) {
         UserDetails userDetails = new CustomUserDetails(user);
 
         Map<String, Object> extraClaims = Map.of("userId", user.getId().toString());
@@ -55,8 +59,8 @@ public class AuthService {
         var accessToken = jwtService.generateToken(extraClaims, userDetails);
         var refreshToken = jwtService.generateRefreshToken(userDetails);
         return AuthenticationOutput.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build();
     }
 }

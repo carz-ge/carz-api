@@ -65,6 +65,8 @@ type Mutation {
   removeProvider(providerId: ID!): Boolean!
   scheduleCarForService(input: ScheduleCarForServiceInput): [ScheduledTimeSlotSchema]
   updateUser(input: UpdateUserInput!): User!
+  removeUser: Boolean
+  addDeviceToken(input: AddDeviceTokenInput!): Boolean
 }
 
 enum CarType {
@@ -369,4 +371,8 @@ input UpdateUserInput {
   firstname: String!
   lastname: String!
   language: Language
+}
+
+input AddDeviceTokenInput {
+  deviceToken: String!
 }
