@@ -1,0 +1,12 @@
+
+
+input PushNotificationInput {
+    deviceToken: String!
+    title: String!
+    text: String!
+}
+
+
+extend type Mutation {
+    sendPushNotification(input: PushNotificationInput!): Boolean
+}

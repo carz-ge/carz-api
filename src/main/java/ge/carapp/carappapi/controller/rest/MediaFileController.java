@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.controller;
+package ge.carapp.carappapi.controller.rest;
 
 import ge.carapp.carappapi.schema.MediaFileSchema;
 import ge.carapp.carappapi.service.MediaService;
