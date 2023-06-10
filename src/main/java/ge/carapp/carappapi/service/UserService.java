@@ -1,7 +1,7 @@
 package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.core.Language;
-import ge.carapp.carappapi.entity.UserAccessDeviceEntity;
+import ge.carapp.carappapi.entity.UserDeviceEntity;
 import ge.carapp.carappapi.entity.datacontainers.UserContainer;
 import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
 import ge.carapp.carappapi.schema.graphql.AddDeviceTokenInput;
@@ -25,7 +25,7 @@ import java.util.UUID;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
-    private final UserAccessDeviceRepository userAccessDeviceRepository;
+    private final UserDeviceRepository userDeviceRepository;
     private final FirebaseMessagingService firebaseMessagingService;
 
 
@@ -90,14 +90,14 @@ public class UserService {
     }
 
     public void addDeviceToken(UserEntity user, AddDeviceTokenInput input) {
-        UserAccessDeviceEntity userAccessDeviceEntity = UserAccessDeviceEntity.builder()
+        UserDeviceEntity userDeviceEntity = UserDeviceEntity.builder()
             .deviceToken(input.deviceToken())
             .platform(input.platform())
             .user(user)
             .build();
 
         try {
-            userAccessDeviceRepository.save(userAccessDeviceEntity);
+            userDeviceRepository.save(userDeviceEntity);
 
         } catch (Exception e) {
             log.error("could not save device token {}", user.getId());
