@@ -33,4 +33,6 @@ public class UserAccessDeviceEntity {
 
     @Column(nullable = false)
     private String deviceToken;
+
+    private String platform;
 }

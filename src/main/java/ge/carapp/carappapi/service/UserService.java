@@ -92,6 +92,7 @@ public class UserService {
     public void addDeviceToken(UserEntity user, AddDeviceTokenInput input) {
         UserAccessDeviceEntity userAccessDeviceEntity = UserAccessDeviceEntity.builder()
             .deviceToken(input.deviceToken())
+            .platform(input.platform())
             .user(user)
             .build();
 

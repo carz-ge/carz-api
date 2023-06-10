@@ -18,6 +18,7 @@ public class FirebaseMessagingService {
     private final FirebaseMessaging firebaseMessaging;
 
     public void sendPushNotification(CreatePushNotificationRequestModel request) {
+        log.info("Sending push notification : {}", request);
         Message message = Message.builder()
             .putData("foo", "bar")
             .setNotification(Notification.builder()

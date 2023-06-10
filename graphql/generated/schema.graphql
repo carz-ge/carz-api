@@ -53,6 +53,7 @@ type Mutation {
   createCategory(input: CategoryInput!): Category!
   updateCategory(categoryId: ID!, input: CategoryInput!): Category!
   removeCategory(categoryId: ID!): Boolean!
+  sendPushNotification(input: PushNotificationInput!): Boolean
   createOrder(order: OrderInput!): Order!
   createProductDetails(input: ProductDetailsInput!): ProductDetails!
   updateProductDetails(productDetailsId: ID!, input: ProductDetailsInput!): ProductDetails!
@@ -181,6 +182,12 @@ input AddressInput {
 input CoordinatesInput {
   lat: Float!
   lng: Float!
+}
+
+input PushNotificationInput {
+  deviceToken: String!
+  title: String!
+  text: String!
 }
 
 enum OrderStatus {
@@ -375,4 +382,5 @@ input UpdateUserInput {
 
 input AddDeviceTokenInput {
   deviceToken: String!
+  platform: String!
 }

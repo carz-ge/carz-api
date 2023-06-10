@@ -23,6 +23,7 @@ input UpdateUserInput {
 
 input AddDeviceTokenInput {
     deviceToken: String!
+    platform: String!
 }
 
 extend type Query {
