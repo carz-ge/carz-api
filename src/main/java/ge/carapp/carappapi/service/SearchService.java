@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Service
@@ -23,7 +24,12 @@ public class SearchService {
 
     //TODO: MAKE reactive
     public List<ProductSchema> searchProducts(ProductFilterInput filter) {
-        final List<ProductEntity> productList = productRepository.findAllByCategoryId(filter.categoryId());
+        List<ProductEntity> productList;
+        if (Objects.nonNull(filter.categoryId())){
+            productList = productRepository.findAllByCategoryId(filter.categoryId());
+        } else {
+            productList = productRepository.findAll();
+        }
 
         Stream<ProductEntity> products = productList.stream();
         if (filter.carType() != null) {
@@ -51,7 +57,8 @@ public class SearchService {
                 });
 
         }
-
-        return products.map(ProductSchema::convert).toList();
+        List<ProductSchema> list = products.map(ProductSchema::convert).toList();
+        log.info("search products: {}, filter: {}", list, filter);
+        return list;
     }
 }
