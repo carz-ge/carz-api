@@ -30,9 +30,9 @@ public class OtpService {
     private static final SecureRandom random = new SecureRandom();
 
     private static final List<OtpStatus> INVALID_OTP_VERIFICATION_STATUSES = List.of(
-            OtpStatus.EXPIRED,
-            OtpStatus.VERIFIED,
-            OtpStatus.EXCEEDED_ATTEMPTS
+        OtpStatus.EXPIRED,
+        OtpStatus.VERIFIED,
+        OtpStatus.EXCEEDED_ATTEMPTS
     );
 
 
@@ -45,8 +45,8 @@ public class OtpService {
         if (Objects.nonNull(userOtp)) {
             if (userOtp.getSendAttempts() >= MAX_MISSED_OTP_SEND) {
                 if (userOtp.getCreatedAt()
-                        .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
-                        .isAfter(timeNow) && !userOtp.getOtpStatus().equals(OtpStatus.VERIFIED)) {
+                    .plus(OTP_SEND_WINDOW_TIME_MINUTES, ChronoUnit.MINUTES)
+                    .isAfter(timeNow) && !userOtp.getOtpStatus().equals(OtpStatus.VERIFIED)) {
                     log.warn("User: {} exceeded max send attempts", user.getId());
                     return new DoubleTuple<>(false, userOtp.getExpiresAt());
                 } else {
@@ -56,10 +56,10 @@ public class OtpService {
             }
         } else {
             userOtp = UserOtpEntity.builder()
-                    .user(user)
-                    .createdAt(timeNow)
-                    .sendAttempts(0)
-                    .build();
+                .user(user)
+                .createdAt(timeNow)
+                .sendAttempts(0)
+                .build();
         }
 
         final String otp = generateOtpBasedOnUserPhone(user.getPhone());
@@ -71,22 +71,24 @@ public class OtpService {
         userOtp.setExpiresAt(expiresAt);
         userOtp.setVerificationAttempts(0);
 
-        var notificationResult = notificationService.sendOtpNotification(user.getPhone(), otp);
+        userOtp.setOtpStatus(OtpStatus.SENT);
+        var notificationResult = notificationService.sendNotification(user.getPhone(),
+            "SMS Code - %s".formatted(otp)
+        );
         if (!notificationResult) {
             log.error("OTP send to user: {} failed", user.getId());
-            return new DoubleTuple<>(false, expiresAt);
+            userOtp.setOtpStatus(OtpStatus.SEND_FAILED);
         }
-        userOtp.setOtpStatus(OtpStatus.SENT);
         user.setUserOtp(userOtp);
         otpRepository.save(userOtp);
-        return new DoubleTuple<>(true, expiresAt);
+        return new DoubleTuple<>(notificationResult, expiresAt);
 
     }
 
     private String generateOtpBasedOnUserPhone(String phone) {
         // special user
 //        if (phone.equals("+995551553907")) {
-            return "123456";
+        return "123456";
 //        }
 
 //        return generateOtp();
