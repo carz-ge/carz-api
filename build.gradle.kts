@@ -94,7 +94,7 @@ dependencies {
 //    implementation("org.springframework.session:spring-session-jdbc")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose") // TODO
 
     // DB drivers
 //    runtimeOnly("mysql:mysql-connector-java:8.0.33")

@@ -1,54 +1,36 @@
 package ge.carapp.carappapi.service.notification.sms;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import ge.carapp.carappapi.service.notification.NotificationService;
+import ge.carapp.carappapi.config.SmsConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
 
-//@Service("smsoffice")
+@Service("smsoffice")
 @Slf4j
-public class SmsOfficeNotificationService implements NotificationService {
+public class SmsOfficeNotificationService implements SmsNotificationService {
 
+    private final SmsConfig smsConfig;
     private final WebClient client;
 
-    private final ObjectMapper objectMapper;
-
-    // https://smsoffice.ge/api/v2/send?
-    public SmsOfficeNotificationService() {
-        client = WebClient.create("https://smsoffice.ge/api/v2/send");
-        objectMapper = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    public SmsOfficeNotificationService(SmsConfig smsConfig) {
+        this.smsConfig = smsConfig;
+        this.client = WebClient.create(smsConfig.getApiUrl());
     }
 
     //6f5fc7ba49344723b22e3e52e1aea302
-    public boolean sendNotification(String phone, String message) {
+    public boolean sendSms(String phone, String message) {
         log.info("sending otp notification to {}, otp {}", phone, message);
-        // TODO
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("destination", phone);
-//        map.put("content", "your code is " + otp);
-//        map.put("no_sms", false);
-//        map.put("key", "63ef00511c28af0caf599c7eb71cda55f50afd62a1724fb51c82282ff12e3ece");
-//        map.put("brand_name", SENDER);
         String query = "key=%s&destination=%s&sender=%s&content=%s"
             .formatted(
-                "6f5fc7ba49344723b22e3e52e1aea302",
+                smsConfig.getApiKey(),
                 phone,
-                "carz",
+                smsConfig.getTitle(),
                 message
             );
         try {
-//            String json = objectMapper.writeValueAsString(map);
-            log.info("json {}", query);
-
+            // TODO initialize types
             Map response = this.client
                 .get()
                 .uri("/?" + query)

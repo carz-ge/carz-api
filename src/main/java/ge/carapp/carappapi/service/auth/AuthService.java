@@ -2,23 +2,28 @@ package ge.carapp.carappapi.service.auth;
 
 import ge.carapp.carappapi.core.DoubleTuple;
 import ge.carapp.carappapi.entity.UserEntity;
+import ge.carapp.carappapi.entity.UserRole;
 import ge.carapp.carappapi.entity.datacontainers.UserContainer;
 import ge.carapp.carappapi.exception.NotAuthorizedException;
 import ge.carapp.carappapi.jwt.JwtService;
+import ge.carapp.carappapi.schema.UserSchema;
 import ge.carapp.carappapi.schema.graphql.AuthenticationInput;
 import ge.carapp.carappapi.schema.graphql.AuthenticationOutput;
 import ge.carapp.carappapi.schema.graphql.SendOptOutput;
 import ge.carapp.carappapi.security.CustomUserDetails;
 import ge.carapp.carappapi.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final UserService userService;
     private final OtpService otpService;
@@ -40,11 +45,11 @@ public class AuthService {
             .build();
     }
 
-    public AuthenticationOutput authorize(AuthenticationInput input) throws NotAuthorizedException {
+    public AuthenticationOutput authorize(AuthenticationInput input, UserRole role) throws NotAuthorizedException {
         UserEntity user = userService.getUserByPhone(input.phone())
             .orElseThrow(NotAuthorizedException::new);
 
-        if (!otpService.verifyOtp(user, input.otp())) {
+        if (!user.getUserRole().equals(role) || !otpService.verifyOtp(user, input.otp())){
             throw new NotAuthorizedException();
         }
 
@@ -61,6 +66,20 @@ public class AuthService {
         return AuthenticationOutput.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
+            .build();
+    }
+
+    public SendOptOutput checkPhoneForManger(String phone) {
+        Optional<UserEntity> user = userService.getUserByPhone(phone);
+        if (user.isEmpty() || UserRole.MANAGER.equals(user.get().getUserRole())) {
+            log.warn("Manager not found: {}", phone);
+            return SendOptOutput.builder().sent(false).build();
+        }
+
+        DoubleTuple<Boolean, LocalDateTime> sendOtpServiceResult = otpService.sendOtpToUser(user.get());
+        return SendOptOutput.builder()
+            .sent(sendOtpServiceResult.first())
+            .expiresAt(sendOtpServiceResult.second())
             .build();
     }
 }

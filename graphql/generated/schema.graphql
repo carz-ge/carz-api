@@ -47,6 +47,8 @@ type Query {
 type Mutation {
   sendOtp(phone: String!): SendOptOutput!
   authorize(input: AuthenticationInput!): AuthenticationOutput!
+  checkPhoneForManger(phone: String!): SendOptOutput!
+  authenticateManager(input: AuthenticationInput!): AuthenticationOutput!
   addCar(carInput: CarInput!): Car!
   removeCar(carId: ID!): Boolean!
   updateCar(carId: ID!, carInput: CarInput!): Car!
@@ -54,6 +56,7 @@ type Mutation {
   updateCategory(categoryId: ID!, input: CategoryInput!): Category!
   removeCategory(categoryId: ID!): Boolean!
   sendPushNotification(input: PushNotificationInput!): Boolean
+  sendSmsNotification(input: SmsNotification!): Boolean
   createOrder(order: OrderInput!): Order!
   createProductDetails(input: ProductDetailsInput!): ProductDetails!
   updateProductDetails(productDetailsId: ID!, input: ProductDetailsInput!): ProductDetails!
@@ -187,6 +190,11 @@ input CoordinatesInput {
 input PushNotificationInput {
   deviceToken: String!
   title: String!
+  text: String!
+}
+
+input SmsNotification {
+  phone: String!
   text: String!
 }
 

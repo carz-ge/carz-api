@@ -72,7 +72,7 @@ public class OtpService {
         userOtp.setVerificationAttempts(0);
 
         userOtp.setOtpStatus(OtpStatus.SENT);
-        var notificationResult = notificationService.sendNotification(user.getPhone(),
+        var notificationResult = notificationService.sendSmsNotification(user.getPhone(),
             "SMS Code - %s".formatted(otp)
         );
         if (!notificationResult) {

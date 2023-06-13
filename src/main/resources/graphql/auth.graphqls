@@ -24,4 +24,8 @@ extend type Mutation {
     # otp auth
     sendOtp(phone : String!): SendOptOutput!
     authorize(input: AuthenticationInput!): AuthenticationOutput!
+
+    # managers
+    checkPhoneForManger(phone : String!): SendOptOutput!
+    authenticateManager(input: AuthenticationInput!): AuthenticationOutput!
 }

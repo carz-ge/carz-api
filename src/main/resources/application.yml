@@ -63,6 +63,11 @@ aws-s3:
   mediaFilesBucket: ""
   cloudfrontDistribution: ""
 
+sms:
+    apiUrl: https://smsoffice.ge/api/v2/send
+    title: Carz
+    apiKey: 6f5fc7ba49344723b22e3e52e1aea302
+
 
 open-ai:
     key: ${OPENAI_KEY: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}

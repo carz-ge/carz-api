@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.service.notification;
+package ge.carapp.carappapi.service.notification.push;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
