@@ -9,8 +9,8 @@ plugins {
 //    checkstyle
 //    id("com.github.spotbugs") version "5.0.14"
     id("org.openapi.generator") version "6.6.0"
-    kotlin("jvm") version "1.8.21"
-    kotlin("plugin.spring") version "1.8.21"
+    kotlin("jvm") version "1.8.22"
+    kotlin("plugin.spring") version "1.8.22"
 }
 
 group = "ge.carapp"

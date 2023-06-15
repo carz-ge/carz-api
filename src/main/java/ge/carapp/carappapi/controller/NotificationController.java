@@ -16,7 +16,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @MutationMapping
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public Boolean sendPushNotification(@Argument PushNotificationInput input) {
         notificationService.sendPushNotification(
             CreatePushNotificationRequestModel.builder()
@@ -30,7 +30,7 @@ public class NotificationController {
     }
 
     @MutationMapping
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public Boolean sendSmsNotification(@Argument SmsNotificationInput input) {
         return notificationService.sendSmsNotification(input.phone(), input.text());
     }

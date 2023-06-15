@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-     private final SmsNotificationService smsNotificationService;
-     private final FirebaseMessagingService pushNotificationService;
+    private final SmsNotificationService smsNotificationService;
+    private final FirebaseMessagingService pushNotificationService;
 
-     public boolean sendSmsNotification(String phone, String message) {
-         return smsNotificationService.sendSms(phone, message);
-     }
+    public boolean sendSmsNotification(String phone, String message) {
+        return smsNotificationService.sendSms(phone, message);
+    }
 
     public void sendPushNotification(CreatePushNotificationRequestModel request) {
-         pushNotificationService.sendPushNotification(request);
+        pushNotificationService.sendPushNotification(request);
     }
 
 }
