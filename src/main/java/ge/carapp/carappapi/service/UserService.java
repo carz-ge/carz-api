@@ -10,7 +10,7 @@ import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserRole;
 import ge.carapp.carappapi.repository.UserRepository;
 import ge.carapp.carappapi.schema.UserSchema;
-import ge.carapp.carappapi.service.notification.push.FirebaseMessagingService;
+import ge.carapp.carappapi.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.UUID;
 public class UserService {
     private final UserRepository userRepository;
     private final UserDeviceRepository userDeviceRepository;
-    private final FirebaseMessagingService firebaseMessagingService;
+    private final NotificationService notificationService;
 
 
     public final Optional<UserEntity> getUserByPhone(String phone) {
@@ -90,7 +90,7 @@ public class UserService {
     }
 
     public void addDeviceToken(UserEntity user, AddDeviceTokenInput input) {
-        log.info("add device token  for user :{}, token {}", user.getId(), input.toString());
+        log.info("add device token for user :{}, token {}", user.getId(), input.toString());
         UserDeviceEntity userDeviceEntity = UserDeviceEntity.builder()
             .deviceToken(input.deviceToken())
             .platform(input.platform())
@@ -106,7 +106,7 @@ public class UserService {
             throw e;
         }
 
-        firebaseMessagingService.sendPushNotification(
+        notificationService.sendPushNotification(
             CreatePushNotificationRequestModel.builder()
                 .token(input.deviceToken())
                 .text("Super duper - სატესტო ტექსტი")
