@@ -1,8 +1,10 @@
 package ge.carapp.carappapi.schema.graphql;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public record PushNotificationInput(
-    String deviceToken,
-    String title,
-    String text
+    @NotEmpty String deviceToken,
+    @NotEmpty String title,
+    @NotEmpty String text
 ) {
 }

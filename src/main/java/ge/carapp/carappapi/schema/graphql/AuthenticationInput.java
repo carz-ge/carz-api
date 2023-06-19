@@ -1,5 +1,7 @@
 package ge.carapp.carappapi.schema.graphql;
 
 
-public record AuthenticationInput(String phone, String otp) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record AuthenticationInput(@NotEmpty String phone, @NotEmpty String otp) {
 }

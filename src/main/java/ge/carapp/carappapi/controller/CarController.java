@@ -11,6 +11,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class CarController {
 
     @MutationMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    public CarSchema addCar(@Argument CarInput carInput) {
+    public CarSchema addCar(@Validated @Argument CarInput carInput) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return carService.addCar(authenticatedUser, carInput);
     }
@@ -43,7 +44,7 @@ public class CarController {
 
     @MutationMapping
     @PreAuthorize("hasAnyAuthority('ROLE_USER','ROLE_ADMIN')")
-    public CarSchema updateCar( @Argument UUID carId, @Argument CarInput carInput) {
+    public CarSchema updateCar(@Argument UUID carId, @Argument CarInput carInput) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return carService.updateCar(authenticatedUser, carId, carInput);
     }

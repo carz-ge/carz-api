@@ -1,7 +1,9 @@
 package ge.carapp.carappapi.schema.graphql;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public record AddDeviceTokenInput(
-     String deviceToken,
-     String platform
+    @NotEmpty String deviceToken,
+    @NotEmpty String platform
 ) {
 }

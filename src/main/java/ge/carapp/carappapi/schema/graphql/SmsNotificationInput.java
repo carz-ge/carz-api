@@ -1,7 +1,9 @@
 package ge.carapp.carappapi.schema.graphql;
 
+import jakarta.validation.constraints.NotEmpty;
+
 public record SmsNotificationInput(
-    String phone,
-    String text
+    @NotEmpty String phone,
+    @NotEmpty String text
 ) {
 }
