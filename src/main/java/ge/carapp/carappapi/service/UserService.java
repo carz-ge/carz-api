@@ -106,7 +106,8 @@ public class UserService {
             throw e;
         }
 
-        notificationService.sendPushNotification(
+        // TODO
+        notificationService.sendPushNotificationToUser(
             CreatePushNotificationRequestModel.builder()
                 .token(input.deviceToken())
                 .text("Super duper - სატესტო ტექსტი")

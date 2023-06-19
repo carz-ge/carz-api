@@ -5,17 +5,18 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
-import lombok.RequiredArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.Future;
 
-@Service
-@RequiredArgsConstructor
 @Slf4j
-public class FirebaseMessagingService {
+class FirebaseMessagingService {
     private final FirebaseMessaging firebaseMessaging;
+
+    FirebaseMessagingService(@NotNull final FirebaseMessaging firebaseMessaging) {
+        this.firebaseMessaging = firebaseMessaging;
+    }
 
     public void sendPushNotification(CreatePushNotificationRequestModel request) {
         Message message = Message.builder()

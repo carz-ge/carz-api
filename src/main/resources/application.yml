@@ -2,6 +2,8 @@
 spring:
     #  main:
     #      web-application-type: reactive
+    http:
+        log-request-details: true
     datasource:
         #    driver-class-name: "com.mysql.cj.jdbc.Driver"
         url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/carapp_db}
@@ -57,11 +59,23 @@ server:
 logging:
     level:
         web: DEBUG
+        org:
+            springframework:
+                data:
+                    r2dbc: DEBUG
+                web:
+                    reactive:
+                        function:
+                            client:
+                                ExchangeFunctions: TRACE
+aws:
+    accessKeyId: ${AWS_ACCESS_KEY_ID:123}
+    secretAccessKey: ${AWS_SECRET_ACCESS_KEY:123}
 
 aws-s3:
-    region: ${AWS_REGION:us-east-1}
-    mediaFilesBucket: ""
-    cloudfrontDistribution: ""
+    region: ${AWS_REGION:eu-west-1}
+    mediaFilesBucket: ${AWS_IMAGES_BUCKET:carzimagetransformations-carzcloudfronts3s3bucket-1dpudwyqq62q1}
+    cloudfrontDistribution: ${AWS_CLOUDFRONT:d12stuyxx450kv.cloudfront.net}
 
 sms:
     apiUrl: https://smsoffice.ge/api/v2/send
@@ -79,3 +93,7 @@ open-ai:
 
 car-app:
     origins: https://api.liquidibrium.me, http://localhost:8080, https://car-app-api.up.railway.app/
+
+firebase:
+    usersAppConfig: firebase-service-account.json
+    managersAppConfig: firebase-service-account.json

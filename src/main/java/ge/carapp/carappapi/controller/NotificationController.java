@@ -7,7 +7,6 @@ import ge.carapp.carappapi.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -18,7 +17,7 @@ public class NotificationController {
     @MutationMapping
 //    @PreAuthorize("hasRole('ADMIN')")
     public Boolean sendPushNotification(@Argument PushNotificationInput input) {
-        notificationService.sendPushNotification(
+        notificationService.sendPushNotificationToUser(
             CreatePushNotificationRequestModel.builder()
                 .title(input.title())
                 .token(input.deviceToken())
