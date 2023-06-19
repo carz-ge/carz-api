@@ -90,6 +90,7 @@ public class UserService {
     }
 
     public void addDeviceToken(UserEntity user, AddDeviceTokenInput input) {
+        log.info("add device token  for user :{}, token {}", user.getId(), input.toString());
         UserDeviceEntity userDeviceEntity = UserDeviceEntity.builder()
             .deviceToken(input.deviceToken())
             .platform(input.platform())

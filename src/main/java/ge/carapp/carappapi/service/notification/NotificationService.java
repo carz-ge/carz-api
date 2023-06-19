@@ -5,19 +5,23 @@ import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
 import ge.carapp.carappapi.service.notification.push.FirebaseMessagingService;
 import ge.carapp.carappapi.service.notification.sms.SmsNotificationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationService {
     private final SmsNotificationService smsNotificationService;
     private final FirebaseMessagingService pushNotificationService;
 
     public boolean sendSmsNotification(String phone, String message) {
+        log.info("send sms notification to phone :{}, message {}", phone, message);
         return smsNotificationService.sendSms(phone, message);
     }
 
     public void sendPushNotification(CreatePushNotificationRequestModel request) {
+        log.info("send push notification: {}", request);
         pushNotificationService.sendPushNotification(request);
     }
 
