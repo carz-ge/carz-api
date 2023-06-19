@@ -41,7 +41,7 @@ public class UserController {
 
     @MutationMapping
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public Boolean addUserToken(@Argument AddDeviceTokenInput input) {
+    public Boolean addDeviceToken(@Argument AddDeviceTokenInput input) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
 
         userService.addDeviceToken(authenticatedUser, input);
