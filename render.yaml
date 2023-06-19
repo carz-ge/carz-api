@@ -1,0 +1,41 @@
+#    https://render.com/docs/blueprint-spec#redis-instances
+services:
+    # A Docker web service
+    -   type: web
+        name: carz-api
+        runtime: docker
+#        repo: https://github.com/carz-ge/carz-api.git # optional
+        region: frankfurt # optional (defaults to oregon)
+        plan: starter # optional (defaults to starter instance type)
+        branch: main # optional (defaults to master)
+        rootDir: .
+        dockerfilePath: Dockerfile
+        dockerContext: .
+#        dockerCommand: ./webdis.sh # optional (defaults to Dockerfile command)
+#        numInstances: 1 # optional (defaults to 1)
+#        scaling:
+#            minInstances: 1
+#            maxInstances: 3
+#            targetMemoryPercent: 60 # optional if targetCPUPercent is set
+#            targetCPUPercent: 60 # optional if targetMemory is set
+        healthCheckPath: /actuator/health
+        autoDeploy: false
+        domains:
+            - api.carz.ge
+        envVars:
+            -   key: SPRING_DATASOURCE_URL
+                sync: false
+            -   key: SPRING_DATASOURCE_USERNAME
+                sync: false
+            -   key: SPRING_DATASOURCE_PASSWORD
+                sync: false
+#            -   key: PORT
+#                value: 10000
+#    # A Redis instance
+#    -   type: redis
+#        name: lightning
+#        ipAllowList: # required
+#            -   source: 0.0.0.0/0
+#                description: everywhere
+#        plan: free # optional (defaults to starter instance type)
+#        maxmemoryPolicy: noeviction # optional (defaults to allkeys-lru)
