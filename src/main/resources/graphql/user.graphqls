@@ -11,6 +11,8 @@ type User {
     firstname: String
     lastname: String
     language: Language!
+    deactivated: Boolean,
+    removed: Boolean,
     createdAt: String
     updatedAt: String
 }
@@ -34,5 +36,6 @@ extend type Query {
 extend type Mutation {
     updateUser(input: UpdateUserInput!): User!
     removeUser: Boolean
+    deactivateUser: Boolean
     addDeviceToken(input: AddDeviceTokenInput!): Boolean
 }

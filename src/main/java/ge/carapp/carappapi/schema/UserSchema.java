@@ -17,6 +17,8 @@ public record UserSchema(
     String phone,
     UserRole role,
     Language language,
+    Boolean deactivated,
+    Boolean removed,
     LocalDateTime createdAt,
     LocalDateTime updatedAt
 ) {
@@ -30,6 +32,8 @@ public record UserSchema(
             .language(Objects.requireNonNullElse(userEntity.getLanguage(), Language.KA))
             .createdAt(userEntity.getCreatedAt())
             .updatedAt(userEntity.getUpdatedAt())
+            .deactivated(userEntity.getDeactivated())
+            .removed(userEntity.getRemoved())
             .build();
     }
 }

@@ -4,11 +4,6 @@ type ScheduledTimeSlotSchema {
     timeSlot: String
 }
 
-extend type Query {
-    listQueue(providerId: ID): [ScheduledTimeSlotSchema]
-}
-
-
 input ScheduleCarForServiceInput {
     productId: ID!,
     carPlateNumber: String,
@@ -18,10 +13,13 @@ input ScheduleCarForServiceInput {
     schedulingTime: String
 }
 
+extend type Query {
+    listQueue(providerId: ID): [ScheduledTimeSlotSchema]
+}
+
 extend type Mutation {
     scheduleCarForService(input: ScheduleCarForServiceInput): [ScheduledTimeSlotSchema]
 }
-
 
 extend type Subscription {
     subscribeToQueue(providerId: ID): [String]

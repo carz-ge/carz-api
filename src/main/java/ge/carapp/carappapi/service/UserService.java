@@ -116,4 +116,14 @@ public class UserService {
 
         );
     }
+
+    public void removeUser(UserEntity user) {
+        user.setRemoved(true);
+        userRepository.save(user);
+    }
+
+    public void deactivateUser(UserEntity user) {
+        user.setDeactivated(true);
+        userRepository.save(user);
+    }
 }

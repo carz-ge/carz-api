@@ -37,6 +37,9 @@ public class UserEntity implements Serializable {
     @Column(name = "USER_ROLE", nullable = false)
     private UserRole userRole;
 
+    private Boolean deactivated;
+    private Boolean removed;
+
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 

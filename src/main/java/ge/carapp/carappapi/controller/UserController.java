@@ -46,4 +46,20 @@ public class UserController {
         userService.addDeviceToken(authenticatedUser, input);
         return true;
     }
+
+    @MutationMapping
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public Boolean removeUser() {
+        UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
+        userService.removeUser(authenticatedUser);
+        return true;
+    }
+
+    @MutationMapping
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    public Boolean deactivateUser() {
+        UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
+        userService.deactivateUser(authenticatedUser);
+        return true;
+    }
 }

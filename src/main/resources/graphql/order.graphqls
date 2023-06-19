@@ -25,9 +25,18 @@ type Order {
 }
 
 input OrderInput {
-    id: ID
-    userId: ID!
-    products: [OrderedProductInput!]!
+    idempotencyKey: String!
+    categoryId: ID!
+    packages: [OrderedProductInput!]!
+
+    carId: ID
+    # one of
+    carType: CarType
+    carPlateNumber: String
+
+    # schedulingId: String
+    schedulingDay: String
+    schedulingTime: String
 }
 
 input OrderedProductInput {
@@ -46,6 +55,7 @@ extend type Query {
 extend type Mutation {
     # create a new order
     createOrder(order: OrderInput!): Order!
+    # cancelOrder(): Order!
 
     # TODO: lock product for checkout
 }
