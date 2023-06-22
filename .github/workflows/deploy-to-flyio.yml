@@ -1,4 +1,4 @@
-name: Deploy to Render
+name: Deploy to Flyio
 
 on:
     workflow_run:
@@ -19,7 +19,7 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v3
-
-            - name: Install Railway
-              run:  curl -X POST ${{ secrets.RENDER_HOOK }}
-
+            -   uses: superfly/flyctl-actions/setup-flyctl@master
+            - run: flyctl deploy --remote-only
+              env:
+                  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
