@@ -7,6 +7,7 @@ enum UserRole {
 type User {
     id: ID!
     phone: String!
+    email: String
     role: UserRole!
     firstname: String
     lastname: String
@@ -21,6 +22,7 @@ input UpdateUserInput {
     firstname: String!
     lastname:String!
     language: Language
+    email: String
 }
 
 input AddDeviceTokenInput {

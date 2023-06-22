@@ -15,6 +15,7 @@ public record UserSchema(
     String firstname,
     String lastname,
     String phone,
+    String email,
     UserRole role,
     Language language,
     Boolean deactivated,
@@ -27,6 +28,7 @@ public record UserSchema(
             .id(userEntity.getId())
             .firstname(userEntity.getFirstname())
             .lastname(userEntity.getLastname())
+            .email(userEntity.getEmail())
             .phone(userEntity.getPhone())
             .role(userEntity.getUserRole())
             .language(Objects.requireNonNullElse(userEntity.getLanguage(), Language.KA))

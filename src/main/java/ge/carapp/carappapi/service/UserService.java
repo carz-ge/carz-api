@@ -3,6 +3,7 @@ package ge.carapp.carappapi.service;
 import ge.carapp.carappapi.core.Language;
 import ge.carapp.carappapi.entity.UserDeviceEntity;
 import ge.carapp.carappapi.entity.datacontainers.UserContainer;
+import ge.carapp.carappapi.exception.GeneralException;
 import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
 import ge.carapp.carappapi.schema.graphql.AddDeviceTokenInput;
 import ge.carapp.carappapi.schema.graphql.UpdateUserInput;
@@ -58,8 +59,15 @@ public class UserService {
             shouldUpdate = true;
             user.setLastname(input.lastname());
         }
+
+        if (!ObjectUtils.isEmpty(input.email())) {
+            shouldUpdate = true;
+            user.setEmail(input.email());
+        }
+
         if (!shouldUpdate) {
             // todo throw exception
+            throw new GeneralException("empty values to update");
         }
 
         user = userRepository.save(user);
