@@ -23,3 +23,12 @@ jobs:
               run: |
                   chmod +x ./gradlew
                   ./gradlew bootJar
+            -   name: Docker build
+                run: |
+                    docker build . -t carz-api
+#                    docker run --rm -it -e STAGE='test' -d -p 8080:8080 carz-api
+#
+#            -   name: Health check
+#                run: |
+#                    chmod +x scripts/health-check.sh
+#                    scripts/health-check.sh http://localhost:8080/actuator/health
