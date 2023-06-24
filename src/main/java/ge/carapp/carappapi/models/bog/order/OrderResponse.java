@@ -26,8 +26,6 @@ public record OrderResponse(
     String id,
 
     @JsonProperty("_links")
-    Map<String, Map<String, Map<String, String>>> links
-
-
+    OrderLinks links
 ) {
 }

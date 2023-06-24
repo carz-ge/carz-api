@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Set;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "MANAGER")
 public class ManagerEntity {
@@ -29,9 +31,11 @@ public class ManagerEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @ToString.Exclude
     @OneToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<ProviderEntity> provider;
 

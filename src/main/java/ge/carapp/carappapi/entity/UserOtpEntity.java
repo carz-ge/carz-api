@@ -16,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "USER_OTP")
 public class UserOtpEntity implements Serializable {
@@ -34,6 +36,7 @@ public class UserOtpEntity implements Serializable {
     private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private UserEntity user;
 
     @Enumerated(EnumType.STRING)

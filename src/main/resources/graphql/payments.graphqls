@@ -1,0 +1,31 @@
+input InitializePaymentInput {
+    idempotencyKey: String!
+    isAutomatic: Boolean!
+}
+
+input InitializePaymentWithSavedCardsInput {
+    idempotencyKey: String!
+    isAutomatic: Boolean!
+    orderId: ID!
+}
+
+type OrderProcessingResponse {
+    idempotencyKey: String!
+    orderId: String!,
+    redirectLink: String!
+
+}
+
+extend type Mutation {
+    initPayment(input: InitializePaymentInput!): OrderProcessingResponse!
+    createOrderBySavedCard(input: InitializePaymentWithSavedCardsInput!): OrderProcessingResponse!
+    saveCard(orderId: ID!): Boolean
+    removeCard(orderId: ID!): Boolean
+    confirmPreAuthorization(orderId: ID!): Boolean
+    rejectPreAuthorization(orderId: ID!): Boolean
+    refund(orderId: ID!, refundAmount: String!): Boolean
+}
+
+extend type Query {
+    getPaymentInfo(orderId: ID!): String
+}

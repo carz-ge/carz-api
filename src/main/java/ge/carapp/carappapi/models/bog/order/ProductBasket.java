@@ -1,10 +1,12 @@
 package ge.carapp.carappapi.models.bog.order;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
-public record ProductBucket(
+@Builder
+public record ProductBasket(
     @NotNull String productId,
-    @NotNull String unitPrice,
+    double unitPrice,
     int quantity,
     String description,
     String unitDiscountPrice,

@@ -31,6 +31,7 @@ type Query {
   listOrders: [Order!]!
   getOrder(id: ID!): Order!
   listOrdersByUserId(userId: ID!): [Order!]!
+  getPaymentInfo(orderId: ID!): String
   listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
   getProduct(productId: ID!): Product!
   listProducts: [Product!]!
@@ -59,6 +60,13 @@ type Mutation {
   sendPushNotification(input: PushNotificationInput!): Boolean
   sendSmsNotification(input: SmsNotification!): Boolean
   createOrder(order: OrderInput!): Order!
+  initPayment(input: InitializePaymentInput!): OrderProcessingResponse!
+  createOrderBySavedCard(input: InitializePaymentWithSavedCardsInput!): OrderProcessingResponse!
+  saveCard(orderId: ID!): Boolean
+  removeCard(orderId: ID!): Boolean
+  confirmPreAuthorization(orderId: ID!): Boolean
+  rejectPreAuthorization(orderId: ID!): Boolean
+  refund(orderId: ID!, refundAmount: String!): Boolean
   createProductDetails(input: ProductDetailsInput!): ProductDetails!
   updateProductDetails(productDetailsId: ID!, input: ProductDetailsInput!): ProductDetails!
   removeProductDetails(productDetailsId: ID!): Boolean!
@@ -251,6 +259,23 @@ input OrderedProductInput {
   schedulingTime: String
 }
 
+input InitializePaymentInput {
+  idempotencyKey: String!
+  isAutomatic: Boolean!
+}
+
+input InitializePaymentWithSavedCardsInput {
+  idempotencyKey: String!
+  isAutomatic: Boolean!
+  orderId: ID!
+}
+
+type OrderProcessingResponse {
+  idempotencyKey: String!
+  orderId: String!
+  redirectLink: String!
+}
+
 type ProductDetailsCarPrice {
   order: ID
   carType: CarType!
@@ -388,6 +413,7 @@ enum UserRole {
 type User {
   id: ID!
   phone: String!
+  email: String
   role: UserRole!
   firstname: String
   lastname: String
@@ -402,6 +428,7 @@ input UpdateUserInput {
   firstname: String!
   lastname: String!
   language: Language
+  email: String
 }
 
 input AddDeviceTokenInput {

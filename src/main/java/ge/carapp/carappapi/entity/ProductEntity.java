@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "PRODUCT")
 public class ProductEntity {
@@ -38,10 +40,12 @@ public class ProductEntity {
     @JoinColumn(name = "NAME_KA")
     private String nameKa;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID", nullable = false)
     private CategoryEntity category;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROVIDER_ID", nullable = false)
     private ProviderEntity provider;
@@ -69,6 +73,7 @@ public class ProductEntity {
     private int capacity;
 
 
+    @ToString.Exclude
     @OneToMany(cascade = CascadeType.ALL,
         orphanRemoval = true,
         fetch = FetchType.LAZY)

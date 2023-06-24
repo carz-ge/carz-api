@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "USER_DEVICE")
 public class UserDeviceEntity {
@@ -28,6 +30,7 @@ public class UserDeviceEntity {
     private UUID id;
 
 
+    @ToString.Exclude
     @ManyToOne
     private UserEntity user;
 

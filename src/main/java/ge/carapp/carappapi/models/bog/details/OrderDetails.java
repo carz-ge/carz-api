@@ -12,12 +12,12 @@ public record OrderDetails(
     Client client,
     OffsetDateTime createDate,
     OffsetDateTime expireDate,
-    OrderStatus orderStatus,
+    KeyValue orderStatus,
     PurchaseUnits purchaseUnits,
     RedirectLinks redirectLinks,
     PaymentDetail paymentDetail,
     String lang,
-    Object rejectReason) {
+    String rejectReason) {
 
 }
 

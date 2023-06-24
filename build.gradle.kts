@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    id("org.springframework.boot") version "3.1.0"
+    id("org.springframework.boot") version "3.1.1"
     id("io.spring.dependency-management") version "1.1.0"
     id("org.graalvm.buildtools.native") version "0.9.23"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
@@ -11,6 +11,9 @@ plugins {
     id("org.openapi.generator") version "6.6.0"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
+    kotlin("plugin.jpa") version "1.8.22"
+    kotlin("plugin.allopen") version "1.4.32"
+//    kotlin("kapt") version "1.4.32"
 }
 
 group = "ge.carapp"
@@ -23,6 +26,16 @@ configurations {
         extendsFrom(configurations.annotationProcessor.get())
     }
 }
+
+sourceSets.main {
+    java.srcDirs("src/main/java", "src/main/kotlin")
+}
+
+//configure<SourceSetContainer> {
+//    named("main") {
+//        java.srcDir("src/main/kotlin")
+//    }
+//}
 
 repositories {
     mavenCentral()
@@ -79,6 +92,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 //    implementation("org.springframework.cloud:spring-cloud-starter-gateway")
 //    implementation("org.springframework.integration:spring-integration-jdbc")
 //    implementation("org.springframework.integration:spring-integration-jpa")
@@ -125,15 +139,43 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+springBoot {
+    buildInfo()
+}
+
+graalvmNative {
+    toolchainDetection.set(true)
+    binaries {
+        named("main") {
+            javaLauncher.set(javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(17))
+                vendor.set(JvmVendorSpec.matching("Oracle Corporation"))
+            })
+        }
+    }
+}
+
+//graalvmNative {
+//    binaries {
+//        all {
+//            resources.autodetect()
+//        }
+//    }
+//}
+
+//nativeBuild {
+//    buildArgs('-H:ReflectionConfigurationFiles=../../../src/main/resources/reflection-config.json')
+//}
+
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-//tasks.test {
-//    outputs.dir(snippetsDir)
-//}
-//
-//tasks.asciidoctor {
-//    inputs.dir(snippetsDir)
-//    dependsOn(test)
-//}
+tasks.test {
+    project.property("snippetsDir")?.let { outputs.dir(it) }
+}
+
+tasks.asciidoctor {
+    project.property("snippetsDir")?.let { inputs.dir(it) }
+    dependsOn(tasks.test)
+}

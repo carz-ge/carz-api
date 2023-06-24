@@ -14,8 +14,10 @@ COPY src src
 RUN gradle bootJar -i --scan --stacktrace --no-daemon
 
 FROM amazoncorretto:17-alpine-jdk
-RUN mkdir $HOME/.postgresql
-RUN wget -O $HOME/.postgresql/root.crt 'https://cockroachlabs.cloud/clusters/b548e392-7d3c-45b4-8d87-2e7e69c9aa03/cert'
+
+COPY scripts/init.sh .
+RUN chmod +X init.sh && ./init.sh
+
 #ENV ARTIFACT_NAME=car-app-api-0.0.1-SNAPSHOT.jar
 ARG BUILD_DIR=/workspace/app/build
 COPY --from=build ${BUILD_DIR}/libs/ /app

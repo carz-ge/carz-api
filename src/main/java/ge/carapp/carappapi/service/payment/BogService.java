@@ -2,21 +2,26 @@ package ge.carapp.carappapi.service.payment;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import ge.carapp.carappapi.config.BogConfig;
 import ge.carapp.carappapi.core.Language;
+import ge.carapp.carappapi.exception.GeneralException;
 import ge.carapp.carappapi.models.bog.AuthenticationResponse;
 import ge.carapp.carappapi.models.bog.details.OrderDetails;
 import ge.carapp.carappapi.models.bog.order.OrderRequest;
 import ge.carapp.carappapi.models.bog.order.OrderResponse;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -26,6 +31,7 @@ import java.util.UUID;
 // Docs: https://api.bog.ge/docs/en/payments/introduction
 
 @Service
+@Slf4j
 public class BogService {
     private final BogConfig config;
 
@@ -40,45 +46,67 @@ public class BogService {
         this.client = config.bogApiClient();
     }
 
+    @org.jetbrains.annotations.NotNull
+    private static <T> Mono<T> handleResponse(WebClient.ResponseSpec retrieve, Class<T> responseClass) {
+        return retrieve
+            .toEntity(responseClass)
+            .log()
+            .doOnError(e -> {
+                log.info("handleResponse On Error: {}", e.getMessage());
+                if (e instanceof WebClientResponseException err) {
+                    String errorBody = err.getResponseBodyAsString();
+                    log.error("Request error message: %s".formatted(errorBody), err);
+                }
+            })
+            .mapNotNull(HttpEntity::getBody);
+    }
 
-    private Mono<AuthenticationResponse> authenticate() {
-        return client
+    public Mono<AuthenticationResponse> authenticate() {
+        WebClient.ResponseSpec retrieve = client
             .post()
             .uri(config.getAuthUrl())
             .header(HttpHeaders.AUTHORIZATION, "Basic " + config.getSecret())
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .bodyValue("grant_type=client_credentials")
             .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .bodyToMono(AuthenticationResponse.class);
+            .retrieve();
+        return handleResponse(retrieve, AuthenticationResponse.class);
     }
 
 
-    private Mono<OrderResponse> createOrder(@NotNull OrderRequest order, Language language, String token) {
+    public Mono<OrderResponse> createOrder(@NotNull OrderRequest order, Language language, String token) {
         Language lang = Objects.requireNonNullElse(language, Language.KA);
+        try {
+            String request = objectMapper.writeValueAsString(order);
+            log.info("Sending order request to bog: {}", request);
 
-        return client
-            .post()
-            .uri(config.getApiUrl() + "/ecommerce/orders")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.ACCEPT_LANGUAGE, lang.name().toLowerCase())
-            .accept(MediaType.APPLICATION_JSON)
-            .bodyValue(order)
-            .retrieve()
-            .bodyToMono(OrderResponse.class);
+            return handleResponse(client
+                    .post()
+                    .uri(config.getApiUrl() + "/ecommerce/orders")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, lang.name().toLowerCase())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .bodyValue(request)
+                    .retrieve()
+                , OrderResponse.class);
+        } catch (JsonProcessingException e) {
+            log.error("Could not convert order to json", e);
+            throw new GeneralException("could not process json for orders");
+        }
     }
 
-    private Mono<OrderDetails> retrieveOrderDetails(@NotNull UUID orderId, String token) {
-        return client
-            .get()
-            .uri(config.getApiUrl() + "/receipt/" + orderId)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .bodyToMono(OrderDetails.class);
+    public Mono<OrderDetails> retrieveOrderDetails(@NotNull UUID orderId, String token) {
+        return handleResponse(client
+                .get()
+                .uri(config.getApiUrl() + "/receipt/" + orderId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+            , OrderDetails.class);
     }
 
-    private Mono<Boolean> saveCardFromOrder(@NotNull UUID orderId, String token) {
+    public Mono<Boolean> saveCardFromOrder(@NotNull UUID orderId, String token) {
         return client
             .put()
             .uri(config.getApiUrl() + "/orders/" + orderId + "/cards")
@@ -89,7 +117,7 @@ public class BogService {
     }
 
     // TODo https://api.bog.ge/docs/en/payments/saved-card/recurrent-payment
-    private Mono<Boolean> saveCardFromOrderForAutomaticPayments(@NotNull UUID orderId, String token) {
+    public Mono<Boolean> saveCardFromOrderForAutomaticPayments(@NotNull UUID orderId, String token) {
         return client
             .put()
             .uri(config.getApiUrl() + "/orders/" + orderId + "/subscriptions")
@@ -99,7 +127,7 @@ public class BogService {
             );
     }
 
-    private Mono<Boolean> deleteSavedCard(@NotNull UUID orderId, String token) {
+    public Mono<Boolean> deleteSavedCard(@NotNull UUID orderId, String token) {
         return client
             .delete()
             .uri(config.getApiUrl() + "/charges/card/" + orderId)
@@ -109,23 +137,23 @@ public class BogService {
             );
     }
 
-    private Mono<OrderResponse> createOrderBySavedCard(@NotNull OrderRequest order, Language language,
-                                                       UUID orderId, String token) {
+    public Mono<OrderResponse> createOrderBySavedCard(@NotNull OrderRequest order, Language language,
+                                                      UUID orderId, String token) {
         Language lang = Objects.requireNonNullElse(language, Language.KA);
 
-        return client
-            .post()
-            .uri(config.getApiUrl() + "/ecommerce/orders/" + orderId)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .header(HttpHeaders.ACCEPT_LANGUAGE, lang.name().toLowerCase())
-            .accept(MediaType.APPLICATION_JSON)
-            .bodyValue(order)
-            .retrieve()
-            .bodyToMono(OrderResponse.class);
+        return handleResponse(client
+                .post()
+                .uri(config.getApiUrl() + "/ecommerce/orders/" + orderId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .header(HttpHeaders.ACCEPT_LANGUAGE, lang.name().toLowerCase())
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(order)
+                .retrieve()
+            , OrderResponse.class);
     }
 
-    private Mono<Boolean> confirmPreAuthorization(@NotNull UUID orderId, String token) {
+    public Mono<Boolean> confirmPreAuthorization(@NotNull UUID orderId, String token) {
         return client
             .put()
             .uri(config.getApiUrl() + "/payment/authorization/approve/" + orderId)
@@ -135,7 +163,7 @@ public class BogService {
             );
     }
 
-    private Mono<Boolean> rejectPreAuthorization(@NotNull UUID orderId, String token) {
+    public Mono<Boolean> rejectPreAuthorization(@NotNull UUID orderId, String token) {
         return client
             .post()
             .uri(config.getApiUrl() + "/payment/authorization/cancel/" + orderId)
@@ -146,7 +174,7 @@ public class BogService {
             );
     }
 
-    private Mono<Boolean> refund(@NotNull UUID orderId, String refundAmount, String token) {
+    public Mono<Boolean> refund(@NotNull UUID orderId, String refundAmount, String token) {
         return client
             .post()
             .uri(config.getApiUrl() + "/payment/refund/" + orderId)
@@ -157,5 +185,7 @@ public class BogService {
                 r -> Mono.just(HttpStatus.ACCEPTED.equals(r.statusCode()))
             );
     }
+
+
 }
 

@@ -3,12 +3,14 @@ package ge.carapp.carappapi.models.bog.order;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 import java.util.List;
 
+@Builder
 public record PurchaseInfo(
-    @NotNull String totalAmount,
-    @NotEmpty List<ProductBucket> bucket,
+    double totalAmount,
+    @NotEmpty List<ProductBasket> basket,
 
     String totalDiscountAmount,
     Delivery delivery,

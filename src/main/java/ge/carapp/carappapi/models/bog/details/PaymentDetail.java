@@ -1,7 +1,7 @@
 package ge.carapp.carappapi.models.bog.details;
 
 public record PaymentDetail(
-    OrderStatus transferMethod,
+    KeyValue transferMethod,
     String transactionID,
     String payerIdentifier,
     String paymentOption,

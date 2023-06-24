@@ -1,6 +1,6 @@
 package ge.carapp.carappapi.models.bog.details;
 
-public record OrderStatus(
+public record KeyValue(
     String key,
     String value
 ) {
