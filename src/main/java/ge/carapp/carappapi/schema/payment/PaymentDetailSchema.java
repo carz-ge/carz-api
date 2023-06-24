@@ -1,7 +1,11 @@
 package ge.carapp.carappapi.schema.payment;
 
+import ge.carapp.carappapi.models.bog.details.KeyValue;
 import ge.carapp.carappapi.models.bog.details.PaymentDetail;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
+
+import java.util.Objects;
 
 @Builder
 public record PaymentDetailSchema(
@@ -11,9 +15,12 @@ public record PaymentDetailSchema(
     String paymentOption,
     String cardType,
     String cardExpiryDate) {
-    public static PaymentDetailSchema from(PaymentDetail paymentDetail) {
+    public static PaymentDetailSchema from(@NotNull PaymentDetail paymentDetail) {
+        KeyValue keyValue = paymentDetail.transferMethod();
+        KeyValueSchema transferMethod = Objects.nonNull(keyValue) ? new KeyValueSchema(keyValue.key(),
+            keyValue.value()) : null;
         return PaymentDetailSchema.builder()
-            .transferMethod(new KeyValueSchema(paymentDetail.transferMethod().key(), paymentDetail.transferMethod().key()))
+            .transferMethod(transferMethod)
             .transactionID(paymentDetail.transactionID())
             .payerIdentifier(paymentDetail.payerIdentifier())
             .paymentOption(paymentDetail.paymentOption())
