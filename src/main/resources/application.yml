@@ -101,3 +101,6 @@ car-app:
 firebase:
     usersAppConfig: firebase-service-account.json
     managersAppConfig: firebase-service-account.json
+
+discord:
+    api: ${DISCORD_API:https://discord.com/api/webhooks/1122422074758144101/CKLoNFqafz1Yh23SyBybo4-zthBowjXwYoALo3ubj6wwQR-uAozX1jm9rkvtp25GU5oL}

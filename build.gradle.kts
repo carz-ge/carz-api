@@ -14,6 +14,8 @@ plugins {
     kotlin("plugin.jpa") version "1.8.22"
     kotlin("plugin.allopen") version "1.4.32"
 //    kotlin("kapt") version "1.4.32"
+
+    id("se.solrike.sonarlint") version "1.0.0-beta.15"
 }
 
 group = "ge.carapp"

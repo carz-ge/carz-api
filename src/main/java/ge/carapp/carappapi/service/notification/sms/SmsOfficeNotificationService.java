@@ -19,7 +19,6 @@ public class SmsOfficeNotificationService implements SmsNotificationService {
         this.client = WebClient.create(smsConfig.getApiUrl());
     }
 
-    //6f5fc7ba49344723b22e3e52e1aea302
     public boolean sendSms(String phone, String message) {
         log.info("sending otp notification to {}, otp {}", phone, message);
         String query = "key=%s&destination=%s&sender=%s&content=%s"
