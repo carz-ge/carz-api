@@ -21,7 +21,7 @@ public record PaymentDetailSchema(
             keyValue.value()) : null;
         return PaymentDetailSchema.builder()
             .transferMethod(transferMethod)
-            .transactionID(paymentDetail.transactionID())
+            .transactionID(paymentDetail.transactionId())
             .payerIdentifier(paymentDetail.payerIdentifier())
             .paymentOption(paymentDetail.paymentOption())
             .cardType(paymentDetail.cardType())

@@ -10,8 +10,11 @@ import java.util.List;
 public record OrderRequest(
     @JsonProperty("callback_url")
     @NotNull String callbackUrl,
+    @JsonProperty("purchase_units")
     @NotNull PurchaseInfo purchaseUnits,
+    @JsonProperty("external_order_id")
     String externalOrderId,
+    @JsonProperty("redirect_urls")
 
     RedirectUrls redirectUrls,
 
@@ -19,6 +22,7 @@ public record OrderRequest(
 
     String capture, //  "automatic" | "manual"
     Integer ttl,
+    @JsonProperty("payment_method")
     List<String> paymentMethod // google_pay, bog_p2p, bog_loyalty, bnpl, bog_loan
 //    PaymentConfiguration config // we dont need this
 ) {

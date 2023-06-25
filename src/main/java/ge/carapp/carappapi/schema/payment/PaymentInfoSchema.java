@@ -11,10 +11,10 @@ import java.util.UUID;
 
 @Builder
 public record PaymentInfoSchema(
-    UUID orderID,
+    UUID orderId,
     String industry,
     String capture,
-    String externalOrderID,
+    String externalOrderId,
     PaymentClientSchema client,
     OffsetDateTime createDate,
     OffsetDateTime expireDate,
@@ -30,10 +30,10 @@ public record PaymentInfoSchema(
         KeyValueSchema convertedOrderStatus = Objects.nonNull(keyValue) ? new KeyValueSchema(keyValue.key(),
             keyValue.value()) : null;
         return PaymentInfoSchema.builder()
-            .orderID(orderDetails.orderID())
+            .orderId(orderDetails.orderId())
             .industry(orderDetails.industry())
             .capture(orderDetails.capture())
-            .externalOrderID(orderDetails.externalOrderID())
+            .externalOrderId(orderDetails.externalOrderId())
             .client(Objects.nonNull(orderDetails.client()) ? PaymentClientSchema.from(orderDetails.client()) : null)
             .createDate(orderDetails.createDate())
             .expireDate(orderDetails.expireDate())

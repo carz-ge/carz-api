@@ -12,7 +12,7 @@ public record BogItemSchema(
 ) {
     public static BogItemSchema from(Item item) {
         return BogItemSchema.builder()
-            .externalItemID(item.externalItemID())
+            .externalItemID(item.externalItemId())
             .description(item.description())
             .quantity(item.quantity())
             .unitPrice(item.unitPrice())
