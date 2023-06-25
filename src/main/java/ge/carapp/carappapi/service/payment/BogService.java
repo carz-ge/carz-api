@@ -90,16 +90,16 @@ public class BogService {
             String request = objectMapper.writeValueAsString(order);
             log.info("Sending order request to bog: {}", request);
 
-        return handleResponse(client
-                .post()
-                .uri(config.getApiUrl() + "/ecommerce/orders/" + orderId)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.ACCEPT_LANGUAGE, lang.name().toLowerCase())
-                .accept(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .retrieve()
-            , OrderResponse.class);
+            return handleResponse(client
+                    .post()
+                    .uri(config.getApiUrl() + "/ecommerce/orders/" + orderId)
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .header(HttpHeaders.ACCEPT_LANGUAGE, lang.name().toLowerCase())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .bodyValue(request)
+                    .retrieve()
+                , OrderResponse.class);
         } catch (JsonProcessingException e) {
             log.error("Could not convert order to json", e);
             throw new GeneralException("could not process json for orders");
@@ -171,13 +171,18 @@ public class BogService {
 
     public Mono<Boolean> confirmPreAuthorization(@NotNull UUID orderId, @NotNull String token,
                                                  OnHoldAmount onHoldAmount) {
-        return handleAcceptStatusResponse(client
+        WebClient.RequestBodySpec requestBodySpec = client
             .post()
             .uri(config.getApiUrl() + "/payment/authorization/approve/" + orderId)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(onHoldAmount)
-        );
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+
+        if (Objects.nonNull(onHoldAmount)) {
+            return handleAcceptStatusResponse(requestBodySpec
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(onHoldAmount));
+        }
+
+        return handleAcceptStatusResponse(requestBodySpec);
     }
 
     public Mono<Boolean> rejectPreAuthorization(@NotNull UUID orderId, @NotNull String token) {
