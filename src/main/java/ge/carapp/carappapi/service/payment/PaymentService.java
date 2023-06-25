@@ -4,6 +4,7 @@ import ge.carapp.carappapi.config.ProfileConfig;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.models.bog.AuthenticationResponse;
 import ge.carapp.carappapi.models.bog.order.Buyer;
+import ge.carapp.carappapi.models.bog.order.OnHoldAmount;
 import ge.carapp.carappapi.models.bog.order.OrderRequest;
 import ge.carapp.carappapi.models.bog.order.OrderResponse;
 import ge.carapp.carappapi.models.bog.order.ProductBasket;
@@ -12,6 +13,7 @@ import ge.carapp.carappapi.models.bog.order.RedirectUrls;
 import ge.carapp.carappapi.schema.Currency;
 import ge.carapp.carappapi.schema.graphql.InitializePaymentInput;
 import ge.carapp.carappapi.schema.graphql.InitializePaymentWithSavedCardsInput;
+import ge.carapp.carappapi.schema.graphql.PaymentConfirmDetailsInput;
 import ge.carapp.carappapi.schema.payment.OrderProcessingResponse;
 import ge.carapp.carappapi.schema.payment.PaymentInfoSchema;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -36,39 +39,7 @@ public class PaymentService {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
         String orderId = input.getIdempotencyKey();
 
-        Buyer buyer = Buyer.builder()
-            .fullName("სატესტო სახელი და გვარი")
-            .build();
-
-        List<ProductBasket> productBaskets = List.of(
-            ProductBasket.builder()
-                .productId("product123")
-                .quantity(1)
-                .unitPrice(input.getUnitPrice())
-                .description("სატესტო აღწერა")
-                .build()
-        );
-
-        PurchaseInfo purchaseInfo = PurchaseInfo.builder()
-            .totalAmount(input.getTotalAmount())
-            .basket(productBaskets)
-            .currency(Currency.GEL.name())
-            .build();
-
-        RedirectUrls redirectUrls = RedirectUrls.builder()
-            .success("https://api2.carz.ge/payment/redirect/%s/success".formatted(orderId))
-            .fail("https://api2.carz.ge/payment/redirect/%s/reject".formatted(orderId))
-            .build();
-
-        var order = OrderRequest.builder()
-            .callbackUrl("https://api2.carz.ge/payment/%s".formatted(orderId))
-            .externalOrderId(orderId)
-            .capture(input.isAutomatic() ? "automatic" : "manual")
-            .buyer(buyer)
-            .purchaseUnits(purchaseInfo)
-            .redirectUrls(redirectUrls)
-            .ttl(600) // 10 min
-            .build();
+        OrderRequest order = getOrderRequest(input.getUnitPrice(), input.getTotalAmount(), orderId, input.isAutomatic());
 
         Mono<String> authToken = authentication.mapNotNull(AuthenticationResponse::accessToken);
 
@@ -97,11 +68,8 @@ public class PaymentService {
             });
     }
 
-
-    public Mono<OrderProcessingResponse> createOrderBySavedCard(@NotNull UserEntity user, @NotNull InitializePaymentWithSavedCardsInput input) {
-        Mono<AuthenticationResponse> authentication = bogService.authenticate();
-        String orderId = input.getIdempotencyKey();
-
+    private static OrderRequest getOrderRequest(double unitPrice, double totalAmount, String orderId,
+                                                boolean isAutomatic) {
         Buyer buyer = Buyer.builder()
             .fullName("სატესტო სახელი და გვარი")
             .build();
@@ -110,13 +78,13 @@ public class PaymentService {
             ProductBasket.builder()
                 .productId("product123")
                 .quantity(1)
-                .unitPrice(input.getUnitPrice())
+                .unitPrice(unitPrice)
                 .description("სატესტო აღწერა")
                 .build()
         );
 
         PurchaseInfo purchaseInfo = PurchaseInfo.builder()
-            .totalAmount(input.getTotalAmount())
+            .totalAmount(totalAmount)
             .basket(productBaskets)
             .currency(Currency.GEL.name())
             .build();
@@ -126,15 +94,23 @@ public class PaymentService {
             .fail("https://api2.carz.ge/payment/redirect/%s/reject".formatted(orderId))
             .build();
 
-        var order = OrderRequest.builder()
+        return OrderRequest.builder()
             .callbackUrl("https://api2.carz.ge/payment/%s".formatted(orderId))
             .externalOrderId(orderId)
-            .capture(input.isAutomatic() ? "automatic" : "manual")
+            .capture(isAutomatic ? "automatic" : "manual")
             .buyer(buyer)
             .purchaseUnits(purchaseInfo)
             .redirectUrls(redirectUrls)
             .ttl(600) // 10 min
             .build();
+    }
+
+
+    public Mono<OrderProcessingResponse> createOrderBySavedCard(@NotNull UserEntity user, @NotNull InitializePaymentWithSavedCardsInput input) {
+        Mono<AuthenticationResponse> authentication = bogService.authenticate();
+        String orderId = input.getIdempotencyKey();
+
+        OrderRequest order = getOrderRequest(input.getUnitPrice(), input.getTotalAmount(), orderId, input.isAutomatic());
 
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.createOrderBySavedCard(order, user.getLanguage(), input.getOrderId(), token))
@@ -181,10 +157,18 @@ public class PaymentService {
     }
 
     @NotNull
-    public Mono<Boolean> confirmPreAuthorization(@Nullable UserEntity user, @NotNull UUID orderId) {
+    public Mono<Boolean> confirmPreAuthorization(@Nullable UserEntity user, @NotNull UUID orderId,
+                                                 PaymentConfirmDetailsInput detailsInput) {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
+
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
-            .flatMap(token -> bogService.confirmPreAuthorization(orderId, token))
+            .flatMap(token -> {
+                OnHoldAmount onHoldAmount = null;
+                if (Objects.nonNull(detailsInput)) {
+                    onHoldAmount = new OnHoldAmount(detailsInput.getAmount(), detailsInput.getDescription());
+                }
+                return bogService.confirmPreAuthorization(orderId, token, onHoldAmount);
+            })
             .log()
             .doOnError(e -> log.error("error occurred after confirm PreAuthorization", e));
 

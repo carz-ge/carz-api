@@ -1,8 +1,8 @@
 package ge.carapp.carappapi.controller.admin
 
-import ge.carapp.carappapi.schema.payment.OrderProcessingResponse
 import ge.carapp.carappapi.schema.graphql.InitializePaymentInput
 import ge.carapp.carappapi.schema.graphql.InitializePaymentWithSavedCardsInput
+import ge.carapp.carappapi.schema.payment.OrderProcessingResponse
 import ge.carapp.carappapi.schema.payment.PaymentInfoSchema
 import ge.carapp.carappapi.security.AuthenticatedUserProvider
 import ge.carapp.carappapi.service.payment.PaymentService
@@ -65,7 +65,7 @@ class PaymentController(val paymentService: PaymentService) {
     suspend fun confirmPreAuthorization(@Argument orderId: UUID): Mono<Boolean> {
         val authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser()
         logger.info { "Authenticated User: $authenticatedUser, input: $orderId" }
-        return paymentService.confirmPreAuthorization(authenticatedUser, orderId)
+        return paymentService.confirmPreAuthorization(authenticatedUser, orderId, null)
     }
 
     @MutationMapping
