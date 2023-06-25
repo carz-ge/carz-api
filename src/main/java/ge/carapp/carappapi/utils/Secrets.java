@@ -3,8 +3,12 @@ package ge.carapp.carappapi.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 
+import java.security.SecureRandom;
+
 @Slf4j
 public class Secrets {
+    private static final SecureRandom random = new SecureRandom();
+
 
     public static String base64(String username, String password) {
         String secret = "%s:%s".formatted(username, password);
@@ -33,4 +37,16 @@ public class Secrets {
         }
         return new String(hexChars);
     }
+
+    public static String generateNumericToken(int tokenLength) {
+        StringBuilder sb = new StringBuilder(tokenLength);
+
+        for (int i = 0; i < tokenLength; i++) {
+            int randomInt = random.nextInt(10);
+            sb.append(randomInt);
+        }
+
+        return sb.toString();
+    }
+
 }

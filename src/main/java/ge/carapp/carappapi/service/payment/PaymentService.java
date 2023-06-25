@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.service.payment;
 
+import ge.carapp.carappapi.config.ProfileConfig;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.models.bog.AuthenticationResponse;
 import ge.carapp.carappapi.models.bog.order.Buyer;
@@ -26,6 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class PaymentService {
+    private final ProfileConfig profileConfig;
     private final BogService bogService;
 
 
@@ -53,8 +55,8 @@ public class PaymentService {
             .build();
 
         RedirectUrls redirectUrls = RedirectUrls.builder()
-            .success("https://api2.carz.ge/payment/redirect/%s/reject".formatted(orderId))
-            .fail("https://api2.carz.ge/payment/redirect/%s/success".formatted(orderId))
+            .success("https://api2.carz.ge/payment/redirect/%s/success".formatted(orderId))
+            .fail("https://api2.carz.ge/payment/redirect/%s/reject".formatted(orderId))
             .build();
 
         var order = OrderRequest.builder()
@@ -107,8 +109,8 @@ public class PaymentService {
             .build();
 
         RedirectUrls redirectUrls = RedirectUrls.builder()
-            .success("https://api2.carz.ge/payment/redirect/%s/reject".formatted(orderId))
-            .fail("https://api2.carz.ge/payment/redirect/%s/success".formatted(orderId))
+            .success("https://api2.carz.ge/payment/redirect/%s/success".formatted(orderId))
+            .fail("https://api2.carz.ge/payment/redirect/%s/reject".formatted(orderId))
             .build();
 
         var order = OrderRequest.builder()

@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.controller
+package ge.carapp.carappapi.controller.admin
 
 import ge.carapp.carappapi.schema.payment.OrderProcessingResponse
 import ge.carapp.carappapi.schema.graphql.InitializePaymentInput

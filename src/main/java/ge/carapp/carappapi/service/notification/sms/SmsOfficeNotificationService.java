@@ -2,13 +2,15 @@ package ge.carapp.carappapi.service.notification.sms;
 
 import ge.carapp.carappapi.config.SmsConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
 
-//@Service("smsoffice")
+@Service("smsoffice")
 @Slf4j
+@Profile("prod")
 public class SmsOfficeNotificationService implements SmsNotificationService {
 
     private final SmsConfig smsConfig;

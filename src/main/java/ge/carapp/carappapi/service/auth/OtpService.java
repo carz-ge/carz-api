@@ -1,6 +1,7 @@
 package ge.carapp.carappapi.service.auth;
 
 import ge.carapp.carappapi.core.DoubleTuple;
+import ge.carapp.carappapi.core.otp.OtpGeneratorAdapter;
 import ge.carapp.carappapi.entity.OtpStatus;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.entity.UserOtpEntity;
@@ -11,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -27,7 +27,6 @@ public class OtpService {
     private static final int OTP_EXPIRATION_TIME_MINUTES = 5;
     private static final int OTP_VERIFICATION_ATTEMPTS = 3;
 
-    private static final SecureRandom random = new SecureRandom();
 
     private static final List<OtpStatus> INVALID_OTP_VERIFICATION_STATUSES = List.of(
         OtpStatus.EXPIRED,
@@ -35,7 +34,7 @@ public class OtpService {
         OtpStatus.EXCEEDED_ATTEMPTS
     );
 
-
+    private final OtpGeneratorAdapter otpGeneratorAdapter;
     private final OtpRepository otpRepository;
     private final NotificationService notificationService;
 
@@ -73,7 +72,7 @@ public class OtpService {
 
         userOtp.setOtpStatus(OtpStatus.SENT);
         var notificationResult = notificationService.sendSmsNotification(user.getPhone(),
-            "SMS Code - %s".formatted(otp)
+            "SMS Code: %s".formatted(otp)
         );
         if (!notificationResult) {
             log.error("OTP send to user: {} failed", user.getId());
@@ -86,12 +85,7 @@ public class OtpService {
     }
 
     private String generateOtpBasedOnUserPhone(String phone) {
-        // special user
-//        if (phone.equals("+995551553907")) {
-        return "123456";
-//        }
-
-//        return generateOtp();
+        return otpGeneratorAdapter.generate(phone, OTP_LENGTH);
     }
 
 
@@ -138,16 +132,6 @@ public class OtpService {
         return true;
     }
 
-    private static String generateOtp() {
-        StringBuilder sb = new StringBuilder(OTP_LENGTH);
-
-        for (int i = 0; i < OTP_LENGTH; i++) {
-            int randomInt = random.nextInt(10);
-            sb.append(randomInt);
-        }
-
-        return sb.toString();
-    }
 
     private static String hashOtp(String otp) {
         return DigestUtils.sha256Hex(otp);

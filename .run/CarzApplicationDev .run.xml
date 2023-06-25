@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="CarAppApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+  <configuration default="false" name="CarzApplicationDev " type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="car-app-api.main" />
     <selectedOptions>
       <option name="environmentVariables" />

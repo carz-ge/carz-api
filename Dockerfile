@@ -22,6 +22,7 @@ RUN chmod +x init.sh && ./init.sh
 ARG BUILD_DIR=/workspace/app/build
 COPY --from=build ${BUILD_DIR}/libs/ /app
 EXPOSE 8080
+ENV SPRING_PROFILES_ACTIVE=dev
 ENTRYPOINT ["java","-jar","/app/car-app-api-0.0.1.jar"]
 #ENTRYPOINT exec java -jar ${ARTIFACT_NAME}
 

@@ -1,0 +1,108 @@
+debug: true
+spring:
+    #  main:
+    #      web-application-type: reactive
+    http:
+        log-request-details: true
+    datasource:
+        #    driver-class-name: "com.mysql.cj.jdbc.Driver"
+        url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/carapp_db}
+        username: ${SPRING_DATASOURCE_USERNAME:carapp_super_user}
+        password: ${SPRING_DATASOURCE_PASSWORD:test_db_password}
+    #    hikari:
+    #      maximum-pool-size: 1 #maximum pool size
+    #      connection-timeout: 10000 #maximum number of milliseconds that a client will wait for a connection
+    #      max-lifetime: 30000 #maximum idle time for connection
+    #      connection-test-query: select 1
+    jpa:
+        show-sql: false
+        hibernate:
+            ddl-auto: 'update'
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+#                default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
+
+    graphql:
+        path: "/graphql"
+        schema:
+            introspection:
+                enabled: true
+            printer:
+                enabled: true
+            file-extensions:
+                - ".graphqls"
+                - ".gqls"
+        #        - ".graphql"
+        graphiql:
+            enabled: true
+            path: "/graphiql"
+    #    websocket:
+    #        path: "/graphql"
+    security:
+        user:
+            password: qweasd
+
+    docker:
+        compose:
+            file: "./docker-compose.yml"
+jwt:
+    secret: ${JWT_SECRET:"655368566D597133743677397A244326452948404D635166546A576E5A723475"}
+    issuer: "carapp"
+    expirationMinutes: 1440 # 1 DAY
+    refreshExpirationMonth: 3
+
+server:
+    #  servlet:
+    #    context-path: /tech
+    port: ${PORT:8080}
+    shutdown: GRACEFUL
+
+logging:
+    level:
+        web: DEBUG
+        org:
+            springframework:
+                data:
+                    r2dbc: DEBUG
+                web:
+                    reactive:
+                        function:
+                            client:
+                                ExchangeFunctions: TRACE
+
+app:
+    appApi: ${APP_API_URL:http://localhost:8080}
+
+aws:
+    accessKeyId: ${AWS_ACCESS_KEY_ID:123}
+    secretAccessKey: ${AWS_SECRET_ACCESS_KEY:123}
+
+aws-s3:
+    region: ${AWS_REGION:eu-west-1}
+    mediaFilesBucket: ${AWS_IMAGES_BUCKET:carzimagetransformations-carzcloudfronts3s3bucket-1dpudwyqq62q1}
+    cloudfrontDistribution: ${AWS_CLOUDFRONT:d12stuyxx450kv.cloudfront.net}
+
+sms:
+    apiUrl: https://smsoffice.ge/api/v2/send
+    title: Carz
+    apiKey: 6f5fc7ba49344723b22e3e52e1aea302
+
+bog:
+    authUrl: https://oauth2.bog.ge/auth/realms/bog/protocol/openid-connect/token
+    apiUrl: https://api.bog.ge/payments/v1
+    secret: ${BOG_SECRET:NzU5Nzg6U2g4OVRLUWo1V2tO}
+
+open-ai:
+    key: ${OPENAI_KEY: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}
+    url: https://api.openai.com
+
+car-app:
+    origins: https://api.liquidibrium.me, http://localhost:8080, https://car-app-api.up.railway.app/
+
+firebase:
+    usersAppConfig: firebase-service-account.json
+    managersAppConfig: firebase-service-account.json
+
+discord:
+    api: ${DISCORD_API:https://discord.com/api/webhooks/1122422074758144101/CKLoNFqafz1Yh23SyBybo4-zthBowjXwYoALo3ubj6wwQR-uAozX1jm9rkvtp25GU5oL}

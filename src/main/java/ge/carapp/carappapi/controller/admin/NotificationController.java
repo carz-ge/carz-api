@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.controller;
+package ge.carapp.carappapi.controller.admin;
 
 import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
 import ge.carapp.carappapi.schema.graphql.PushNotificationInput;
