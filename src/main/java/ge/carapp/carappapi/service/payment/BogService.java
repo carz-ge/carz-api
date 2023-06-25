@@ -112,7 +112,15 @@ public class BogService {
             .uri(config.getApiUrl() + "/orders/" + orderId + "/cards")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .exchangeToMono(
-                r -> Mono.just(HttpStatus.ACCEPTED.equals(r.statusCode()))
+                r -> {
+                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
+                        return Mono.just(true);
+                    }
+
+                    return r.bodyToMono(String.class)
+                        .log()
+                        .map(e -> false);
+                }
             )
             .log()
             .doOnError(e -> {
@@ -132,7 +140,15 @@ public class BogService {
             .uri(config.getApiUrl() + "/orders/" + orderId + "/subscriptions")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .exchangeToMono(
-                r -> Mono.just(HttpStatus.ACCEPTED.equals(r.statusCode()))
+                r -> {
+                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
+                        return Mono.just(true);
+                    }
+
+                    return r.bodyToMono(String.class)
+                        .log()
+                        .map(e -> false);
+                }
             );
     }
 
@@ -142,7 +158,15 @@ public class BogService {
             .uri(config.getApiUrl() + "/charges/card/" + orderId)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .exchangeToMono(
-                r -> Mono.just(HttpStatus.ACCEPTED.equals(r.statusCode()))
+                r -> {
+                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
+                        return Mono.just(true);
+                    }
+
+                    return r.bodyToMono(String.class)
+                        .log()
+                        .map(e -> false);
+                }
             )
             .log()
             .doOnError(e -> {
@@ -176,7 +200,15 @@ public class BogService {
             .uri(config.getApiUrl() + "/payment/authorization/approve/" + orderId)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .exchangeToMono(
-                r -> Mono.just(HttpStatus.ACCEPTED.equals(r.statusCode()))
+                r -> {
+                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
+                        return Mono.just(true);
+                    }
+
+                    return r.bodyToMono(String.class)
+                        .log()
+                        .map(e -> false);
+                }
             )
             .log()
             .doOnError(e -> {
@@ -195,7 +227,15 @@ public class BogService {
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .exchangeToMono(
-                r -> Mono.just(HttpStatus.ACCEPTED.equals(r.statusCode()))
+                r -> {
+                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
+                        return Mono.just(true);
+                    }
+
+                    return r.bodyToMono(String.class)
+                        .log()
+                        .map(e -> false);
+                }
             )
             .log()
             .doOnError(e -> {
@@ -207,7 +247,7 @@ public class BogService {
             });
     }
 
-    public Mono   <Boolean> refund(@NotNull UUID orderId, String refundAmount, String token) {
+    public Mono<Boolean> refund(@NotNull UUID orderId, String refundAmount, String token) {
         return client
             .post()
             .uri(config.getApiUrl() + "/payment/refund/" + orderId)
@@ -215,7 +255,15 @@ public class BogService {
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .bodyValue(Map.of("amount", refundAmount))
             .exchangeToMono(
-                r -> Mono.just(HttpStatus.ACCEPTED.equals(r.statusCode()))
+                r -> {
+                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
+                        return Mono.just(true);
+                    }
+
+                    return r.bodyToMono(String.class)
+                        .log()
+                        .map(e -> false);
+                }
             )
             .log()
             .doOnError(e -> {
