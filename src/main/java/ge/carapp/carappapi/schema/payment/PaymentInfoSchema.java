@@ -5,7 +5,6 @@ import ge.carapp.carappapi.models.bog.details.OrderDetails;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
-import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -16,8 +15,8 @@ public record PaymentInfoSchema(
     String capture,
     String externalOrderId,
     PaymentClientSchema client,
-    OffsetDateTime createDate,
-    OffsetDateTime expireDate,
+    String createDate,
+    String expireDate,
     KeyValueSchema orderStatus,
     PurchaseUnitsSchema purchaseUnits,
     RedirectLinksSchema redirectLinks,

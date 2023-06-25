@@ -3,7 +3,6 @@ package ge.carapp.carappapi.models.bog.details;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public record OrderDetails(
@@ -15,9 +14,9 @@ public record OrderDetails(
     String externalOrderId,
     Client client,
     @JsonProperty("create_date")
-    OffsetDateTime createDate,
+    String createDate,
     @JsonProperty("expire_date")
-    OffsetDateTime expireDate,
+    String expireDate,
     @JsonProperty("order_status")
     KeyValue orderStatus,
     @JsonProperty("purchase_units")
