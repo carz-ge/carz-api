@@ -61,6 +61,30 @@ public class BogService {
             .mapNotNull(HttpEntity::getBody);
     }
 
+    @org.jetbrains.annotations.NotNull
+    private static Mono<Boolean> handleAcceptStatusResponse(WebClient.RequestBodySpec req) {
+        return req
+            .exchangeToMono(
+                r -> {
+                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
+                        return Mono.just(true);
+                    }
+
+                    return r.bodyToMono(String.class)
+                        .log()
+                        .map(e -> false);
+                }
+            )
+            .log()
+            .doOnError(e -> {
+                log.info("handleResponse On Error: {}", e.getMessage());
+                if (e instanceof WebClientResponseException err) {
+                    String errorBody = err.getResponseBodyAsString();
+                    log.error("Request error message: %s".formatted(errorBody), err);
+                }
+            });
+    }
+
     public Mono<AuthenticationResponse> authenticate() {
         WebClient.ResponseSpec retrieve = client
             .post()
@@ -107,30 +131,10 @@ public class BogService {
     }
 
     public Mono<Boolean> saveCardFromOrder(@NotNull UUID orderId, String token) {
-        return client
+        return handleAcceptStatusResponse(client
             .put()
             .uri(config.getApiUrl() + "/orders/" + orderId + "/cards")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .exchangeToMono(
-                r -> {
-                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
-                        return Mono.just(true);
-                    }
-
-                    return r.bodyToMono(String.class)
-                        .log()
-                        .map(e -> false);
-                }
-            )
-            .log()
-            .doOnError(e -> {
-                log.info("handleResponse On Error: {}", e.getMessage());
-                if (e instanceof WebClientResponseException err) {
-                    String errorBody = err.getResponseBodyAsString();
-                    log.error("Request error message: %s".formatted(errorBody), err);
-                }
-            })
-            ;
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
     }
 
     // TODo https://api.bog.ge/docs/en/payments/saved-card/recurrent-payment
@@ -195,57 +199,21 @@ public class BogService {
     }
 
     public Mono<Boolean> confirmPreAuthorization(@NotNull UUID orderId, String token) {
-        return client
+        return handleAcceptStatusResponse(client
             .put()
             .uri(config.getApiUrl() + "/payment/authorization/approve/" + orderId)
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .exchangeToMono(
-                r -> {
-                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
-                        return Mono.just(true);
-                    }
-
-                    return r.bodyToMono(String.class)
-                        .log()
-                        .map(e -> false);
-                }
-            )
-            .log()
-            .doOnError(e -> {
-                log.info("handleResponse On Error: {}", e.getMessage());
-                if (e instanceof WebClientResponseException err) {
-                    String errorBody = err.getResponseBodyAsString();
-                    log.error("Request error message: %s".formatted(errorBody), err);
-                }
-            });
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
     }
 
     public Mono<Boolean> rejectPreAuthorization(@NotNull UUID orderId, String token) {
-        return client
+        WebClient.RequestBodySpec req = client
             .post()
             .uri(config.getApiUrl() + "/payment/authorization/cancel/" + orderId)
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-            .exchangeToMono(
-                r -> {
-                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
-                        return Mono.just(true);
-                    }
-
-                    return r.bodyToMono(String.class)
-                        .log()
-                        .map(e -> false);
-                }
-            )
-            .log()
-            .doOnError(e -> {
-                log.info("handleResponse On Error: {}", e.getMessage());
-                if (e instanceof WebClientResponseException err) {
-                    String errorBody = err.getResponseBodyAsString();
-                    log.error("Request error message: %s".formatted(errorBody), err);
-                }
-            });
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        return handleAcceptStatusResponse(req);
     }
+
 
     public Mono<Boolean> refund(@NotNull UUID orderId, String refundAmount, String token) {
         return client

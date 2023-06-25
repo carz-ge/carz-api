@@ -2,6 +2,7 @@ package ge.carapp.carappapi.service.notification;
 
 
 import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
+import ge.carapp.carappapi.service.notification.discord.DiscordService;
 import ge.carapp.carappapi.service.notification.push.ManagersFirebaseMessagingService;
 import ge.carapp.carappapi.service.notification.push.UsersFirebaseMessagingService;
 import ge.carapp.carappapi.service.notification.sms.SmsNotificationService;
@@ -16,6 +17,7 @@ public class NotificationService {
     private final SmsNotificationService smsNotificationService;
     private final UsersFirebaseMessagingService usersPushNotificationService;
     private final ManagersFirebaseMessagingService managersPushNotificationService;
+    private final DiscordService discordService;
 
 
     public boolean sendSmsNotification(String phone, String message) {
@@ -31,5 +33,10 @@ public class NotificationService {
     public void sendPushNotificationToManager(CreatePushNotificationRequestModel request) {
         log.info("send push notification to manager: {}", request);
         managersPushNotificationService.sendPushNotification(request);
+    }
+
+    public void sendNotificationToAdmin(String message) {
+        discordService.sendMessage(message)
+            .block();
     }
 }
