@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.service;
+package ge.carapp.carappapi.repository;
 
 import ge.carapp.carappapi.entity.UserDeviceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

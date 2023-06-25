@@ -5,6 +5,7 @@ import ge.carapp.carappapi.entity.UserDeviceEntity;
 import ge.carapp.carappapi.entity.datacontainers.UserContainer;
 import ge.carapp.carappapi.exception.GeneralException;
 import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
+import ge.carapp.carappapi.repository.UserDeviceRepository;
 import ge.carapp.carappapi.schema.graphql.AddDeviceTokenInput;
 import ge.carapp.carappapi.schema.graphql.UpdateUserInput;
 import ge.carapp.carappapi.entity.UserEntity;
