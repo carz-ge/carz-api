@@ -2,7 +2,7 @@ package ge.carapp.carappapi.models.bog.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -23,7 +23,7 @@ import java.util.Map;
  * @param id
  */
 public record OrderResponse(
-    String id,
+    UUID id,
 
     @JsonProperty("_links")
     OrderLinks links

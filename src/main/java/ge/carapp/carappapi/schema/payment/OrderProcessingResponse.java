@@ -2,10 +2,12 @@ package ge.carapp.carappapi.schema.payment;
 
 import lombok.Builder;
 
+import java.util.UUID;
+
 @Builder
 public record OrderProcessingResponse(
     String idempotencyKey,
-    String orderId,
+    UUID orderId,
     String redirectLink
-    ) {
+) {
 }

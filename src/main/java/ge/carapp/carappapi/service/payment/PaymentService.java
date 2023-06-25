@@ -5,14 +5,15 @@ import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.models.bog.AuthenticationResponse;
 import ge.carapp.carappapi.models.bog.order.Buyer;
 import ge.carapp.carappapi.models.bog.order.OrderRequest;
+import ge.carapp.carappapi.models.bog.order.OrderResponse;
 import ge.carapp.carappapi.models.bog.order.ProductBasket;
 import ge.carapp.carappapi.models.bog.order.PurchaseInfo;
 import ge.carapp.carappapi.models.bog.order.RedirectUrls;
 import ge.carapp.carappapi.schema.Currency;
-import ge.carapp.carappapi.schema.graphql.InitializePaymentWithSavedCardsInput;
-import ge.carapp.carappapi.schema.payment.PaymentInfoSchema;
 import ge.carapp.carappapi.schema.graphql.InitializePaymentInput;
+import ge.carapp.carappapi.schema.graphql.InitializePaymentWithSavedCardsInput;
 import ge.carapp.carappapi.schema.payment.OrderProcessingResponse;
+import ge.carapp.carappapi.schema.payment.PaymentInfoSchema;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -69,12 +70,24 @@ public class PaymentService {
             .ttl(600) // 10 min
             .build();
 
-        return authentication.mapNotNull(AuthenticationResponse::accessToken)
+        Mono<String> authToken = authentication.mapNotNull(AuthenticationResponse::accessToken);
+
+        Mono<OrderResponse> createOrderResult = authToken
             .flatMap(token -> bogService.createOrder(order, user.getLanguage(), token))
             .log()
-            .doOnError(e -> log.error("error occurred after creating order", e))
+            .doOnError(e -> log.error("error occurred after creating order", e));
+
+        if (input.getSaveCard()) {
+            createOrderResult
+                .flatMap(res -> authToken
+                    .flatMap(token -> bogService
+                        .saveCardFromOrder(res.id(), token)))
+                .log();
+        }
+
+        return createOrderResult
             .map(res -> {
-                String bogOrderId = res.id();
+                UUID bogOrderId = res.id();
                 String redirectLink = res.links().redirect().href();
                 return OrderProcessingResponse.builder()
                     .idempotencyKey(input.getIdempotencyKey())
@@ -128,7 +141,7 @@ public class PaymentService {
             .log()
             .doOnError(e -> log.error("error occurred after creating order", e))
             .map(res -> {
-                String bogOrderId = res.id();
+                UUID bogOrderId = res.id();
                 String redirectLink = res.links().redirect().href();
                 return OrderProcessingResponse.builder()
                     .idempotencyKey(input.getIdempotencyKey())

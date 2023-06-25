@@ -3,6 +3,7 @@ input InitializePaymentInput {
     isAutomatic: Boolean!
     totalAmount: Float!
     unitPrice: Float!
+    saveCard: Boolean!
 }
 
 input InitializePaymentWithSavedCardsInput {

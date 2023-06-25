@@ -5,4 +5,5 @@ data class InitializePaymentInput(
     val isAutomatic: Boolean = true,
     val totalAmount: Double,
     val unitPrice: Double,
+    val saveCard: Boolean,
 )
