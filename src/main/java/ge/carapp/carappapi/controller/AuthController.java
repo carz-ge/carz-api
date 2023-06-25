@@ -13,9 +13,14 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Set;
+
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
+    private static final Set<UserRole> USER_AND_ADMIN = Set.of(UserRole.USER, UserRole.ADMIN);
+    private static final Set<UserRole> MANAGER_AND_ADMIN = Set.of(UserRole.MANAGER, UserRole.ADMIN);
+
     private final AuthService authService;
 
     @QueryMapping
@@ -31,18 +36,19 @@ public class AuthController {
     @MutationMapping
     @ExceptionHandler(GeneralException.class)
     public AuthenticationOutput authorize(@Argument AuthenticationInput input) {
-        return authService.authorize(input, UserRole.USER); // todooo managers wouldn't be able to authenticate
+        // Todo managers wouldn't be able to authenticate
+        return authService.authorize(input, USER_AND_ADMIN);
     }
 
     @MutationMapping
     public SendOptOutput checkPhoneForManger(@Argument String phone) {
-        return authService.checkPhoneForManger(phone);
+        return authService.checkPhoneForManger(phone, MANAGER_AND_ADMIN);
     }
 
     @MutationMapping
     @ExceptionHandler(GeneralException.class)
     public AuthenticationOutput authenticateManager(@Argument AuthenticationInput input) {
-        return authService.authorize(input, UserRole.MANAGER);
+        return authService.authorize(input, MANAGER_AND_ADMIN);
     }
 
 

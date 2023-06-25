@@ -6,7 +6,6 @@ import ge.carapp.carappapi.entity.UserRole;
 import ge.carapp.carappapi.entity.datacontainers.UserContainer;
 import ge.carapp.carappapi.exception.NotAuthorizedException;
 import ge.carapp.carappapi.jwt.JwtService;
-import ge.carapp.carappapi.schema.UserSchema;
 import ge.carapp.carappapi.schema.graphql.AuthenticationInput;
 import ge.carapp.carappapi.schema.graphql.AuthenticationOutput;
 import ge.carapp.carappapi.schema.graphql.SendOptOutput;
@@ -20,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -45,11 +45,11 @@ public class AuthService {
             .build();
     }
 
-    public AuthenticationOutput authorize(AuthenticationInput input, UserRole role) throws NotAuthorizedException {
+    public AuthenticationOutput authorize(AuthenticationInput input, Set<UserRole> roles) throws NotAuthorizedException {
         UserEntity user = userService.getUserByPhone(input.phone())
             .orElseThrow(NotAuthorizedException::new);
 
-        if (!user.getUserRole().equals(role) || !otpService.verifyOtp(user, input.otp())){
+        if (!roles.contains(user.getUserRole()) || !otpService.verifyOtp(user, input.otp())) {
             throw new NotAuthorizedException();
         }
 
@@ -69,9 +69,9 @@ public class AuthService {
             .build();
     }
 
-    public SendOptOutput checkPhoneForManger(String phone) {
+    public SendOptOutput checkPhoneForManger(String phone, Set<UserRole> managerAndAdmin) {
         Optional<UserEntity> user = userService.getUserByPhone(phone);
-        if (user.isEmpty() || UserRole.MANAGER.equals(user.get().getUserRole())) {
+        if (user.isEmpty() || !managerAndAdmin.contains(user.get().getUserRole())) {
             log.warn("Manager not found: {}", phone);
             return SendOptOutput.builder().sent(false).build();
         }
