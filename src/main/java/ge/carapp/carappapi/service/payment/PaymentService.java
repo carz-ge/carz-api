@@ -41,13 +41,13 @@ public class PaymentService {
             ProductBasket.builder()
                 .productId("product123")
                 .quantity(1)
-                .unitPrice(1d)
+                .unitPrice(input.getUnitPrice())
                 .description("სატესტო აღწერა")
                 .build()
         );
 
         PurchaseInfo purchaseInfo = PurchaseInfo.builder()
-            .totalAmount(1d)
+            .totalAmount(input.getTotalAmount())
             .basket(productBaskets)
             .currency(Currency.GEL.name())
             .build();
@@ -95,13 +95,13 @@ public class PaymentService {
             ProductBasket.builder()
                 .productId("product123")
                 .quantity(1)
-                .unitPrice(1d)
+                .unitPrice(input.getUnitPrice())
                 .description("სატესტო აღწერა")
                 .build()
         );
 
         PurchaseInfo purchaseInfo = PurchaseInfo.builder()
-            .totalAmount(1d)
+            .totalAmount(input.getTotalAmount())
             .basket(productBaskets)
             .currency(Currency.GEL.name())
             .build();

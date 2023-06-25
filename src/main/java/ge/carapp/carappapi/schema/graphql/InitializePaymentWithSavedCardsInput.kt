@@ -5,5 +5,7 @@ import java.util.UUID
 data class InitializePaymentWithSavedCardsInput(
     val idempotencyKey: String,
     val isAutomatic: Boolean = true,
-    val orderId: UUID
+    val orderId: UUID,
+    val totalAmount: Double,
+    val unitPrice: Double,
 )

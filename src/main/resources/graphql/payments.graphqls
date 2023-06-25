@@ -1,12 +1,16 @@
 input InitializePaymentInput {
     idempotencyKey: String!
     isAutomatic: Boolean!
+    totalAmount: Float!
+    unitPrice: Float!
 }
 
 input InitializePaymentWithSavedCardsInput {
     idempotencyKey: String!
     isAutomatic: Boolean!
     orderId: ID!
+    totalAmount: Float!
+    unitPrice: Float!
 }
 
 type OrderProcessingResponse {
