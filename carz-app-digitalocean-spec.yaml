@@ -1,0 +1,50 @@
+alerts:
+    - rule: DEPLOYMENT_FAILED
+    - rule: DOMAIN_FAILED
+#domains:
+#    - domain: api3.carz.ge
+#      type: PRIMARY
+envs:
+    - key: SPRING_DATASOURCE_USERNAME
+      scope: RUN_AND_BUILD_TIME
+      type: SECRET
+      value: EV[1:0yu/RHdc4I4niPWRSWe/miYGJDbD6gbi:xoX1GdMHASQOlZLbeYkMdQOoIpn9Uus1wr6gJg==]
+    - key: SPRING_DATASOURCE_PASSWORD
+      scope: RUN_AND_BUILD_TIME
+      type: SECRET
+      value: EV[1:X5oxNnMp5zrqhRAtmPO22Al+VfXCCotO:m3JBIqccPMX90eD6uKJYsabwO6kLBhCaZtLqRFtiZdErkbK/PPM=]
+    - key: SPRING_DATASOURCE_URL
+      scope: RUN_AND_BUILD_TIME
+      type: SECRET
+      value: EV[1:ma0wPy//73/8NUjTT9UW+K9Q9vyofQTh:OwjO858RwV2348Kpzq+nXYSA1lSTFat1cCzkp+Uoor7xOCK67EnpNVcWkln0+hqXEz1rFX5DK/0lESjA7K2n9wjBSA7fm+FTe1BHKESeI8mPYsbNkAKed5rjSDAtchq6H47fIG0a74wRmG4Kw3MJoJ7Camg+]
+    - key: SPRING_PROFILES_ACTIVE
+      scope: RUN_AND_BUILD_TIME
+      value: prod
+ingress:
+    rules:
+        - component:
+              name: carz-api
+          match:
+              path:
+                  prefix: /
+name: carz-api-do
+region: fra
+services:
+    image:
+      registry_type: DOCR
+      repository: carz-container-registry
+#       tag:
+      deploy_on_push:
+        enabled: true
+#    - dockerfile_path: Dockerfile
+#      github:
+#          branch: main
+#          deploy_on_push: true
+#          repo: carz-ge/carz-api
+      health_check:
+          http_path: /actuator/health
+      http_port: 8080
+      instance_count: 1
+      instance_size_slug: basic-xs
+      name: carz-api
+      source_dir: /
