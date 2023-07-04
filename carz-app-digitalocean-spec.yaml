@@ -30,17 +30,17 @@ ingress:
 name: carz-api-do
 region: fra
 services:
-#    image:
-#      registry_type: DOCR
-#      repository: carz-container-registry
-##       tag:
-#      deploy_on_push:
-#        enabled: true
-    - dockerfile_path: Dockerfile
-      github:
-          branch: main
-          deploy_on_push: true
-          repo: carz-ge/carz-api
+    image:
+      registry_type: DOCR
+      repository: carz-container-registry
+      tag: latest
+      deploy_on_push:
+        enabled: true
+#    - dockerfile_path: Dockerfile
+#      github:
+#          branch: main
+#          deploy_on_push: true
+#          repo: carz-ge/carz-api
       health_check:
           http_path: /actuator/health
       http_port: 8080
