@@ -8,9 +8,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Map;
 
-@Service("smsoffice")
+//@Service("smsoffice")
 @Slf4j
-@Profile("prod")
+//@Profile("prod")
 public class SmsOfficeNotificationService implements SmsNotificationService {
 
     private final SmsConfig smsConfig;
