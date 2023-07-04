@@ -32,7 +32,7 @@ region: fra
 services:
     image:
       registry_type: DOCR
-      repository: carz-container-registry
+      repository: carz-api-container
       tag: latest
       deploy_on_push:
         enabled: true
