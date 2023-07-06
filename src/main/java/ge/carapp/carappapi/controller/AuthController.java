@@ -51,5 +51,4 @@ public class AuthController {
         return authService.authorize(input, MANAGER_AND_ADMIN);
     }
 
-
 }

@@ -34,13 +34,10 @@ public class PaymentService {
     private final ProfileConfig profileConfig;
     private final BogService bogService;
 
-
-    public Mono<OrderProcessingResponse> createOrder(@NotNull UserEntity user, @NotNull InitializePaymentInput input) {
+    public Mono<OrderProcessingResponse> createOrder(@NotNull UserEntity user,
+                                                     @NotNull OrderRequest order,
+                                                     boolean saveCard) {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
-        String orderId = input.getIdempotencyKey();
-
-        OrderRequest order = getOrderRequest(input.getUnitPrice(), input.getTotalAmount(), orderId, input.isAutomatic());
-
         Mono<String> authToken = authentication.mapNotNull(AuthenticationResponse::accessToken);
 
         Mono<OrderResponse> createOrderResult = authToken
@@ -48,7 +45,7 @@ public class PaymentService {
             .log()
             .doOnError(e -> log.error("error occurred after creating order", e));
 
-        if (input.getSaveCard()) {
+        if (saveCard) {
             createOrderResult
                 .flatMap(res -> authToken
                     .flatMap(token -> bogService
@@ -61,25 +58,44 @@ public class PaymentService {
                 UUID bogOrderId = res.id();
                 String redirectLink = res.links().redirect().href();
                 return OrderProcessingResponse.builder()
-                    .idempotencyKey(input.getIdempotencyKey())
-                    .orderId(bogOrderId)
+                    .bogOrderId(bogOrderId)
                     .redirectLink(redirectLink)
                     .build();
             });
     }
 
-    private static OrderRequest getOrderRequest(double unitPrice, double totalAmount, String orderId,
-                                                boolean isAutomatic) {
-        Buyer buyer = Buyer.builder()
-            .fullName("სატესტო სახელი და გვარი")
-            .build();
+    public Mono<OrderProcessingResponse> createOrder(@NotNull UserEntity user, @NotNull InitializePaymentInput input) {
+
+
+        OrderRequest order = createOrderRequest(input.getOrderId(),
+            input.getUnitPrice(),
+            input.getTotalAmount(),
+            input.isAutomatic(),
+            null,
+            "",
+            ""
+        );
+        return createOrder(user, order, input.getSaveCard());
+
+    }
+
+    public static OrderRequest createOrderRequest(
+        UUID orderId,
+        double unitPrice,
+        double totalAmount,
+        boolean isAutomatic,
+        UUID productId,
+        String productName,
+        String buyerFullName
+    ) {
+
 
         List<ProductBasket> productBaskets = List.of(
             ProductBasket.builder()
-                .productId("product123")
+                .productId(productId.toString())
                 .quantity(1)
                 .unitPrice(unitPrice)
-                .description("სატესტო აღწერა")
+                .description(productName)
                 .build()
         );
 
@@ -94,9 +110,13 @@ public class PaymentService {
             .fail("https://api2.carz.ge/payment/redirect/%s/reject".formatted(orderId))
             .build();
 
+        Buyer buyer = Buyer.builder()
+            .fullName(buyerFullName)
+            .build();
+
         return OrderRequest.builder()
             .callbackUrl("https://api2.carz.ge/payment/%s".formatted(orderId))
-            .externalOrderId(orderId)
+            .externalOrderId(orderId.toString())
             .capture(isAutomatic ? "automatic" : "manual")
             .buyer(buyer)
             .purchaseUnits(purchaseInfo)
@@ -108,20 +128,25 @@ public class PaymentService {
 
     public Mono<OrderProcessingResponse> createOrderBySavedCard(@NotNull UserEntity user, @NotNull InitializePaymentWithSavedCardsInput input) {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
-        String orderId = input.getIdempotencyKey();
 
-        OrderRequest order = getOrderRequest(input.getUnitPrice(), input.getTotalAmount(), orderId, input.isAutomatic());
+        OrderRequest order = createOrderRequest(input.getOrderId(),
+            input.getUnitPrice(),
+            input.getTotalAmount(),
+            input.isAutomatic(),
+            null,
+            "",
+            ""
+        );
 
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
-            .flatMap(token -> bogService.createOrderBySavedCard(order, user.getLanguage(), input.getOrderId(), token))
+            .flatMap(token -> bogService.createOrderBySavedCard(order, user.getLanguage(), input.getBogOrderId(), token))
             .log()
             .doOnError(e -> log.error("error occurred after creating order", e))
             .map(res -> {
                 UUID bogOrderId = res.id();
                 String redirectLink = res.links().redirect().href();
                 return OrderProcessingResponse.builder()
-                    .idempotencyKey(input.getIdempotencyKey())
-                    .orderId(bogOrderId)
+                    .bogOrderId(bogOrderId)
                     .redirectLink(redirectLink)
                     .build();
             });

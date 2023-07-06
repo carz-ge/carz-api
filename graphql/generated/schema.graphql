@@ -30,7 +30,6 @@ type Query {
   echoFlux(message: String): [String]
   listOrders: [Order!]!
   getOrder(id: ID!): Order!
-  listOrdersByUserId(userId: ID!): [Order!]!
   getPaymentInfo(orderId: ID!): String
   listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
   getProduct(productId: ID!): Product!
@@ -59,7 +58,7 @@ type Mutation {
   respondToOrder(managersOrderResponse: ManagersOrderResponseInput!): Boolean
   sendPushNotification(input: PushNotificationInput!): Boolean
   sendSmsNotification(input: SmsNotification!): Boolean
-  createOrder(order: OrderInput!): Order!
+  createOrder(order: OrderInput!): OrderInitializationResponse!
   initPayment(input: InitializePaymentInput!): OrderProcessingResponse!
   createOrderBySavedCard(input: InitializePaymentWithSavedCardsInput!): OrderProcessingResponse!
   saveCard(orderId: ID!): Boolean
@@ -223,12 +222,20 @@ enum OrderStatus {
   CANCELLED
   REJECTED
   REIMBURSED
+  FAILED
+}
+
+input OrderedProductInput {
+  productId: ID!
+  packageId: ID!
+  schedulingDay: String
+  schedulingTime: String
 }
 
 type OrderedProduct {
   productId: ID!
-  quantity: Int
-  schedulingDate: String
+  packageId: ID!
+  schedulingDay: String
   schedulingTime: String
 }
 
@@ -237,26 +244,37 @@ type Order {
   userId: ID!
   categoryId: ID!
   providerId: ID
-  products: [OrderedProduct]
+  productId: ID!
+  packageId: ID!
+  schedulingDay: String
+  schedulingTime: String
   orderStatus: OrderStatus
 }
 
 input OrderInput {
   idempotencyKey: String!
-  categoryId: ID!
-  packages: [OrderedProductInput!]!
-  carId: ID
+  productId: ID!
+  packageId: ID!
+  schedulingDay: String
+  schedulingTime: String
   carType: CarType
   carPlateNumber: String
-  schedulingDay: String
-  schedulingTime: String
+  carId: ID
+  comment: String
 }
 
-input OrderedProductInput {
+type OrderInitializationResponse {
+  id: ID!
+  idempotencyKey: String!
+  redirectLink: String!
+  totalPrice: Int!
   productId: ID!
-  productDetailsId: ID!
+  categoryId: ID!
+  packageId: ID!
+  providerId: ID!
   schedulingDay: String
   schedulingTime: String
+  orderStatus: OrderStatus
 }
 
 input InitializePaymentInput {

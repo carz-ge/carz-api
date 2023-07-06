@@ -1,6 +1,7 @@
 package ge.carapp.carappapi.models.bog.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.UUID;
 
@@ -23,9 +24,9 @@ import java.util.UUID;
  * @param id
  */
 public record OrderResponse(
-    UUID id,
+    @NotNull UUID id,
 
     @JsonProperty("_links")
-    OrderLinks links
+    @NotNull OrderLinks links
 ) {
 }

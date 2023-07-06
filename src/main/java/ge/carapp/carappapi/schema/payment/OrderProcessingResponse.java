@@ -1,13 +1,13 @@
 package ge.carapp.carappapi.schema.payment;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.util.UUID;
 
 @Builder
 public record OrderProcessingResponse(
-    String idempotencyKey,
-    UUID orderId,
+    @NotNull UUID bogOrderId,
     String redirectLink
 ) {
 }
