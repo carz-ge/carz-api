@@ -1,0 +1,17 @@
+
+
+type Card {
+    id: ID!
+    pan: String!
+    cardType: String!
+    expirationDate: String!
+}
+
+extend type Query {
+    listCards: [Card!]!
+}
+
+
+#extend type Mutation {
+#    removeCard(cardId: ID!): Boolean
+#}

@@ -3,7 +3,9 @@ package ge.carapp.carappapi.schema.order;
 public enum OrderStatus {
     NEW,
     PROCESSING,
-    SHIPPED,
+    PAYED,
+    WAITING_MANAGER,
+    ACTIVE,
     DELIVERED,
     CANCELLED,
     REJECTED,

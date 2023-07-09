@@ -2,6 +2,7 @@ package ge.carapp.carappapi.controller.rest;
 
 import ge.carapp.carappapi.models.bog.PaymentStatusInfo;
 import ge.carapp.carappapi.service.notification.NotificationService;
+import ge.carapp.carappapi.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PaymentRestController {
     private final NotificationService notificationService;
+    private final OrderService orderService;
 
     @PostMapping("/payment/{orderId}")
     ResponseEntity<Void> orderResultCallback(@PathVariable("orderId") String orderId,
                                              @RequestBody PaymentStatusInfo paymentInfo) {
         log.info("order result received: {}, requestBody: {}", orderId, paymentInfo);
-
+        orderService.processPaymentCallbackResponse(orderId, paymentInfo);
         notificationService.sendNotificationToAdmin("Received payment callback, oid: %s, status: %s"
             .formatted(orderId, paymentInfo.body().orderStatus().key()));
         return ResponseEntity.ok().build();

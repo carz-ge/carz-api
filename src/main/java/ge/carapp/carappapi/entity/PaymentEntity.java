@@ -1,6 +1,9 @@
 package ge.carapp.carappapi.entity;
 
+import ge.carapp.carappapi.entity.json_converters.ListPaymentItemConverter;
+import ge.carapp.carappapi.models.bog.details.Item;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +23,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -29,21 +33,50 @@ import java.util.UUID;
 @ToString
 @AllArgsConstructor
 @Entity
-@Table(name = "CARD")
-public class CardEntity implements Serializable {
+@Table(name = "PAYMENT")
+public class PaymentEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private UUID orderId;
     private UUID bogOrderId;
-    private UUID paymentId;
 
-    private String pan;
+    private String industry;
+    private String capture;
+
+    // client
+    private String clientId;
+    private String brandKa;
+    private String brandEn;
+    private String clientUrl;
+
+
+    private String bogCreateDate;
+    private String bogExpireDate;
+    private String bogOrderStatus;
+
+    // PurchaseUnits
+    private String requestAmount;
+    private String transferAmount;
+    private String refundAmount;
+    private String currencyCode;
+
+    @Convert(converter = ListPaymentItemConverter.class)
+    private List<Item> items;
+
+    // payment detail
+    private String transferMethod;
+    private String transactionId;
+    private String payerIdentifier;
+    private String paymentOption;
     private String cardType;
-    private String expirationDate;
+    private String cardExpirationDate;
 
-    private Boolean removed;
-    private Boolean expired;
+    private String redirectLinkSuccess;
+    private String redirectLinkFail;
+
+    private String lang;
+    private String rejectReason;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

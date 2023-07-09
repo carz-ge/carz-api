@@ -41,30 +41,33 @@ public class OrderEntity {
 
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(foreignKey=@ForeignKey(name="ORDER_TO_USER_FK"))
+    @JoinColumn(foreignKey = @ForeignKey(name = "ORDER_TO_USER_FK"))
     private UserEntity user;
 
-    String idempotencyKey;
-    String redirectLink;
-    Integer totalPrice;
+    private String idempotencyKey;
+    private String redirectLink;
+    private Integer totalPrice;
+    private Integer commission;
+
     @Enumerated(EnumType.STRING)
-    OrderStatus status;
+    private OrderStatus status;
 
-    UUID productId;
-    UUID packageId;
-    UUID categoryId;
-    UUID providerId;
-    UUID managerId;
+    private UUID productId;
+    private UUID packageId;
+    private UUID categoryId;
+    private UUID providerId;
+    private UUID managerId;
 
-    String schedulingDay;
-    String schedulingTime;
+    private String schedulingDay;
+    private String schedulingTime;
     @Enumerated(EnumType.STRING)
-    CarType carType;
-    String carPlateNumber;
-    String comment;
+    private CarType carType;
+    private String carPlateNumber;
+    private String comment;
 
-    UUID bogOrderId;
-    String bogRedirectLink;
+    private UUID bogOrderId;
+    private String bogRedirectLink;
+    private String errorMessage;
 
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;

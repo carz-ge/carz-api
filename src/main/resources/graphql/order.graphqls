@@ -1,8 +1,9 @@
 enum OrderStatus {
     NEW
     PROCESSING
-    SHIPPED
-    DELIVERED
+    PAYED,
+    WAITING_MANAGER,
+    ACTIVE,
     CANCELLED
     REJECTED
     REIMBURSED
@@ -55,6 +56,7 @@ type OrderInitializationResponse {
     idempotencyKey: String!
     redirectLink: String!
     totalPrice: Int!
+    commission: Int!
     productId: ID!
     categoryId: ID!
     packageId: ID!
@@ -62,11 +64,24 @@ type OrderInitializationResponse {
     schedulingDay: String
     schedulingTime: String
     orderStatus: OrderStatus
+    carType: CarType
+    carPlateNumber: String
+    createdAt: String
+}
+
+
+type Commission {
+    commission: Int!
+    commissionToShow: String!
 }
 
 extend type Query {
     listOrders: [Order!]!
+    listOrdersByManager: [Order!]!
+
     getOrder(id: ID!): Order!
+
+    getCommission(productId: ID!, packageId: ID): Commission!
 }
 
 extend type Mutation {

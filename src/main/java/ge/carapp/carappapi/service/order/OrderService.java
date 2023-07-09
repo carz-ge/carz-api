@@ -4,8 +4,12 @@ import ge.carapp.carappapi.entity.OrderEntity;
 import ge.carapp.carappapi.entity.ProductDetailsCarPrice;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.exception.GeneralException;
+import ge.carapp.carappapi.models.bog.BogOrderStatus;
+import ge.carapp.carappapi.models.bog.PaymentStatusInfo;
 import ge.carapp.carappapi.repository.OrderRepository;
 import ge.carapp.carappapi.schema.CarType;
+import ge.carapp.carappapi.schema.CommissionSchema;
+import ge.carapp.carappapi.schema.OrderSchema;
 import ge.carapp.carappapi.schema.ProductDetailsSchema;
 import ge.carapp.carappapi.schema.ProductSchema;
 import ge.carapp.carappapi.schema.order.OrderInitializationResponse;
@@ -19,6 +23,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import static ge.carapp.carappapi.utils.PaymentUtils.converPriceIntoDouble;
+import static ge.carapp.carappapi.utils.PaymentUtils.convertPriceiIntoDoubleString;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +35,6 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductService productService;
 
-    private static Double converPriceIntoDouble(int price) {
-        return ((double) price) / 100;
-    }
 
     public OrderInitializationResponse initializeOrder(UserEntity user, OrderInput order) {
 
@@ -57,6 +62,7 @@ public class OrderService {
         }
         int price = priceOptional.get();
         Double priceIntoDouble = converPriceIntoDouble(price);
+        int commission = calculateCommission(product, productPackage);
 
         OrderEntity orderEntity = OrderEntity.builder()
             .idempotencyKey(order.idempotencyKey())
@@ -66,7 +72,8 @@ public class OrderService {
             .providerId(product.providerId())
             .schedulingDay(order.schedulingDay())
             .schedulingTime(order.schedulingTime())
-            .totalPrice(price)
+            .totalPrice(price + commission)
+            .commission(commission)
             .carType(order.carType())
             .carPlateNumber(order.carPlateNumber())
             .comment(order.comment())
@@ -78,8 +85,8 @@ public class OrderService {
         Optional<OrderProcessingResponse> orderProcessingResponseOtp = paymentService.createOrder(user,
             PaymentService.createOrderRequest(
                 orderEntity.getId(),
-                priceIntoDouble,
-                priceIntoDouble,
+                commission,
+                commission,
                 true,
                 product.id(),
                 product.name().ka(),
@@ -113,4 +120,51 @@ public class OrderService {
             .build();
     }
 
+    public CommissionSchema calculateCommission(UserEntity user, UUID productId, UUID packageId) {
+        ProductSchema product = productService.getProductById(productId);
+        List<ProductDetailsSchema> packages = productService.getProductDetailsByProductId(productId);
+        Optional<ProductDetailsSchema> productPackageOptional =
+            packages.stream().filter(p -> packageId.equals(p.id())).findAny();
+        if (productPackageOptional.isEmpty()) {
+            throw new GeneralException("Package does not exists");
+        }
+        ProductDetailsSchema productPackage = productPackageOptional.get();
+
+        int commission = calculateCommission(product, productPackage);
+        return new CommissionSchema(commission, convertPriceiIntoDoubleString(commission));
+    }
+
+    public void processPaymentCallbackResponse(String orderId, PaymentStatusInfo paymentInfo) {
+        Optional<OrderEntity> orderEntityOptional = orderRepository.findById(UUID.fromString(orderId));
+
+        if (orderEntityOptional.isEmpty()) {
+            throw new GeneralException("no order found by id");
+        }
+
+        OrderEntity orderEntity = orderEntityOptional.get();
+
+        paymentService.savePayment(orderEntity.getUser(), orderEntity, paymentInfo);
+
+        if (BogOrderStatus.COMPLETED.toLower().equals(paymentInfo.body().orderStatus().key())) {
+            orderEntity.setStatus(OrderStatus.PAYED);
+            orderEntity = orderRepository.save(orderEntity);
+        } else if (BogOrderStatus.REJECTED.toLower().equals(paymentInfo.body().orderStatus().key())) {
+            orderEntity.setStatus(OrderStatus.REJECTED);
+            orderEntity.setErrorMessage(paymentInfo.body().rejectReason());
+            orderEntity = orderRepository.save(orderEntity);
+        }
+    }
+
+    private int calculateCommission(ProductSchema product, ProductDetailsSchema productPackage) {
+        return 20;
+    }
+
+    public List<OrderSchema> listUserOrders(UserEntity user) {
+        return orderRepository.findAllByUserId(user.getId()).stream().map(OrderSchema::convert).toList();
+    }
+
+    public List<OrderSchema> listProviderOrders(UserEntity user) {
+        // TODO
+        return null;
+    }
 }

@@ -23,13 +23,16 @@ type SendOptOutput {
 type Query {
   checkPhone(phone: String!): Boolean!
   listCars: [Car!]!
+  listCards: [Card!]!
   listCategories: [Category!]!
   echo(message: String): String
   echoAuthorized(message: String): String
   echoMono(message: String): String
   echoFlux(message: String): [String]
   listOrders: [Order!]!
+  listOrdersByManager: [Order!]!
   getOrder(id: ID!): Order!
+  getCommission(productId: ID!, packageId: ID): Commission!
   getPaymentInfo(orderId: ID!): String
   listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
   getProduct(productId: ID!): Product!
@@ -114,6 +117,13 @@ input CarInput {
   make: String
   model: String
   year: Int
+}
+
+type Card {
+  id: ID!
+  pan: String!
+  cardType: String!
+  expirationDate: String!
 }
 
 type Category {
@@ -217,8 +227,9 @@ input SmsNotification {
 enum OrderStatus {
   NEW
   PROCESSING
-  SHIPPED
-  DELIVERED
+  PAYED
+  WAITING_MANAGER
+  ACTIVE
   CANCELLED
   REJECTED
   REIMBURSED
@@ -268,6 +279,7 @@ type OrderInitializationResponse {
   idempotencyKey: String!
   redirectLink: String!
   totalPrice: Int!
+  commission: Int!
   productId: ID!
   categoryId: ID!
   packageId: ID!
@@ -275,6 +287,14 @@ type OrderInitializationResponse {
   schedulingDay: String
   schedulingTime: String
   orderStatus: OrderStatus
+  carType: CarType
+  carPlateNumber: String
+  createdAt: String
+}
+
+type Commission {
+  commission: Int!
+  commissionToShow: String!
 }
 
 input InitializePaymentInput {
