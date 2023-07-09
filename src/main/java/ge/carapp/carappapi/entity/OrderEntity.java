@@ -41,7 +41,7 @@ public class OrderEntity {
 
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "ORDER_TO_USER_FK"))
+//    @JoinColumn(foreignKey = @ForeignKey(name = "ORDER_TO_USER_FK"))
     private UserEntity user;
 
     private String idempotencyKey;
