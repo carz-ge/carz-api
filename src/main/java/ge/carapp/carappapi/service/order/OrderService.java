@@ -9,7 +9,7 @@ import ge.carapp.carappapi.models.bog.PaymentStatusInfo;
 import ge.carapp.carappapi.repository.OrderRepository;
 import ge.carapp.carappapi.schema.CarType;
 import ge.carapp.carappapi.schema.CommissionSchema;
-import ge.carapp.carappapi.schema.OrderSchema;
+import ge.carapp.carappapi.schema.order.OrderSchema;
 import ge.carapp.carappapi.schema.ProductDetailsSchema;
 import ge.carapp.carappapi.schema.ProductSchema;
 import ge.carapp.carappapi.schema.order.OrderInitializationResponse;
@@ -106,18 +106,7 @@ public class OrderService {
         orderEntity.setStatus(OrderStatus.PROCESSING);
         orderEntity = orderRepository.save(orderEntity);
 
-        return OrderInitializationResponse.builder()
-            .id(orderEntity.getId())
-            .totalPrice(price)
-            .idempotencyKey(orderEntity.getIdempotencyKey())
-            .redirectLink(orderEntity.getRedirectLink())
-            .productId(order.productId())
-            .packageId(order.packageId())
-            .categoryId(product.categoryId())
-            .providerId(product.providerId())
-            .schedulingDay(order.schedulingDay())
-            .schedulingTime(order.schedulingTime())
-            .build();
+        return OrderInitializationResponse.convert(orderEntity);
     }
 
     public CommissionSchema calculateCommission(UserEntity user, UUID productId, UUID packageId) {

@@ -26,14 +26,21 @@ type OrderedProduct {
 
 type Order {
     id: ID!
-    userId: ID!
-    categoryId: ID!
-    providerId: ID
+    totalPrice: Int!
+    commission: Int!
+    status: OrderStatus
     productId: ID!
     packageId: ID!
+    categoryId: ID!
+    providerId: ID
     schedulingDay: String
     schedulingTime: String
-    orderStatus: OrderStatus
+    carType: CarType
+    carPlateNumber: String
+    errorMessage: String
+    createdAt: String
+    updatedAt: String
+
 }
 
 input OrderInput {
@@ -58,14 +65,15 @@ type OrderInitializationResponse {
     totalPrice: Int!
     commission: Int!
     productId: ID!
-    categoryId: ID!
     packageId: ID!
+    categoryId: ID!
     providerId: ID!
     schedulingDay: String
     schedulingTime: String
-    orderStatus: OrderStatus
+    status: OrderStatus
     carType: CarType
     carPlateNumber: String
+    errorMessage: String
     createdAt: String
 }
 

@@ -1,7 +1,7 @@
-package ge.carapp.carappapi.schema;
+package ge.carapp.carappapi.schema.order;
 
 import ge.carapp.carappapi.entity.OrderEntity;
-import ge.carapp.carappapi.schema.order.OrderStatus;
+import ge.carapp.carappapi.schema.CarType;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -10,7 +10,6 @@ import java.util.UUID;
 @Builder
 public record OrderSchema(
     UUID id,
-    String idempotencyKey,
     Integer totalPrice,
     Integer commission,
 
@@ -26,16 +25,13 @@ public record OrderSchema(
     CarType carType,
     String carPlateNumber,
     String errorMessage,
-
     LocalDateTime createdAt,
-
     LocalDateTime updatedAt
 ) {
 
     public static OrderSchema convert(OrderEntity orderEntity) {
         return OrderSchema.builder()
             .id(orderEntity.getId())
-            .idempotencyKey(orderEntity.getIdempotencyKey())
             .totalPrice(orderEntity.getTotalPrice())
             .commission(orderEntity.getCommission())
             .status(orderEntity.getStatus())

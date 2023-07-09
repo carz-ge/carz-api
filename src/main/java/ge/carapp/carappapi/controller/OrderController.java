@@ -2,7 +2,7 @@ package ge.carapp.carappapi.controller;
 
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.schema.CommissionSchema;
-import ge.carapp.carappapi.schema.OrderSchema;
+import ge.carapp.carappapi.schema.order.OrderSchema;
 import ge.carapp.carappapi.schema.order.OrderInitializationResponse;
 import ge.carapp.carappapi.schema.order.OrderInput;
 import ge.carapp.carappapi.security.AuthenticatedUserProvider;
