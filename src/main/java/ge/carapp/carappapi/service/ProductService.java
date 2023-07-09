@@ -11,13 +11,13 @@ import ge.carapp.carappapi.entity.CategoryEntity;
 import ge.carapp.carappapi.entity.ProductEntity;
 import ge.carapp.carappapi.exception.GeneralException;
 import ge.carapp.carappapi.repository.CategoryRepository;
-import ge.carapp.carappapi.schema.graphql.ProductFilterInput;
 import ge.carapp.carappapi.schema.ProductSchema;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.repository.ProductRepository;
 import ge.carapp.carappapi.schema.graphql.ProductInput;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -168,15 +168,22 @@ public class ProductService {
     }
 
     public ProductSchema getProductById(UUID productId) {
-        ProductEntity productEntity = productRepository
+        ProductEntity productEntity = getProductEntity(productId);
+        return ProductSchema.convert(productEntity);
+    }
+
+    public ProductEntity getProductEntity(UUID productId) {
+        return productRepository
             .findById(productId)
             .orElseThrow(()-> new GeneralException("product by id not found"));
-
-        return ProductSchema.convert(productEntity);
     }
 
     public List<ProductDetailsSchema> batchGetProductDetails(List<UUID> productIds) {
         return productDetailsRepository.findAllByProductIdIn(productIds).stream()
             .map(ProductDetailsSchema::convert).toList();
+    }
+
+    public void updateReviewCount(ProductEntity productEntity, @Range(min=0, max=5) int stars) {
+        productRepository.updateReviews(productEntity.getId(), stars);
     }
 }

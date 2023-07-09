@@ -26,6 +26,7 @@ public class CardService {
             .expirationDate(paymentDetail.cardExpiryDate())
             .pan(paymentDetail.payerIdentifier())
             .cardType(paymentDetail.cardType())
+            .removed(false)
             .build();
 
         cardEntity = cardRepository.save(cardEntity);

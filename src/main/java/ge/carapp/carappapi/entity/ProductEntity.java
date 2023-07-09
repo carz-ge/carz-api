@@ -72,6 +72,8 @@ public class ProductEntity {
 
     private int capacity;
 
+    private Integer reviewStars;
+    private Integer totalReviews;
 
     @ToString.Exclude
     @OneToMany(cascade = CascadeType.ALL,

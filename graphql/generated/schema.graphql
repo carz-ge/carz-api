@@ -42,6 +42,7 @@ type Query {
   searchProducts(filter: ProductFilterInput!): [Product!]!
   listProviders: [Provider!]!
   listQueue(providerId: ID): [ScheduledTimeSlotSchema]
+  listProductReviews(productId: ID!): [Review!]!
   listChatMessages: [ChatMessage!]!
   getMe: User!
   getUserById(userId: ID!): User!
@@ -79,6 +80,7 @@ type Mutation {
   updateProvider(input: ProviderInput!): Provider!
   removeProvider(providerId: ID!): Boolean!
   scheduleCarForService(input: ScheduleCarForServiceInput): [ScheduledTimeSlotSchema]
+  addProductReview(input: AddReviewInput): Review
   updateUser(input: UpdateUserInput!): User!
   removeUser: Boolean
   deactivateUser: Boolean
@@ -437,6 +439,20 @@ input ScheduleCarForServiceInput {
 
 type Subscription {
   subscribeToQueue(providerId: ID): [String]
+}
+
+input AddReviewInput {
+  productId: ID!
+  comment: String
+  stars: Int!
+}
+
+type Review {
+  id: ID!
+  productId: ID!
+  comment: String
+  stars: Int!
+  createdAt: String
 }
 
 enum ChatMessageStatus {
