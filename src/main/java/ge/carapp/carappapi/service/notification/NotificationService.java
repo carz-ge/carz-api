@@ -3,11 +3,13 @@ package ge.carapp.carappapi.service.notification;
 
 import ge.carapp.carappapi.models.firebase.CreatePushNotificationRequestModel;
 import ge.carapp.carappapi.service.notification.discord.DiscordService;
+import ge.carapp.carappapi.service.notification.email.EmailService;
 import ge.carapp.carappapi.service.notification.push.ManagersFirebaseMessagingService;
 import ge.carapp.carappapi.service.notification.push.UsersFirebaseMessagingService;
 import ge.carapp.carappapi.service.notification.sms.SmsNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +20,7 @@ public class NotificationService {
     private final UsersFirebaseMessagingService usersPushNotificationService;
     private final ManagersFirebaseMessagingService managersPushNotificationService;
     private final DiscordService discordService;
-
+    private final EmailService emailService;
 
     public boolean sendSmsNotification(String phone, String message) {
         log.info("send sms notification to phone :{}, message {}", phone, message);
@@ -35,8 +37,11 @@ public class NotificationService {
         managersPushNotificationService.sendPushNotification(request);
     }
 
+    @Async
     public void sendNotificationToAdmin(String message) {
         discordService.sendMessage(message)
-            .block();
+                .block();
+
+        emailService.sendEmail("vanoganjelashvili@gmail.com", "Payment CallBack", message);
     }
 }

@@ -46,6 +46,18 @@ spring:
     docker:
         compose:
             file: "./docker-compose.yml"
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: ${EMAIL_USERNAME:carz.ge.dev@gmail.com}
+        password: ${EMAIL_PASSWORD:boeqabuccsqyswlm}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+
 jwt:
     secret: ${JWT_SECRET:"655368566D597133743677397A244326452948404D635166546A576E5A723475"}
     issuer: "carapp"

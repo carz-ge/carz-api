@@ -24,6 +24,7 @@ public class SearchService {
 
     //TODO: MAKE reactive
     public List<ProductSchema> searchProducts(ProductFilterInput filter) {
+        log.info("searching: {}", filter);
         List<ProductEntity> productList;
         if (Objects.nonNull(filter.categoryId())){
             productList = productRepository.findAllByCategoryId(filter.categoryId());
@@ -40,7 +41,7 @@ public class SearchService {
                             carTypeAndPrice.carType().equals(CarType.ALL)
                                 || carTypeAndPrice.carType().equals(filter.carType()))));
         }
-
+        // TODO filter separately
         if (filter.date() != null && filter.time() != null) {
             products =
                 products.filter(product -> {

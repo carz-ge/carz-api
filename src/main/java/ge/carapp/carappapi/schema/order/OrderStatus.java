@@ -7,8 +7,9 @@ public enum OrderStatus {
     WAITING_MANAGER,
     ACTIVE,
     DELIVERED,
-    CANCELLED,
-    REJECTED,
+    CANCELLED, // by user
+    CANCELLED_BY_MANAGER,
+    REJECTED, // by bank
     REIMBURSED,
-    FAILED
+    FAILED // by server
 }
