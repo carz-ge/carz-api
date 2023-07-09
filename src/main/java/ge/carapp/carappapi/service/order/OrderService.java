@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static ge.carapp.carappapi.utils.PaymentUtils.converPriceIntoDouble;
+import static ge.carapp.carappapi.utils.PaymentUtils.convertPriceIntoDouble;
 import static ge.carapp.carappapi.utils.PaymentUtils.convertPriceiIntoDoubleString;
 
 @Service
@@ -61,7 +61,6 @@ public class OrderService {
             throw new GeneralException("No price value found for car types");
         }
         int price = priceOptional.get();
-        Double priceIntoDouble = converPriceIntoDouble(price);
         int commission = calculateCommission(product, productPackage);
 
         OrderEntity orderEntity = OrderEntity.builder()
@@ -78,15 +77,17 @@ public class OrderService {
             .carPlateNumber(order.carPlateNumber())
             .comment(order.comment())
             .status(OrderStatus.NEW)
+            .user(user)
             .build();
 
         orderEntity = orderRepository.save(orderEntity);
+        double commissionDouble = convertPriceIntoDouble(commission);
 
         Optional<OrderProcessingResponse> orderProcessingResponseOtp = paymentService.createOrder(user,
             PaymentService.createOrderRequest(
                 orderEntity.getId(),
-                commission,
-                commission,
+                commissionDouble,
+                commissionDouble,
                 true,
                 product.id(),
                 product.name().ka(),

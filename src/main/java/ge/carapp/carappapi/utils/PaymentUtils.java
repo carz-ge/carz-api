@@ -2,7 +2,7 @@ package ge.carapp.carappapi.utils;
 
 public class PaymentUtils {
 
-    public static Double converPriceIntoDouble(int price) {
+    public static double convertPriceIntoDouble(int price) {
         return ((double) price) / 100;
     }
     public static String convertPriceiIntoDoubleString(int amountInTetri) {

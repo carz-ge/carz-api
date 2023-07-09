@@ -237,6 +237,7 @@ public class PaymentService {
         Client client = orderDetails.client();
         PaymentEntity paymentEntity = PaymentEntity.builder()
                 .orderId(order.getId())
+                .user(user)
                 .bogOrderId(orderDetails.orderId())
                 .capture(orderDetails.capture())
                 .industry(orderDetails.industry())
