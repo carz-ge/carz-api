@@ -33,7 +33,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "ORDER")
+@Table(name = "ORDERS")
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
