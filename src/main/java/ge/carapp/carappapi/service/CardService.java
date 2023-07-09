@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -18,7 +19,19 @@ public class CardService {
 
 
     public CardSchema saveCard(UserEntity user, UUID orderId, UUID bogOrderId, UUID paymentId, PaymentDetail paymentDetail) {
-        CardEntity cardEntity = CardEntity.builder()
+
+        List<CardEntity> userCards = cardRepository.findAllByUserId(user.getId());
+
+        // check if same card already exists
+        Optional<CardEntity> savedCard = userCards.stream().filter(card ->
+            card.getCardType().equals(paymentDetail.cardType())
+                && card.getPan().equals(paymentDetail.payerIdentifier())
+                && card.getExpirationDate().equals(paymentDetail.cardExpiryDate())
+        ).findAny();
+
+        CardEntity cardEntity;
+        if (savedCard.isEmpty()) {
+            cardEntity = CardEntity.builder()
             .orderId(orderId)
             .bogOrderId(bogOrderId)
             .paymentId(paymentId)
@@ -28,7 +41,15 @@ public class CardService {
             .cardType(paymentDetail.cardType())
             .removed(false)
             .build();
-
+        } else {
+            cardEntity = savedCard.get();
+            if (Boolean.FALSE.equals(cardEntity.getRemoved())) {
+                return CardSchema.convert(cardEntity);
+            }
+            cardEntity.setOrderId(orderId);
+            cardEntity.setBogOrderId(bogOrderId);
+            cardEntity.setRemoved(false);
+        }
         cardEntity = cardRepository.save(cardEntity);
         return CardSchema.convert(cardEntity);
     }

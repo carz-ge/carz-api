@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface CardRepository extends JpaRepository<CardEntity, UUID> {
 
     List<CardEntity> findAllByUserIdAndRemoved(UUID userId, boolean removed);
+
+    List<CardEntity> findAllByUserId(UUID userId);
 }
