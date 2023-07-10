@@ -1,9 +1,8 @@
 package ge.carapp.carappapi.service;
 
-import ge.carapp.carappapi.entity.ScheduleEntity;
+import ge.carapp.carappapi.entity.BookingEntity;
 import ge.carapp.carappapi.entity.UserEntity;
-import ge.carapp.carappapi.repository.ProviderRepository;
-import ge.carapp.carappapi.repository.ScheduleRepository;
+import ge.carapp.carappapi.repository.BookingRepository;
 import ge.carapp.carappapi.schema.ScheduledTimeSlotSchema;
 import ge.carapp.carappapi.schema.graphql.ScheduleCarForServiceInput;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class QueueService {
-    private final ScheduleRepository scheduleRepository;
+    private final BookingRepository bookingRepository;
 
 
     public List<ScheduledTimeSlotSchema> listQueueByProviderId(UUID productId) {
@@ -35,7 +34,7 @@ public class QueueService {
             upperQuarter);
 
 
-        List<ScheduleEntity> schedule = scheduleRepository.listAllPendingSchedule(
+        List<BookingEntity> schedule = bookingRepository.listAllPendingSchedule(
             productId,
             date,
             upperQuarter

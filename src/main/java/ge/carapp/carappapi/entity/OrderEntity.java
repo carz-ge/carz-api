@@ -21,7 +21,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Getter
@@ -56,8 +58,8 @@ public class OrderEntity {
     private UUID providerId;
     private UUID managerId;
 
-    private String schedulingDay;
-    private String schedulingTime;
+    private LocalDate schedulingDate;
+    private LocalTime schedulingTime;
     @Enumerated(EnumType.STRING)
     private CarType carType;
     private String carPlateNumber;
@@ -66,12 +68,15 @@ public class OrderEntity {
     private UUID bogOrderId;
     private String bogRedirectLink;
     private String errorMessage;
+    private LocalDateTime timeSentToManager;
+    private LocalDateTime managerAcceptedAt;
 
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "UPDATED_AT", nullable = false)
     private LocalDateTime updatedAt;
+
 
     @PrePersist
     private void prePersist() {

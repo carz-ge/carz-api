@@ -9,7 +9,7 @@ input ScheduleCarForServiceInput {
     carPlateNumber: String,
     customerPhoneNumber: String,
 
-    schedulingDay: String
+    schedulingDate: String
     schedulingTime: String
 }
 

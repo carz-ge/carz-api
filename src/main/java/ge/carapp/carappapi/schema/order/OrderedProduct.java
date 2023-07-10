@@ -7,7 +7,7 @@ import java.util.UUID;
 public record OrderedProduct(
     @NotNull UUID productId,
     @NotNull UUID packageId,
-    String schedulingDay,
+    String schedulingDate,
     String schedulingTime
 ) {
 }

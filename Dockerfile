@@ -11,7 +11,7 @@ COPY build.gradle.kts .
 COPY src src
 
 # TODO check this- > https://stackoverflow.com/questions/58593661/slow-gradle-build-in-docker-caching-gradle-build
-RUN gradle bootJar -i --scan --stacktrace --no-daemon
+RUN gradle bootJar -i --stacktrace --no-daemon
 
 FROM amazoncorretto:17-alpine-jdk
 

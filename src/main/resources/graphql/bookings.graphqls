@@ -1,0 +1,12 @@
+
+input ManagersOrderResponseInput {
+    orderId: ID!
+    accepted: Boolean!
+}
+
+extend type Mutation {
+    cancelBookingByUser(orderId: ID!): Boolean
+
+
+    respondToBookingRequest(input: ManagersOrderResponseInput!): Boolean
+}

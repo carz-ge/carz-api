@@ -17,6 +17,7 @@ import ge.carapp.carappapi.schema.order.OrderInput;
 import ge.carapp.carappapi.schema.order.OrderStatus;
 import ge.carapp.carappapi.schema.payment.OrderProcessingResponse;
 import ge.carapp.carappapi.service.ProductService;
+import ge.carapp.carappapi.service.BookingService;
 import ge.carapp.carappapi.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class OrderService {
     private final PaymentService paymentService;
     private final OrderRepository orderRepository;
     private final ProductService productService;
-
+    private final BookingService bookingService;
 
     public OrderInitializationResponse initializeOrder(UserEntity user, OrderInput order) {
 
@@ -69,7 +70,7 @@ public class OrderService {
             .packageId(order.packageId())
             .categoryId(product.categoryId())
             .providerId(product.providerId())
-            .schedulingDay(order.schedulingDay())
+            .schedulingDate(order.schedulingDate())
             .schedulingTime(order.schedulingTime())
             .totalPrice(price + commission)
             .commission(commission)
@@ -138,6 +139,8 @@ public class OrderService {
         if (BogOrderStatus.COMPLETED.toLower().equals(paymentInfo.body().orderStatus().key())) {
             orderEntity.setStatus(OrderStatus.PAYED);
             orderEntity = orderRepository.save(orderEntity);
+            orderEntity = bookingService.initializeBookingNotifications(orderEntity);
+
         } else if (BogOrderStatus.REJECTED.toLower().equals(paymentInfo.body().orderStatus().key())) {
             orderEntity.setStatus(OrderStatus.REJECTED);
             orderEntity.setErrorMessage(paymentInfo.body().rejectReason());

@@ -2,7 +2,7 @@ package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.entity.ProductEntity;
 import ge.carapp.carappapi.repository.ProductRepository;
-import ge.carapp.carappapi.repository.ScheduleRepository;
+import ge.carapp.carappapi.repository.BookingRepository;
 import ge.carapp.carappapi.schema.CarType;
 import ge.carapp.carappapi.schema.ProductSchema;
 import ge.carapp.carappapi.schema.graphql.ProductFilterInput;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 @Slf4j
 public class SearchService {
-    private final ScheduleRepository scheduleRepository;
+    private final BookingRepository bookingRepository;
 
     private final ProductRepository productRepository;
 
@@ -46,7 +46,7 @@ public class SearchService {
             products =
                 products.filter(product -> {
                     Boolean isFreeTimeSlot =
-                        scheduleRepository.hasCapacity(
+                        bookingRepository.hasCapacity(
                             product.getId(),
                             filter.date(),
                             filter.time(),

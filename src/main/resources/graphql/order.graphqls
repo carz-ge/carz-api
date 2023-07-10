@@ -14,14 +14,14 @@ enum OrderStatus {
 input OrderedProductInput {
     productId: ID!
     packageId: ID!
-    schedulingDay: String
+    schedulingDate: String
     schedulingTime: String
 }
 
 type OrderedProduct {
     productId: ID!
     packageId: ID!
-    schedulingDay: String
+    schedulingDate: String
     schedulingTime: String
 }
 
@@ -34,7 +34,7 @@ type Order {
     packageId: ID!
     categoryId: ID!
     providerId: ID
-    schedulingDay: String
+    schedulingDate: String
     schedulingTime: String
     carType: CarType
     carPlateNumber: String
@@ -48,7 +48,7 @@ input OrderInput {
     idempotencyKey: String!
     productId: ID!
     packageId: ID!
-    schedulingDay: String
+    schedulingDate: String
     schedulingTime: String
 
     carType: CarType
@@ -69,7 +69,7 @@ type OrderInitializationResponse {
     packageId: ID!
     categoryId: ID!
     providerId: ID!
-    schedulingDay: String
+    schedulingDate: String
     schedulingTime: String
     status: OrderStatus
     carType: CarType

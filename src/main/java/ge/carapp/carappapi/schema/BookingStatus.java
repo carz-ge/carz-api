@@ -1,6 +1,6 @@
 package ge.carapp.carappapi.schema;
 
-public enum TimeSlotStatus {
+public enum BookingStatus {
     PENDING,
     STARTED,
     FINISHED,

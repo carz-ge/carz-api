@@ -1,7 +1,6 @@
 package ge.carapp.carappapi.security;
 
 import ge.carapp.carappapi.entity.UserEntity;
-import ge.carapp.carappapi.schema.UserSchema;
 import ge.carapp.carappapi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

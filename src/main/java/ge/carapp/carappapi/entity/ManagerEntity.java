@@ -5,7 +5,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -35,13 +34,7 @@ public class ManagerEntity {
     @OneToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 
-    @ToString.Exclude
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<ProviderEntity> provider;
+    private UUID providerId;
 
     private Boolean isActive;
-
-    private String name;
-    private String phone;
-    private String email;
 }

@@ -4,3 +4,9 @@ up:
 
 gen:
    cd graphql && npm run gen
+
+build:
+    gradlew bootJar -i --stacktrace --no-daemon
+
+start:
+    gradlew bootRun

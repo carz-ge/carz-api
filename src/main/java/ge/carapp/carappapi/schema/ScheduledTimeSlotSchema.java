@@ -1,7 +1,7 @@
 package ge.carapp.carappapi.schema;
 
 
-import ge.carapp.carappapi.entity.ScheduleEntity;
+import ge.carapp.carappapi.entity.BookingEntity;
 import lombok.Builder;
 
 import java.time.LocalTime;
@@ -14,7 +14,7 @@ public record ScheduledTimeSlotSchema(
 ) {
 
 
-    public static ScheduledTimeSlotSchema convert(ScheduleEntity scheduleEntity) {
+    public static ScheduledTimeSlotSchema convert(BookingEntity scheduleEntity) {
         return ScheduledTimeSlotSchema.builder()
             .orderNumber(scheduleEntity.getOrderNumber())
             .carPlateNumber(scheduleEntity.getCarPlateNumber())

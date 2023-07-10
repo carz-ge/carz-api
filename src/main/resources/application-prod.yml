@@ -14,6 +14,10 @@ spring:
     #      connection-timeout: 10000 #maximum number of milliseconds that a client will wait for a connection
     #      max-lifetime: 30000 #maximum idle time for connection
     #      connection-test-query: select 1
+
+    # spring.jpa.open-in-view is enabled by default.
+    # Therefore, database queries may be performed during view rendering.
+    #    Explicitly configure spring.jpa.open-in-view   to disable this warning
     jpa:
         show-sql: false
         hibernate:

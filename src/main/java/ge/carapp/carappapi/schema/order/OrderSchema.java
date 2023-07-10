@@ -4,7 +4,9 @@ import ge.carapp.carappapi.entity.OrderEntity;
 import ge.carapp.carappapi.schema.CarType;
 import lombok.Builder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Builder
@@ -20,8 +22,8 @@ public record OrderSchema(
     UUID categoryId,
     UUID providerId,
 
-    String schedulingDay,
-    String schedulingTime,
+    LocalDate schedulingDate,
+    LocalTime schedulingTime,
     CarType carType,
     String carPlateNumber,
     String errorMessage,
@@ -39,7 +41,7 @@ public record OrderSchema(
             .packageId(orderEntity.getPackageId())
             .providerId(orderEntity.getProviderId())
             .categoryId(orderEntity.getCategoryId())
-            .schedulingDay(orderEntity.getSchedulingDay())
+            .schedulingDate(orderEntity.getSchedulingDate())
             .schedulingTime(orderEntity.getSchedulingTime())
             .carType(orderEntity.getCarType())
             .carPlateNumber(orderEntity.getCarPlateNumber())

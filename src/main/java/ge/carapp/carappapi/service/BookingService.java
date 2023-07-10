@@ -1,0 +1,114 @@
+package ge.carapp.carappapi.service;
+
+import com.google.gson.Gson;
+import ge.carapp.carappapi.controller.ws.manager.ManagersOrderWebSocketHandler;
+import ge.carapp.carappapi.controller.ws.user.UserOrderWebSocketHandler;
+import ge.carapp.carappapi.entity.BookingEntity;
+import ge.carapp.carappapi.entity.ManagerEntity;
+import ge.carapp.carappapi.entity.OrderEntity;
+import ge.carapp.carappapi.entity.UserEntity;
+import ge.carapp.carappapi.exception.GeneralException;
+import ge.carapp.carappapi.repository.BookingRepository;
+import ge.carapp.carappapi.repository.OrderRepository;
+import ge.carapp.carappapi.schema.BookingStatus;
+import ge.carapp.carappapi.schema.graphql.ManagersOrderResponseInput;
+import ge.carapp.carappapi.schema.order.OrderStatus;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class BookingService {
+    private final BookingRepository bookingRepository;
+    private final ProviderService providerService;
+    private final ManagerService managerService;
+    private final UserOrderWebSocketHandler userOrderWebSocketHandler;
+    private final ManagersOrderWebSocketHandler managersOrderWebSocketHandler;
+    private final OrderRepository orderRepository;
+
+
+    public OrderEntity initializeBookingNotifications(OrderEntity orderEntity) {
+        Gson gson = new Gson();
+
+        userOrderWebSocketHandler.sendMessage(orderEntity.getUser(), gson.toJson(orderEntity));
+
+        List<ManagerEntity> managers = managerService.getAllManagersForProvider(orderEntity.getProviderId());
+
+        if (managers.isEmpty()) {
+            throw new GeneralException("manager list for provider id is null");
+        }
+
+        List<UUID> managerIds = managersOrderWebSocketHandler.sendMessageToAll(
+            orderEntity.getProviderId(),
+            gson.toJson(orderEntity)
+        );
+
+        if (!managerIds.isEmpty()) {
+            orderEntity.setStatus(OrderStatus.WAITING_MANAGER);
+            orderEntity.setTimeSentToManager(LocalDateTime.now());
+            return orderRepository.save(orderEntity);
+        }
+        return orderEntity;
+    }
+
+    public Boolean respondToBookingRequest(UserEntity managerUser, ManagersOrderResponseInput input) {
+        ManagerEntity manager = managerService.getManager(managerUser);
+        Optional<OrderEntity> orderEntityOptional = orderRepository.findById(input.orderId());
+        if (orderEntityOptional.isEmpty()) {
+            throw new GeneralException("no order found");
+        }
+        OrderEntity orderEntity = orderEntityOptional.get();
+
+
+        if (orderEntity.getStatus().equals(OrderStatus.WAITING_MANAGER)) {
+            throw new GeneralException("wrong order status");
+        }
+
+        if (input.accept()) {
+            orderEntity.setStatus(OrderStatus.ACTIVE);
+            orderEntity.setManagerId(manager.getId());
+            orderEntity.setManagerAcceptedAt(LocalDateTime.now());
+        } else {
+            orderEntity.setStatus(OrderStatus.CANCELLED_BY_MANAGER);
+        }
+
+        orderEntity = orderRepository.save(orderEntity);
+
+        Gson gson = new Gson();
+
+        boolean sentToUser = userOrderWebSocketHandler.sendMessage(orderEntity.getUser(), gson.toJson(input));
+
+        if (input.accept()) {
+            createNewBooking(orderEntity);
+        }
+
+        managerService.getAllManagersForProvider(orderEntity.getProviderId());
+
+
+        return sentToUser;
+    }
+
+
+    public BookingEntity createNewBooking(OrderEntity orderEntity) {
+        BookingEntity booking = BookingEntity.builder()
+            .categoryId(orderEntity.getCategoryId())
+            .status(BookingStatus.PENDING)
+            .carPlateNumber(orderEntity.getCarPlateNumber())
+            .productId(orderEntity.getProductId())
+            .providerId(orderEntity.getProviderId())
+            .productDetailsId(orderEntity.getPackageId())
+            .schedulingTime(orderEntity.getSchedulingTime())
+            .schedulingDate(orderEntity.getSchedulingDate())
+            .managerId(orderEntity.getManagerId())
+            .userId(orderEntity.getUser().getId())
+            .build();
+
+        return bookingRepository.save(booking);
+    }
+
+}

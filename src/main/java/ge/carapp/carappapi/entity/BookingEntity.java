@@ -1,6 +1,6 @@
 package ge.carapp.carappapi.entity;
 
-import ge.carapp.carappapi.schema.TimeSlotStatus;
+import ge.carapp.carappapi.schema.BookingStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,13 +28,15 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "SCHEDULE")
-public class ScheduleEntity {
+@Table(name = "BOOKING")
+public class BookingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
+    @SequenceGenerator(name="SEQUENCE_ORDER_NUMBER", sequenceName="SEQUENCE_ORDER_NUMBER", allocationSize = 50)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQUENCE_ORDER_NUMBER")
     private String orderNumber;
 
     @Column(nullable = false)
@@ -52,14 +55,12 @@ public class ScheduleEntity {
     private LocalTime schedulingTime;
 
     private UUID userId;
-    private UUID carId;
 
     private String carPlateNumber;
-    private String phoneNumber;
 
     // Presented if this time slot was scheduled by the manager manually.
     private UUID managerId;
 
     @Enumerated(EnumType.STRING)
-    private TimeSlotStatus status;
+    private BookingStatus status;
 }

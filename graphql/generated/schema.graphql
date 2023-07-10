@@ -53,13 +53,14 @@ type Mutation {
   authorize(input: AuthenticationInput!): AuthenticationOutput!
   checkPhoneForManger(phone: String!): SendOptOutput!
   authenticateManager(input: AuthenticationInput!): AuthenticationOutput!
+  cancelBookingByUser(orderId: ID!): Boolean
+  respondToBookingRequest(input: ManagersOrderResponseInput!): Boolean
   addCar(carInput: CarInput!): Car!
   removeCar(carId: ID!): Boolean!
   updateCar(carId: ID!, carInput: CarInput!): Car!
   createCategory(input: CategoryInput!): Category!
   updateCategory(categoryId: ID!, input: CategoryInput!): Category!
   removeCategory(categoryId: ID!): Boolean!
-  respondToOrder(managersOrderResponse: ManagersOrderResponseInput!): Boolean
   sendPushNotification(input: PushNotificationInput!): Boolean
   sendSmsNotification(input: SmsNotification!): Boolean
   createOrder(order: OrderInput!): OrderInitializationResponse!
@@ -85,6 +86,11 @@ type Mutation {
   removeUser: Boolean
   deactivateUser: Boolean
   addDeviceToken(input: AddDeviceTokenInput!): Boolean
+}
+
+input ManagersOrderResponseInput {
+  orderId: ID!
+  accepted: Boolean!
 }
 
 enum CarType {
@@ -208,13 +214,6 @@ input CoordinatesInput {
   lng: Float!
 }
 
-input ManagersOrderResponseInput {
-  orderId: ID!
-  productId: ID!
-  providerId: ID!
-  accepted: Boolean!
-}
-
 input PushNotificationInput {
   deviceToken: String!
   title: String!
@@ -242,14 +241,14 @@ enum OrderStatus {
 input OrderedProductInput {
   productId: ID!
   packageId: ID!
-  schedulingDay: String
+  schedulingDate: String
   schedulingTime: String
 }
 
 type OrderedProduct {
   productId: ID!
   packageId: ID!
-  schedulingDay: String
+  schedulingDate: String
   schedulingTime: String
 }
 
@@ -262,7 +261,7 @@ type Order {
   packageId: ID!
   categoryId: ID!
   providerId: ID
-  schedulingDay: String
+  schedulingDate: String
   schedulingTime: String
   carType: CarType
   carPlateNumber: String
@@ -275,7 +274,7 @@ input OrderInput {
   idempotencyKey: String!
   productId: ID!
   packageId: ID!
-  schedulingDay: String
+  schedulingDate: String
   schedulingTime: String
   carType: CarType
   carPlateNumber: String
@@ -293,7 +292,7 @@ type OrderInitializationResponse {
   packageId: ID!
   categoryId: ID!
   providerId: ID!
-  schedulingDay: String
+  schedulingDate: String
   schedulingTime: String
   status: OrderStatus
   carType: CarType
@@ -434,7 +433,7 @@ input ScheduleCarForServiceInput {
   productId: ID!
   carPlateNumber: String
   customerPhoneNumber: String
-  schedulingDay: String
+  schedulingDate: String
   schedulingTime: String
 }
 

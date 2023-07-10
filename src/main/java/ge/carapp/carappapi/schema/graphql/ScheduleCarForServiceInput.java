@@ -12,7 +12,7 @@ public record ScheduleCarForServiceInput(
     String carPlateNumber,
     String customerPhoneNumber,
 
-    LocalDate schedulingDay,
+    LocalDate schedulingDate,
     LocalTime schedulingTime
 
 ) {

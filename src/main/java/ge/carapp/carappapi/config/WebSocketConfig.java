@@ -1,6 +1,8 @@
 package ge.carapp.carappapi.config;
 
 import ge.carapp.carappapi.controller.ws.ChatWebSocketHandler;
+import ge.carapp.carappapi.controller.ws.manager.ManagersOrderWebSocketHandler;
+import ge.carapp.carappapi.controller.ws.user.UserOrderWebSocketHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +21,9 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
     private final ChatWebSocketHandler chatWebSocketHandler;
+    private final ManagersOrderWebSocketHandler managersOrderWebSocketHandler;
+    private final UserOrderWebSocketHandler userOrderWebSocketHandler;
+
 //    private final WebSocketAuthInterceptor interceptor;
 
     @Value("${car-app.origins}")
@@ -26,15 +31,25 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(chatWebSocketHandler, "/chat")
+        registry
+            .addHandler(chatWebSocketHandler, "/chat")
+            .addHandler(userOrderWebSocketHandler, "/user-order")
+            .addHandler(managersOrderWebSocketHandler, "/manager-order")
             .setAllowedOrigins(allowedOrigins);
 //            .addInterceptors(interceptor);
     }
 
     @Bean
     AuthorizationManager<Message<?>> authorizationManager(MessageMatcherDelegatingAuthorizationManager.Builder messages) {
-        messages. // todo check
-            anyMessage().hasAnyRole("ADMIN", "USER");
+        messages
+            .simpDestMatchers("/chat")
+            .hasAnyRole("ADMIN", "USER")
+            .simpDestMatchers("/user-order")
+            .hasAnyRole("ADMIN", "USER")
+            .simpDestMatchers("/manager-order")
+            .hasAnyRole("ADMIN", "MANAGER")
+
+        ;
         return messages.build();
     }
 

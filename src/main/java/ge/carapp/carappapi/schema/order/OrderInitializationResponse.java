@@ -5,7 +5,9 @@ import ge.carapp.carappapi.schema.CarType;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Builder
@@ -19,8 +21,8 @@ public record OrderInitializationResponse(
     @NotNull UUID packageId,
     UUID providerId,
     UUID categoryId,
-    String schedulingDay,
-    String schedulingTime,
+    LocalDate schedulingDate,
+    LocalTime schedulingTime,
     OrderStatus status,
     CarType carType,
     String carPlateNumber,
@@ -39,7 +41,7 @@ public record OrderInitializationResponse(
             .packageId(orderEntity.getPackageId())
             .categoryId(orderEntity.getCategoryId())
             .providerId(orderEntity.getProviderId())
-            .schedulingDay(orderEntity.getSchedulingDay())
+            .schedulingDate(orderEntity.getSchedulingDate())
             .schedulingTime(orderEntity.getSchedulingTime())
             .status(orderEntity.getStatus())
             .carType(orderEntity.getCarType())
