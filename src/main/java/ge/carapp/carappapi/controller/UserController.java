@@ -34,14 +34,14 @@ public class UserController {
     }
 
     @MutationMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public UserSchema updateUser(@Validated @Argument UpdateUserInput input) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return userService.updateUser(authenticatedUser, input);
     }
 
     @MutationMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Boolean addDeviceToken(@Argument AddDeviceTokenInput input) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         userService.addDeviceToken(authenticatedUser, input);
@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @MutationMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public Boolean removeUser() {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         userService.removeUser(authenticatedUser);
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @MutationMapping
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Boolean deactivateUser() {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         userService.deactivateUser(authenticatedUser);

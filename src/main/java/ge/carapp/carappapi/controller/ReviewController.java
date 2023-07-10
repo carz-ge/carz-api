@@ -29,7 +29,7 @@ public class ReviewController {
     }
 
     @MutationMapping
-    @PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ReviewSchema addProductReview(@Argument AddReviewInput input) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return reviewService.addProductReview(authenticatedUser, input);

@@ -34,7 +34,7 @@ public class QueueController {
 
 
     @MutationMapping
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
     public Boolean scheduleCarForService(@Argument ScheduleCarForServiceInput input) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         return queueService.scheduleCarByManager(authenticatedUser, input);

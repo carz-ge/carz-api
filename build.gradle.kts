@@ -47,6 +47,9 @@ extra["snippetsDir"] = file("build/generated-snippets")
 //extra["springCloudVersion"] = "2022.0.2"
 
 dependencies {
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.1.0")
+
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 //    implementation("org.springframework.boot:spring-boot-starter-batch")
 //    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
