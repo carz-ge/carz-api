@@ -39,8 +39,8 @@ public class NotificationService {
 
     @Async
     public void sendNotificationToAdmin(String message) {
-        discordService.sendMessage(message)
-                .block();
+//        discordService.sendMessage(message)
+//                .block();
 
         emailService.sendEmail("vanoganjelashvili@gmail.com", "Payment CallBack", message);
     }
