@@ -4,6 +4,6 @@ import java.util.UUID;
 
 public record ManagersOrderResponseInput(
     UUID orderId,
-    boolean accept
+    boolean accepted
 ) {
 }

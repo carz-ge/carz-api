@@ -92,6 +92,7 @@ public class ManagersOrderWebSocketHandler extends TextWebSocketHandler {
             }
 
             try {
+                log.info("sending message to manager {}", id);
                 webSocketSession.sendMessage(new TextMessage(message));
                 success.add(id);
             } catch (IOException e) {

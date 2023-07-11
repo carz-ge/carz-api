@@ -15,6 +15,7 @@ import ge.carapp.carappapi.schema.BookingStatus;
 import ge.carapp.carappapi.schema.graphql.ManagersOrderResponseInput;
 import ge.carapp.carappapi.schema.order.OrderStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingService {
     private final ObjectMapper objectMapper;
     private final BookingRepository bookingRepository;
@@ -37,19 +39,22 @@ public class BookingService {
     public OrderEntity initializeBookingNotifications(OrderEntity orderEntity) {
         try {
 
-            userOrderWebSocketHandler.sendMessage(orderEntity.getUser(), objectMapper.writeValueAsString(orderEntity));
+            boolean sentToUser = userOrderWebSocketHandler.sendMessage(orderEntity.getUser(),
+                objectMapper.writeValueAsString(orderEntity));
 
+            log.info("initializeBookingNotifications was sent to user {}", sentToUser);
             List<ManagerEntity> managers = managerService.getAllManagersForProvider(orderEntity.getProviderId());
 
             if (managers.isEmpty()) {
+                log.info("managers are empty");
                 throw new GeneralException("manager list for provider id is null");
             }
 
-            List<UUID> managerIds = null;
-            managerIds = managersOrderWebSocketHandler.sendMessageToAll(
+            List<UUID>  managerIds = managersOrderWebSocketHandler.sendMessageToAll(
                 orderEntity.getProviderId(),
                 objectMapper.writeValueAsString(orderEntity)
             );
+            log.info("Order was sent to managers {}", managerIds);
 
             if (!managerIds.isEmpty()) {
                 orderEntity.setStatus(OrderStatus.WAITING_MANAGER);
@@ -75,7 +80,7 @@ public class BookingService {
             throw new GeneralException("wrong order status");
         }
 
-        if (input.accept()) {
+        if (input.accepted()) {
             orderEntity.setStatus(OrderStatus.ACTIVE);
             orderEntity.setManagerId(manager.getId());
             orderEntity.setManagerAcceptedAt(LocalDateTime.now());
@@ -93,7 +98,7 @@ public class BookingService {
             throw new RuntimeException(e);
         }
 
-        if (input.accept()) {
+        if (input.accepted()) {
             createNewBooking(orderEntity);
         }
 

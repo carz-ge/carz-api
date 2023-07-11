@@ -59,6 +59,7 @@ public class UserOrderWebSocketHandler extends TextWebSocketHandler {
         }
 
         try {
+            log.info("sending message to user {}", user.getId());
             webSocketSession.sendMessage(new TextMessage(message));
         } catch (IOException e) {
             return false;
