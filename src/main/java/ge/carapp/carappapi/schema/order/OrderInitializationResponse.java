@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.schema.order;
 
+import ge.carapp.carappapi.entity.BookingEntity;
 import ge.carapp.carappapi.entity.OrderEntity;
 import ge.carapp.carappapi.schema.CarType;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +28,8 @@ public record OrderInitializationResponse(
     CarType carType,
     String carPlateNumber,
     String errorMessage,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    Boolean isAutomaticPayment
 ) {
 
     public static OrderInitializationResponse convert(OrderEntity orderEntity) {
@@ -48,6 +50,7 @@ public record OrderInitializationResponse(
             .carPlateNumber(orderEntity.getCarPlateNumber())
             .errorMessage(orderEntity.getErrorMessage())
             .createdAt(orderEntity.getCreatedAt())
+            .isAutomaticPayment(orderEntity.getIsAutomaticPayment())
             .build();
     }
 }

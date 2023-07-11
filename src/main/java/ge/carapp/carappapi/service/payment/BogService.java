@@ -11,6 +11,7 @@ import ge.carapp.carappapi.core.Language;
 import ge.carapp.carappapi.exception.GeneralException;
 import ge.carapp.carappapi.models.bog.AuthenticationResponse;
 import ge.carapp.carappapi.models.bog.details.OrderDetails;
+import ge.carapp.carappapi.models.bog.order.AutomaticOrderRequest;
 import ge.carapp.carappapi.models.bog.order.OnHoldAmount;
 import ge.carapp.carappapi.models.bog.order.OrderRequest;
 import ge.carapp.carappapi.models.bog.order.OrderResponse;
@@ -125,21 +126,31 @@ public class BogService {
 
     // TODo https://api.bog.ge/docs/en/payments/saved-card/recurrent-payment
     public Mono<Boolean> saveCardFromOrderForAutomaticPayments(@NotNull UUID orderId, @NotNull String token) {
-        return client
-            .put()
+        return handleAcceptStatusResponse(
+            client.put()
             .uri(config.getApiUrl() + "/orders/" + orderId + "/subscriptions")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-            .exchangeToMono(
-                r -> {
-                    if (HttpStatus.ACCEPTED.equals(r.statusCode())) {
-                        return Mono.just(true);
-                    }
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token));
+    }
 
-                    return r.bodyToMono(String.class)
-                        .log()
-                        .map(e -> false);
-                }
-            );
+    public Mono<OrderResponse> createAutomaticOrderBySavedCard(@NotNull AutomaticOrderRequest order,
+                                                                     @NotNull UUID parentOrderId, @NotNull String token) {
+        try {
+            String request = objectMapper.writeValueAsString(order);
+            log.info("Sending order request to bog: {}", request);
+
+            return handleResponse(client
+                    .post()
+                    .uri(config.getApiUrl() + "/ecommerce/orders/" + parentOrderId +"/subscribe")
+                    .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .bodyValue(request)
+                    .retrieve()
+                , OrderResponse.class);
+        } catch (JsonProcessingException e) {
+            log.error("Could not convert order to json", e);
+            throw new GeneralException("could not process json for orders");
+        }
     }
 
     public Mono<Boolean> deleteSavedCard(@NotNull UUID orderId, @NotNull String token) {

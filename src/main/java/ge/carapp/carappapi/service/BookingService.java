@@ -76,7 +76,7 @@ public class BookingService {
         OrderEntity orderEntity = orderEntityOptional.get();
 
 
-        if (orderEntity.getStatus().equals(OrderStatus.WAITING_MANAGER)) {
+        if (!orderEntity.getStatus().equals(OrderStatus.WAITING_MANAGER)) {
             throw new GeneralException("wrong order status");
         }
 

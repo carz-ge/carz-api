@@ -67,11 +67,15 @@ public class OrderEntity {
     private String carPlateNumber;
     private String comment;
 
+    private UUID cardId;
+
     private UUID bogOrderId;
     private String bogRedirectLink;
     private String errorMessage;
     private LocalDateTime timeSentToManager;
     private LocalDateTime managerAcceptedAt;
+
+    private Boolean isAutomaticPayment;
 
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;

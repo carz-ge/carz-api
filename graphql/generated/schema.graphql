@@ -280,12 +280,14 @@ input OrderInput {
   carPlateNumber: String
   carId: ID
   comment: String
+  cardId: ID
 }
 
 type OrderInitializationResponse {
   id: ID!
   idempotencyKey: String!
-  redirectLink: String!
+  redirectLink: String
+  isAutomatic: Boolean
   totalPrice: Int!
   commission: Int!
   productId: ID!

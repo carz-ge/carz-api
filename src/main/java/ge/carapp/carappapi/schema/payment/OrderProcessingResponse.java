@@ -8,6 +8,7 @@ import java.util.UUID;
 @Builder
 public record OrderProcessingResponse(
     @NotNull UUID bogOrderId,
-    String redirectLink
+    String redirectLink,
+    Boolean isAutomaticPayment
 ) {
 }

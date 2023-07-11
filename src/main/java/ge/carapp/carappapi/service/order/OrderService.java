@@ -79,6 +79,7 @@ public class OrderService {
             .comment(order.comment())
             .status(OrderStatus.NEW)
             .user(user)
+            .cardId(order.cardId())
             .build();
 
         orderEntity = orderRepository.save(orderEntity);
@@ -93,7 +94,12 @@ public class OrderService {
                 product.id(),
                 product.name().ka(),
                 user.getFirstname() + user.getLastname()
-            ), true).blockOptional();
+            ),
+            true,
+            // todo check before saving
+            Optional.ofNullable(order.cardId()),
+            true
+        ).blockOptional();
 
         if (orderProcessingResponseOtp.isEmpty()) {
             orderEntity.setStatus(OrderStatus.FAILED);
@@ -105,6 +111,7 @@ public class OrderService {
 
         orderEntity.setBogOrderId(paymentOrderCreationResponse.bogOrderId());
         orderEntity.setRedirectLink(paymentOrderCreationResponse.redirectLink());
+        orderEntity.setIsAutomaticPayment(paymentOrderCreationResponse.isAutomaticPayment());
         orderEntity.setStatus(OrderStatus.PROCESSING);
         orderEntity = orderRepository.save(orderEntity);
 

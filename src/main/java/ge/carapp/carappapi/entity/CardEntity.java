@@ -39,6 +39,7 @@ public class CardEntity implements Serializable {
     private UUID bogOrderId;
     private UUID paymentId;
 
+    private String totalAmountInGel;
     private String pan;
     private String cardType;
     private String expirationDate;

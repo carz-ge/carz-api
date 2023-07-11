@@ -2,6 +2,7 @@ package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.entity.CardEntity;
 import ge.carapp.carappapi.entity.UserEntity;
+import ge.carapp.carappapi.exception.GeneralException;
 import ge.carapp.carappapi.models.bog.details.PaymentDetail;
 import ge.carapp.carappapi.repository.CardRepository;
 import ge.carapp.carappapi.schema.CardSchema;
@@ -18,7 +19,14 @@ public class CardService {
     private final CardRepository cardRepository;
 
 
-    public CardSchema saveCard(UserEntity user, UUID orderId, UUID bogOrderId, UUID paymentId, PaymentDetail paymentDetail) {
+    public final CardEntity getByCardIdAndUserId(UUID cardId, UUID userId) {
+        return cardRepository.findByIdAndUserId(cardId, userId).orElseThrow(() -> new GeneralException("card not " +
+            "found for user"));
+    }
+
+    public CardSchema saveCard(UserEntity user, UUID orderId,
+                               UUID bogOrderId, UUID paymentId,
+                               PaymentDetail paymentDetail, String totalAmount) {
 
         List<CardEntity> userCards = cardRepository.findAllByUserId(user.getId());
 
@@ -32,15 +40,16 @@ public class CardService {
         CardEntity cardEntity;
         if (savedCard.isEmpty()) {
             cardEntity = CardEntity.builder()
-            .orderId(orderId)
-            .bogOrderId(bogOrderId)
-            .paymentId(paymentId)
-            .user(user)
-            .expirationDate(paymentDetail.cardExpiryDate())
-            .pan(paymentDetail.payerIdentifier())
-            .cardType(paymentDetail.cardType())
-            .removed(false)
-            .build();
+                .orderId(orderId)
+                .bogOrderId(bogOrderId)
+                .paymentId(paymentId)
+                .user(user)
+                .expirationDate(paymentDetail.cardExpiryDate())
+                .pan(paymentDetail.payerIdentifier())
+                .cardType(paymentDetail.cardType())
+                .removed(false)
+                .totalAmountInGel(totalAmount)
+                .build();
         } else {
             cardEntity = savedCard.get();
             if (Boolean.FALSE.equals(cardEntity.getRemoved())) {
@@ -48,6 +57,7 @@ public class CardService {
             }
             cardEntity.setOrderId(orderId);
             cardEntity.setBogOrderId(bogOrderId);
+            cardEntity.setTotalAmountInGel(totalAmount);
             cardEntity.setRemoved(false);
         }
         cardEntity = cardRepository.save(cardEntity);

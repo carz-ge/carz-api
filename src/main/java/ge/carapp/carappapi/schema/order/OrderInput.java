@@ -15,6 +15,7 @@ public record OrderInput(
     LocalTime schedulingTime,
     CarType carType,
     String carPlateNumber,
-    String comment
+    String comment,
+    UUID cardId
 ) {
 }
