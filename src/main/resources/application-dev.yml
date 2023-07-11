@@ -110,7 +110,7 @@ open-ai:
     url: https://api.openai.com
 
 car-app:
-    origins: https://api.liquidibrium.me, http://localhost:8080, https://car-app-api.up.railway.app/
+    origins: https://api2.carz.ge, https://api.carz.ge, https://carz.ge, http://localhost:8080
 
 firebase:
     usersAppConfig: firebase-service-account.json
