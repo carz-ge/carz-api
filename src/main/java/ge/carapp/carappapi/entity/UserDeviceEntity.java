@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +32,7 @@ public class UserDeviceEntity {
 
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne
     private UserEntity user;
 

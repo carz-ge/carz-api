@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ge.carapp.carappapi.entity.json_converters.ListStringConverter;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -41,11 +42,13 @@ public class ProductEntity {
     private String nameKa;
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID", nullable = false)
     private CategoryEntity category;
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROVIDER_ID", nullable = false)
     private ProviderEntity provider;
@@ -76,6 +79,7 @@ public class ProductEntity {
     private Integer totalReviews;
 
     @ToString.Exclude
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL,
         orphanRemoval = true,
         fetch = FetchType.LAZY)

@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ge.carapp.carappapi.schema.CarType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -61,6 +62,7 @@ public class CarEntity implements Serializable {
 
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OWNER_ID", nullable = false)
     private UserEntity owner;

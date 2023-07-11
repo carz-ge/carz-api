@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ge.carapp.carappapi.core.Language;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,6 +52,7 @@ public class UserEntity implements Serializable {
     private LocalDateTime updatedAt;
 
     @ToString.Exclude
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private UserOtpEntity userOtp;
 

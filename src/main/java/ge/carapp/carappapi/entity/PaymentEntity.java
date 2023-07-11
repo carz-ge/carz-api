@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ge.carapp.carappapi.entity.json_converters.ListPaymentItemConverter;
 import ge.carapp.carappapi.models.bog.details.Item;
 import jakarta.persistence.Column;
@@ -79,6 +80,7 @@ public class PaymentEntity implements Serializable {
     private String rejectReason;
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", nullable = false)
     private UserEntity user;

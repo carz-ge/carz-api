@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ge.carapp.carappapi.entity.json_converters.ListLingualStringConverter;
 import ge.carapp.carappapi.entity.json_converters.ListProductDetailsCarPriceConverter;
 import ge.carapp.carappapi.schema.Currency;
@@ -39,6 +40,7 @@ public class ProductDetailsEntity {
     private UUID id;
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_ID")
     private ProductEntity product;

@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ge.carapp.carappapi.schema.ChatMessageStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -30,6 +31,7 @@ public class ChatMessageEntity {
     private String id;
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne
     private UserEntity user;
 

@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -31,6 +31,7 @@ public class ManagerEntity {
     private UUID id;
 
     @ToString.Exclude
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     private UserEntity user;
 

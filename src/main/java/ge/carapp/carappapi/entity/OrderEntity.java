@@ -1,6 +1,7 @@
 package ge.carapp.carappapi.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ge.carapp.carappapi.schema.CarType;
 import ge.carapp.carappapi.schema.order.OrderStatus;
 import jakarta.persistence.Column;
@@ -40,6 +41,7 @@ public class OrderEntity {
     private UUID id;
 
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne
 //    @JoinColumn(foreignKey = @ForeignKey(name = "ORDER_TO_USER_FK"))
     private UserEntity user;
