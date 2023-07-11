@@ -1,6 +1,7 @@
 package ge.carapp.carappapi.service;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ge.carapp.carappapi.controller.ws.manager.ManagersOrderWebSocketHandler;
 import ge.carapp.carappapi.controller.ws.user.UserOrderWebSocketHandler;
 import ge.carapp.carappapi.entity.BookingEntity;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class BookingService {
+    private final ObjectMapper objectMapper;
     private final BookingRepository bookingRepository;
     private final ProviderService providerService;
     private final ManagerService managerService;
@@ -33,25 +35,29 @@ public class BookingService {
 
 
     public OrderEntity initializeBookingNotifications(OrderEntity orderEntity) {
-        Gson gson = new Gson();
+        try {
 
-        userOrderWebSocketHandler.sendMessage(orderEntity.getUser(), gson.toJson(orderEntity));
+            userOrderWebSocketHandler.sendMessage(orderEntity.getUser(), objectMapper.writeValueAsString(orderEntity));
 
-        List<ManagerEntity> managers = managerService.getAllManagersForProvider(orderEntity.getProviderId());
+            List<ManagerEntity> managers = managerService.getAllManagersForProvider(orderEntity.getProviderId());
 
-        if (managers.isEmpty()) {
-            throw new GeneralException("manager list for provider id is null");
-        }
+            if (managers.isEmpty()) {
+                throw new GeneralException("manager list for provider id is null");
+            }
 
-        List<UUID> managerIds = managersOrderWebSocketHandler.sendMessageToAll(
-            orderEntity.getProviderId(),
-            gson.toJson(orderEntity)
-        );
+            List<UUID> managerIds = null;
+            managerIds = managersOrderWebSocketHandler.sendMessageToAll(
+                orderEntity.getProviderId(),
+                objectMapper.writeValueAsString(orderEntity)
+            );
 
-        if (!managerIds.isEmpty()) {
-            orderEntity.setStatus(OrderStatus.WAITING_MANAGER);
-            orderEntity.setTimeSentToManager(LocalDateTime.now());
-            return orderRepository.save(orderEntity);
+            if (!managerIds.isEmpty()) {
+                orderEntity.setStatus(OrderStatus.WAITING_MANAGER);
+                orderEntity.setTimeSentToManager(LocalDateTime.now());
+                return orderRepository.save(orderEntity);
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
         return orderEntity;
     }
@@ -79,9 +85,13 @@ public class BookingService {
 
         orderEntity = orderRepository.save(orderEntity);
 
-        Gson gson = new Gson();
 
-        boolean sentToUser = userOrderWebSocketHandler.sendMessage(orderEntity.getUser(), gson.toJson(input));
+        boolean sentToUser = false;
+        try {
+            sentToUser = userOrderWebSocketHandler.sendMessage(orderEntity.getUser(), objectMapper.writeValueAsString(input));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
         if (input.accept()) {
             createNewBooking(orderEntity);

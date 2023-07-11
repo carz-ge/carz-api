@@ -76,6 +76,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    // date jackson
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2")
 
     implementation("commons-codec:commons-codec:1.15")
     // AWS SDK
