@@ -1,12 +1,12 @@
 package ge.carapp.carappapi.service;
 
 import ge.carapp.carappapi.entity.ProductDetailsCarPrice;
-import ge.carapp.carappapi.entity.ProductDetailsEntity;
+import ge.carapp.carappapi.entity.ProductPackageEntity;
 import ge.carapp.carappapi.entity.ProviderEntity;
-import ge.carapp.carappapi.repository.ProductDetailsRepository;
+import ge.carapp.carappapi.repository.ProductPackageRepository;
 import ge.carapp.carappapi.repository.ProviderRepository;
 import ge.carapp.carappapi.schema.graphql.ProductDetailsInput;
-import ge.carapp.carappapi.schema.ProductDetailsSchema;
+import ge.carapp.carappapi.schema.ProductPackageSchema;
 import ge.carapp.carappapi.entity.CategoryEntity;
 import ge.carapp.carappapi.entity.ProductEntity;
 import ge.carapp.carappapi.exception.GeneralException;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -32,7 +33,7 @@ public class ProductService {
     private final ProviderRepository providerRepository;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
-    private final ProductDetailsRepository productDetailsRepository;
+    private final ProductPackageRepository productPackageRepository;
 
     public List<ProductSchema> getProducts() {
         return productRepository.findAll().stream().map(ProductSchema::convert).toList();
@@ -111,21 +112,21 @@ public class ProductService {
         return productRepository.findAllByProviderId(providerId).stream().map(ProductSchema::convert).toList();
     }
 
-    public List<ProductDetailsSchema> getProductDetailsByProductId(UUID productId) {
-        return productDetailsRepository.findAllByProductId(productId).stream().map(ProductDetailsSchema::convert).toList();
+    public List<ProductPackageSchema> getProductDetailsByProductId(UUID productId) {
+        return productPackageRepository.findAllByProductId(productId).stream().map(ProductPackageSchema::convert).toList();
     }
 
-    public ProductDetailsSchema createProductDetails(UserEntity authenticatedUser, ProductDetailsInput input) {
+    public ProductPackageSchema createProductDetails(UserEntity authenticatedUser, ProductDetailsInput input) {
         Optional<ProductEntity> productEntityOpt = productRepository.findById(input.productId());
         if (productEntityOpt.isEmpty()) {
             throw new GeneralException("Product not found");
         }
         ProductEntity productEntity = productEntityOpt.get();
-        List<ProductDetailsEntity> productDetailsList = productEntity.getProductDetailsList();
+        List<ProductPackageEntity> productDetailsList = productEntity.getProductDetailsList();
 
         // check if product details with same name already exists
         if (productDetailsList.stream()
-            .anyMatch(productDetailsEntity -> productDetailsEntity.getName().equals(input.name().en()))) {
+            .anyMatch(productPackageEntity -> productPackageEntity.getName().equals(input.name().en()))) {
             throw new GeneralException("Product details with same name already exists");
         }
         var convertedCarType = IntStream.range(0, input.pricesForCarTypes().size())
@@ -138,7 +139,7 @@ public class ProductService {
             }).toList();
 
         // create product details and add them to the product details list
-        ProductDetailsEntity productDetailsEntity = ProductDetailsEntity.builder()
+        ProductPackageEntity productPackageEntity = ProductPackageEntity.builder()
             .product(productEntity)
             .name(input.name().en())
             .nameKa(input.name().ka())
@@ -150,14 +151,14 @@ public class ProductService {
             .currency(input.currency())
             .averageDurationMinutes(input.averageDurationMinutes())
             .build();
-        productDetailsEntity = productDetailsRepository.save(productDetailsEntity);
+        productPackageEntity = productPackageRepository.save(productPackageEntity);
 
-        productEntity.getProductDetailsList().add(productDetailsEntity);
+        productEntity.getProductDetailsList().add(productPackageEntity);
 
-        return ProductDetailsSchema.convert(productDetailsEntity);
+        return ProductPackageSchema.convert(productPackageEntity);
     }
 
-    public ProductDetailsSchema updateProductDetails(UserEntity authenticatedUser, UUID productDetailsId, ProductDetailsInput input) {
+    public ProductPackageSchema updateProductDetails(UserEntity authenticatedUser, UUID productDetailsId, ProductDetailsInput input) {
        // TODO
         return null;
     }
@@ -178,12 +179,22 @@ public class ProductService {
             .orElseThrow(()-> new GeneralException("product by id not found"));
     }
 
-    public List<ProductDetailsSchema> batchGetProductDetails(List<UUID> productIds) {
-        return productDetailsRepository.findAllByProductIdIn(productIds).stream()
-            .map(ProductDetailsSchema::convert).toList();
+    public List<ProductPackageSchema> batchGetProductPackages(List<UUID> productIds) {
+        return productPackageRepository.findAllByProductIdIn(productIds).stream()
+            .map(ProductPackageSchema::convert).toList();
     }
 
     public void updateReviewCount(ProductEntity productEntity, @Range(min=0, max=5) int stars) {
         productRepository.updateReviews(productEntity.getId(), stars);
+    }
+
+    public List<ProductPackageSchema> batchGetPackages(Set<UUID> packageIds) {
+        return productPackageRepository.findAllById(packageIds).stream()
+            .map(ProductPackageSchema::convert).toList();
+    }
+
+    public List<ProductSchema> batchGetProducts(Set<UUID> productIds) {
+        return productRepository.findAllById(productIds).stream()
+            .map(ProductSchema::convert).toList();
     }
 }

@@ -1,7 +1,7 @@
-schema { 
-  query: Query 
-  mutation: Mutation 
-  subscription: Subscription  
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
 }
 
 input AuthenticationInput {
@@ -34,7 +34,7 @@ type Query {
   getOrder(id: ID!): Order!
   getCommission(productId: ID!, packageId: ID): Commission!
   getPaymentInfo(orderId: ID!): String
-  listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
+  listProductDetailsByProductId(productId: ID!): [ProductPackage!]!
   getProduct(productId: ID!): Product!
   listProducts: [Product!]!
   listProductByCategoryId(categoryId: ID!): [Product!]!
@@ -71,8 +71,8 @@ type Mutation {
   confirmPreAuthorization(orderId: ID!): Boolean
   rejectPreAuthorization(orderId: ID!): Boolean
   refund(orderId: ID!, refundAmount: String!): Boolean
-  createProductDetails(input: ProductDetailsInput!): ProductDetails!
-  updateProductDetails(productDetailsId: ID!, input: ProductDetailsInput!): ProductDetails!
+  createProductDetails(input: ProductDetailsInput!): ProductPackage!
+  updateProductDetails(productDetailsId: ID!, input: ProductDetailsInput!): ProductPackage!
   removeProductDetails(productDetailsId: ID!): Boolean!
   createProduct(input: ProductInput!): Product!
   updateProduct(productId: ID!, input: ProductInput!): Product!
@@ -258,9 +258,11 @@ type Order {
   commission: Int!
   status: OrderStatus
   productId: ID!
+  product: Product!
   packageId: ID!
+  productPackage: ProductPackage!
   categoryId: ID!
-  providerId: ID
+  providerId: ID!
   schedulingDate: String
   schedulingTime: String
   carType: CarType
@@ -336,7 +338,7 @@ type ProductDetailsCarPrice {
   price: Int
 }
 
-type ProductDetails {
+type ProductPackage {
   id: ID!
   productId: ID!
   name: LingualString!
@@ -368,10 +370,11 @@ type Product {
   id: ID!
   name: LingualString!
   providerId: ID!
-  categoryId: ID!
-  description: LingualString
-  packages: [ProductDetails!]
   provider: Provider!
+  categoryId: ID!
+  category: Category!
+  description: LingualString
+  packages: [ProductPackage!]
   location: Location
   mainImage: String!
   images: [String!]

@@ -31,9 +31,11 @@ type Order {
     commission: Int!
     status: OrderStatus
     productId: ID!
+    product: Product!
     packageId: ID!
+    productPackage: ProductPackage!
     categoryId: ID!
-    providerId: ID
+    providerId: ID!
     schedulingDate: String
     schedulingTime: String
     carType: CarType

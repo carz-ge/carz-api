@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +68,10 @@ public class CategoryService {
         }
         categoryRepository.delete(categoryEntity.get());
         return true;
+    }
+
+    public List<CategorySchema> batchGetCategories(Set<UUID> categoryIds) {
+        return categoryRepository.findAllById(categoryIds).stream()
+            .map(CategorySchema::convert).toList();
     }
 }

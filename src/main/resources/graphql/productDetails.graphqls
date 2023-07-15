@@ -4,7 +4,7 @@ type ProductDetailsCarPrice {
     price: Int
 }
 
-type ProductDetails {
+type ProductPackage {
     id: ID!
     productId: ID!
     name: LingualString!
@@ -33,12 +33,12 @@ input ProductDetailsInput {
 }
 
 extend type Query {
-    listProductDetailsByProductId(productId: ID!): [ProductDetails!]!
+    listProductDetailsByProductId(productId: ID!): [ProductPackage!]!
 }
 
 extend type Mutation {
-    createProductDetails(input: ProductDetailsInput!): ProductDetails!
+    createProductDetails(input: ProductDetailsInput!): ProductPackage!
     updateProductDetails(productDetailsId: ID!,
-                         input: ProductDetailsInput!): ProductDetails!
+                         input: ProductDetailsInput!): ProductPackage!
     removeProductDetails(productDetailsId: ID!): Boolean!
 }

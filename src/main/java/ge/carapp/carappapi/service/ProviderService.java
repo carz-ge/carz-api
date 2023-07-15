@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -75,5 +76,10 @@ public class ProviderService {
     public List<ProviderSchema> batchGetProviders(List<UUID> providerIds) {
         return providerRepository.findAllById(providerIds)
             .stream().map(ProviderSchema::convert).toList();
+    }
+
+    public List<ProviderSchema> batchGetProviders(Set<UUID> providerIds) {
+        return providerRepository.findAllById(providerIds).stream()
+            .map(ProviderSchema::convert).toList();
     }
 }

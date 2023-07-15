@@ -2,10 +2,11 @@ type Product {
     id: ID!
     name: LingualString!
     providerId: ID!
-    categoryId: ID!
-    description: LingualString
-    packages: [ProductDetails!]
     provider: Provider!
+    categoryId: ID!
+    category: Category!
+    description: LingualString
+    packages: [ProductPackage!]
     location: Location
     mainImage: String!
     images: [String!]

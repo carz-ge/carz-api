@@ -4,13 +4,17 @@
     "description": "",
     "main": "generate.ts",
     "scripts": {
-        "gen": "ts-node generate.ts",
+        "gen": "ts-node generate-new.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@graphql-tools/load-files": "^7.0.0",
+        "@graphql-tools/merge": "^9.0.0",
+        "@graphql-tools/graphql-file-loader": "^8.0.0",
+        "@graphql-tools/load": "^8.0.0",
         "graphql-schema-utilities": "^1.1.6",
         "ts-node": "^10.9.1"
     }

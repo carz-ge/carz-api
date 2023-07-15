@@ -10,7 +10,7 @@ import ge.carapp.carappapi.repository.OrderRepository;
 import ge.carapp.carappapi.schema.CarType;
 import ge.carapp.carappapi.schema.CommissionSchema;
 import ge.carapp.carappapi.schema.order.OrderSchema;
-import ge.carapp.carappapi.schema.ProductDetailsSchema;
+import ge.carapp.carappapi.schema.ProductPackageSchema;
 import ge.carapp.carappapi.schema.ProductSchema;
 import ge.carapp.carappapi.schema.order.OrderInitializationResponse;
 import ge.carapp.carappapi.schema.order.OrderInput;
@@ -40,13 +40,13 @@ public class OrderService {
     public OrderInitializationResponse initializeOrder(UserEntity user, OrderInput order) {
 
         ProductSchema product = productService.getProductById(order.productId());
-        List<ProductDetailsSchema> packages = productService.getProductDetailsByProductId(order.productId());
-        Optional<ProductDetailsSchema> productPackageOptional =
+        List<ProductPackageSchema> packages = productService.getProductDetailsByProductId(order.productId());
+        Optional<ProductPackageSchema> productPackageOptional =
             packages.stream().filter(p -> order.packageId().equals(p.id())).findAny();
         if (productPackageOptional.isEmpty()) {
             throw new GeneralException("Package does not exists");
         }
-        ProductDetailsSchema productPackage = productPackageOptional.get();
+        ProductPackageSchema productPackage = productPackageOptional.get();
 
         // check if order with that idempotency key did not exist
         Optional<OrderEntity> orderByIdempotencyKey = orderRepository.findByIdempotencyKey(order.idempotencyKey());
@@ -120,13 +120,13 @@ public class OrderService {
 
     public CommissionSchema calculateCommission(UserEntity user, UUID productId, UUID packageId) {
         ProductSchema product = productService.getProductById(productId);
-        List<ProductDetailsSchema> packages = productService.getProductDetailsByProductId(productId);
-        Optional<ProductDetailsSchema> productPackageOptional =
+        List<ProductPackageSchema> packages = productService.getProductDetailsByProductId(productId);
+        Optional<ProductPackageSchema> productPackageOptional =
             packages.stream().filter(p -> packageId.equals(p.id())).findAny();
         if (productPackageOptional.isEmpty()) {
             throw new GeneralException("Package does not exists");
         }
-        ProductDetailsSchema productPackage = productPackageOptional.get();
+        ProductPackageSchema productPackage = productPackageOptional.get();
 
         int commission = calculateCommission(product, productPackage);
         return new CommissionSchema(commission, convertPriceiIntoDoubleString(commission));
@@ -155,7 +155,7 @@ public class OrderService {
         }
     }
 
-    private int calculateCommission(ProductSchema product, ProductDetailsSchema productPackage) {
+    private int calculateCommission(ProductSchema product, ProductPackageSchema productPackage) {
         return 20;
     }
 

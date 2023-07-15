@@ -84,6 +84,6 @@ public class ProductEntity {
         orphanRemoval = true,
         fetch = FetchType.LAZY)
     @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "ID")
-    private List<ProductDetailsEntity> productDetailsList;
+    private List<ProductPackageEntity> productDetailsList;
 
 }

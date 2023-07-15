@@ -33,8 +33,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "PRODUCT_DETAILS")
-public class ProductDetailsEntity {
+@Table(name = "PRODUCT_PACKAGE")
+public class ProductPackageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;

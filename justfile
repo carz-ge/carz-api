@@ -1,4 +1,8 @@
 set windows-shell := ["cmd.exe", "/c"]
+
+init:
+  cd graphql && npm i
+
 up:
   docker compose up --build
 
