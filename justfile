@@ -1,6 +1,8 @@
 set windows-shell := ["cmd.exe", "/c"]
 
 init:
+  chmod +x ./scripts/init.sh
+  ./scripts/init.sh
   cd graphql && npm i
 
 up:

@@ -2,7 +2,7 @@ debug: true
 spring:
     #  main:
     #      web-application-type: reactive
-    http:
+    mvc:
         log-request-details: true
     datasource:
         #    driver-class-name: "com.mysql.cj.jdbc.Driver"

@@ -84,8 +84,8 @@ public class ProductPackageController {
             .map(OrderSchema::packageId)
             .collect(Collectors.toSet());
 
-        List<ProductPackageSchema> categories = productService.batchGetPackages(packageIds);
-        Map<UUID, ProductPackageSchema> packagesMap = categories.stream()
+        List<ProductPackageSchema> packages = productService.batchGetPackages(packageIds);
+        Map<UUID, ProductPackageSchema> packagesMap = packages.stream()
             .collect(Collectors.toMap(
                 ProductPackageSchema::id,
                 Function.identity()
@@ -93,7 +93,7 @@ public class ProductPackageController {
 
         return orders.stream().collect(Collectors.toMap(
             Function.identity(),
-            o-> packagesMap.get(o.categoryId()))
+            o-> packagesMap.get(o.packageId()))
         );
     }
 
