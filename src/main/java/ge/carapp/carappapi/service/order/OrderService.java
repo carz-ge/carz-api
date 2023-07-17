@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.service.order;
 
+import ge.carapp.carappapi.entity.ManagerEntity;
 import ge.carapp.carappapi.entity.OrderEntity;
 import ge.carapp.carappapi.entity.ProductDetailsCarPrice;
 import ge.carapp.carappapi.entity.UserEntity;
@@ -16,6 +17,7 @@ import ge.carapp.carappapi.schema.order.OrderInitializationResponse;
 import ge.carapp.carappapi.schema.order.OrderInput;
 import ge.carapp.carappapi.schema.order.OrderStatus;
 import ge.carapp.carappapi.schema.payment.OrderProcessingResponse;
+import ge.carapp.carappapi.service.ManagerService;
 import ge.carapp.carappapi.service.ProductService;
 import ge.carapp.carappapi.service.BookingService;
 import ge.carapp.carappapi.service.payment.PaymentService;
@@ -36,6 +38,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductService productService;
     private final BookingService bookingService;
+    private final ManagerService managerService;
 
     public OrderInitializationResponse initializeOrder(UserEntity user, OrderInput order) {
 
@@ -164,7 +167,10 @@ public class OrderService {
     }
 
     public List<OrderSchema> listProviderOrders(UserEntity user) {
-        // TODO
-        return null;
+        ManagerEntity manager = managerService.getManager(user);
+
+        return orderRepository.findAllByProviderId(manager.getProviderId())
+            .stream().map(OrderSchema::convert)
+            .toList();
     }
 }
