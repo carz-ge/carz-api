@@ -26,6 +26,9 @@ public record ProductSchema(
             new AddressSchema(productEntity.getStreet(),
                 productEntity.getDistrict(),
                 productEntity.getCity()),
+            new AddressSchema(productEntity.getStreetEn(),
+                productEntity.getDistrictEn(),
+                productEntity.getCityEn()),
             new CoordinatesSchema(productEntity.getLat(),
                 productEntity.getLng())
         );

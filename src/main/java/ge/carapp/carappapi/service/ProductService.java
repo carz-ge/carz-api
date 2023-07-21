@@ -64,6 +64,9 @@ public class ProductService {
             .city(input.location().address().city())
             .district(input.location().address().district())
             .street(input.location().address().street())
+            .cityEn(input.location().addressEn().city())
+            .districtEn(input.location().addressEn().district())
+            .streetEn(input.location().addressEn().street())
             .lat(input.location().coordinates().lat())
             .lng(input.location().coordinates().lng())
             .capacity(1)
@@ -91,6 +94,9 @@ public class ProductService {
         productEntity.setCity(input.location().address().city());
         productEntity.setDistrict(input.location().address().district());
         productEntity.setStreet(input.location().address().street());
+        productEntity.setCityEn(input.location().addressEn().city());
+        productEntity.setDistrictEn(input.location().addressEn().district());
+        productEntity.setStreetEn(input.location().addressEn().street());
         productEntity.setLat(input.location().coordinates().lat());
         productEntity.setLng(input.location().coordinates().lng());
         productEntity.setCapacity(1);
@@ -159,7 +165,7 @@ public class ProductService {
     }
 
     public ProductPackageSchema updateProductDetails(UserEntity authenticatedUser, UUID productDetailsId, ProductDetailsInput input) {
-       // TODO
+        // TODO
         return null;
     }
 
@@ -176,7 +182,7 @@ public class ProductService {
     public ProductEntity getProductEntity(UUID productId) {
         return productRepository
             .findById(productId)
-            .orElseThrow(()-> new GeneralException("product by id not found"));
+            .orElseThrow(() -> new GeneralException("product by id not found"));
     }
 
     public List<ProductPackageSchema> batchGetProductPackages(List<UUID> productIds) {
@@ -184,7 +190,7 @@ public class ProductService {
             .map(ProductPackageSchema::convert).toList();
     }
 
-    public void updateReviewCount(ProductEntity productEntity, @Range(min=0, max=5) int stars) {
+    public void updateReviewCount(ProductEntity productEntity, @Range(min = 0, max = 5) int stars) {
         productRepository.updateReviews(productEntity.getId(), stars);
     }
 

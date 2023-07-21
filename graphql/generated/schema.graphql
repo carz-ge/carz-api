@@ -22,6 +22,7 @@ type SendOptOutput {
 
 type Query {
   checkPhone(phone: String!): Boolean!
+  listAutoStations: [AutoStation!]!
   listCars: [Car!]!
   listCards: [Card!]!
   listCategories: [Category!]!
@@ -86,6 +87,24 @@ type Mutation {
   removeUser: Boolean
   deactivateUser: Boolean
   addDeviceToken(input: AddDeviceTokenInput!): Boolean
+}
+
+type AutoStation {
+  id: ID!
+  name: LingualString!
+  stationType: String!
+  providerCode: String!
+  description: LingualString
+  active: Boolean!
+  location: Location
+  region: LingualString
+  image: String
+  productTypes: String
+  objectTypes: String
+  paymentTypes: String
+  serviceTypes: String
+  textHtml: String
+  textHtmlEn: String
 }
 
 input ManagersOrderResponseInput {
@@ -195,11 +214,13 @@ type Coordinates {
 
 type Location {
   address: Address!
+  addressEn: Address
   coordinates: Coordinates!
 }
 
 input LocationInput {
   address: AddressInput!
+  addressEn: AddressInput!
   coordinates: CoordinatesInput!
 }
 

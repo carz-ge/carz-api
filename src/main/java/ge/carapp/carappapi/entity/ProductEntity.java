@@ -69,6 +69,9 @@ public class ProductEntity {
     private String street;
     private String district;
     private String city;
+    private String streetEn;
+    private String districtEn;
+    private String cityEn;
     // coordinates
     private double lat;
     private double lng;

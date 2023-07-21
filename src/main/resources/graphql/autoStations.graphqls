@@ -1,0 +1,26 @@
+type AutoStation {
+    id: ID!
+    name: LingualString!
+    stationType: String!
+    providerCode: String!
+
+    description: LingualString
+
+    active: Boolean!
+
+    location: Location
+    region: LingualString
+    image: String
+
+    productTypes: String
+    objectTypes: String
+    paymentTypes: String
+    serviceTypes: String
+    textHtml: String
+    textHtmlEn: String
+}
+
+
+extend type Query {
+    listAutoStations: [AutoStation!]!
+}

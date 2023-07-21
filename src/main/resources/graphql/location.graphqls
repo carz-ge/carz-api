@@ -11,12 +11,15 @@ type Coordinates {
 
 type Location {
 	address: Address!
+  addressEn: Address
 #	addressEn: Address!
 	coordinates: Coordinates!
 }
 
 input LocationInput {
 	address: AddressInput!
+  addressEn: AddressInput!
+
 #	addressEn: AddressInput!
 	coordinates: CoordinatesInput!
 }
