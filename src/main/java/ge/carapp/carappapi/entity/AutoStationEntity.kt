@@ -48,9 +48,13 @@ data class AutoStationEntity(
     var address: String? = null,
     var addressEn: String? = null,
     var picture: String? = null,
+    @Column(columnDefinition = "jsonb")
     var productTypes: Any? = null,
+    @Column(columnDefinition = "jsonb")
     var objectTypes: Any? = null,
+    @Column(columnDefinition = "jsonb")
     var paymentTypes: Any? = null,
+    @Column(columnDefinition = "jsonb")
     var serviceTypes: Any? = null,
     var textHtml: ByteArray? = null,
     var textHtmlEn: ByteArray? = null,

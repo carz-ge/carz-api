@@ -47,13 +47,13 @@ fun convert(entity: AutoStationEntity): AutoStationsSchema {
 
     return AutoStationsSchema(
         id = entity.id,
-        name = LingualString(entity.name, entity.nameEn),
+        name = LingualString(entity.nameEn, entity.name),
         stationType = entity.stationType,
         providerCode = entity.providerCode,
-        description = LingualString(entity.description, entity.descriptionEn),
+        description = LingualString(entity.descriptionEn, entity.description),
         active = entity.active,
         location = LocationSchema(addressSchema, addressEnSchema, coordinatesSchema),
-        region = LingualString(entity.region, entity.regionEn),
+        region = LingualString(entity.regionEn, entity.region),
         image = entity.picture,
         productTypes = Objects.toString(entity.productTypes),
         objectTypes = Objects.toString(entity.objectTypes),
@@ -61,7 +61,6 @@ fun convert(entity: AutoStationEntity): AutoStationsSchema {
         serviceTypes = Objects.toString(entity.serviceTypes),
         textHtml = Objects.toString(entity.textHtml),
         textHtmlEn = Objects.toString(entity.textHtmlEn),
-
 
         )
 }

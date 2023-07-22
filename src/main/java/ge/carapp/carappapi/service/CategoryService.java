@@ -19,6 +19,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Cacheable("getCategories")
+//    @CacheEvict(value = "categories", allEntries = true)
+//    @Scheduled(fixedRateString = "${caching.spring.categoriestTTL}")
     public List<CategorySchema> getCategories() {
         List<CategorySchema> categories = categoryRepository.findAllByActiveOrderByPriorityDesc(true).stream().map(CategorySchema::convert).toList();
         log.info("Categories list: {}", categories);
