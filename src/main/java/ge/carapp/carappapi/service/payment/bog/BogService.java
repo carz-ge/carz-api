@@ -1,4 +1,4 @@
-package ge.carapp.carappapi.service.payment;
+package ge.carapp.carappapi.service.payment.bog;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,6 +17,7 @@ import ge.carapp.carappapi.models.bog.order.OrderRequest;
 import ge.carapp.carappapi.models.bog.order.OrderResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,7 +35,8 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class BogService {
+@Profile("prod")
+public class BogService implements IBogService{
     private final BogConfig config;
 
     private final WebClient client;

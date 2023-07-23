@@ -2,6 +2,7 @@ package ge.carapp.carappapi.models.bog.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
  *
  * @param id
  */
+@Builder
 public record OrderResponse(
     @NotNull UUID id,
 

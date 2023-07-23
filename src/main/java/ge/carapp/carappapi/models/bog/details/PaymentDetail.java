@@ -1,7 +1,9 @@
 package ge.carapp.carappapi.models.bog.details;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
+@Builder
 public record PaymentDetail(
     @JsonProperty("transfer_method")
     KeyValue transferMethod,

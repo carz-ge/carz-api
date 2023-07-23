@@ -1,5 +1,7 @@
 debug: true
 spring:
+    devtools:
+        add-properties: false
     #  main:
     #      web-application-type: reactive
     mvc:

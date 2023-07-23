@@ -29,6 +29,7 @@ import ge.carapp.carappapi.schema.graphql.PaymentConfirmDetailsInput;
 import ge.carapp.carappapi.schema.payment.OrderProcessingResponse;
 import ge.carapp.carappapi.schema.payment.PaymentInfoSchema;
 import ge.carapp.carappapi.service.CardService;
+import ge.carapp.carappapi.service.payment.bog.IBogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +47,7 @@ import java.util.UUID;
 @Slf4j
 public class PaymentService {
     private final ProfileConfig profileConfig;
-    private final BogService bogService;
+    private final IBogService bogService;
     private final CardService cardService;
     private final PaymentRepository paymentRepository;
 

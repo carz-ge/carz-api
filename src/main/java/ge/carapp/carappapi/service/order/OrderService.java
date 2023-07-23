@@ -7,6 +7,9 @@ import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.exception.GeneralException;
 import ge.carapp.carappapi.models.bog.BogOrderStatus;
 import ge.carapp.carappapi.models.bog.PaymentStatusInfo;
+import ge.carapp.carappapi.models.bog.details.KeyValue;
+import ge.carapp.carappapi.models.bog.details.OrderDetails;
+import ge.carapp.carappapi.models.bog.details.PaymentDetail;
 import ge.carapp.carappapi.repository.OrderRepository;
 import ge.carapp.carappapi.schema.CarType;
 import ge.carapp.carappapi.schema.CommissionSchema;
@@ -24,6 +27,7 @@ import ge.carapp.carappapi.service.payment.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -172,5 +176,25 @@ public class OrderService {
         return orderRepository.findAllByProviderId(manager.getProviderId())
             .stream().map(OrderSchema::convert)
             .toList();
+    }
+
+    public void makeMockPaymentRequest(String orderId, boolean isSuccess) {
+           PaymentStatusInfo mockedPayment = PaymentStatusInfo.builder()
+               .requestTime(LocalDateTime.now().toString())
+               .body(OrderDetails.builder()
+                   .capture("automatic")
+                   .externalOrderId(orderId)
+                   .orderStatus(isSuccess ? new KeyValue("completed","წარმატებული") : new KeyValue("rejected","წარუმატებული"))
+                   .paymentDetail(PaymentDetail.builder()
+                       .transactionId("230513868679")
+                       .cardExpiryDate("03/24")
+                       .paymentOption("direct_debit")
+                       .payerIdentifier("548888xxxxxx9893")
+                       .cardType("mc")
+                       .build())
+                   .build())
+               .build();
+
+        processPaymentCallbackResponse(orderId, mockedPayment);
     }
 }

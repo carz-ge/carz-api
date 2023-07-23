@@ -11,8 +11,16 @@ up:
 gen:
    cd graphql && npm run gen
 
+run:
+   docker build -f Dockerfile.native -t carz-api .
+#   docker run  -rm carz-api
+
 build:
     gradlew bootJar -i --stacktrace --no-daemon
 
 start:
     gradlew bootRun
+
+
+log:
+   railway logs

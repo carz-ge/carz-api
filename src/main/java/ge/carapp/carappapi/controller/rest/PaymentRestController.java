@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,14 +31,20 @@ public class PaymentRestController {
     }
 
     @GetMapping("/payment/redirect/{orderId}/success")
-    ResponseEntity<String> successRedirect(@PathVariable("orderId") String orderId) {
-        log.info("payment success redirect: {}", orderId);
+    ResponseEntity<String> successRedirect(@PathVariable("orderId") String orderId, @RequestParam(value = "mock", defaultValue = "false") Boolean shouldMock) {
+        if (Boolean.TRUE.equals(shouldMock)) {
+           orderService.makeMockPaymentRequest(orderId, true);
+        }
+        log.info("payment success redirect: {}, mock: {}", orderId, shouldMock);
         return ResponseEntity.ok().body("payment success redirect: %s".formatted(orderId));
     }
 
     @GetMapping("/payment/redirect/{orderId}/reject")
-    ResponseEntity<String> rejectRedirect(@PathVariable("orderId") String orderId) {
-        log.info("payment fail redirect: {}", orderId);
+    ResponseEntity<String> rejectRedirect(@PathVariable("orderId") String orderId, @RequestParam(value = "mock", defaultValue = "false") Boolean shouldMock) {
+        if (Boolean.TRUE.equals(shouldMock)) {
+           orderService.makeMockPaymentRequest(orderId, false);
+        }
+        log.info("payment fail redirect: {}, mock: {}", orderId, shouldMock);
         return ResponseEntity.ok().body("payment fail redirect: %s".formatted(orderId));
     }
 

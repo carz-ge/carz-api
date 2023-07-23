@@ -2,9 +2,11 @@ package ge.carapp.carappapi.models.bog.details;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
 import java.util.UUID;
 
+@Builder
 public record OrderDetails(
     @JsonProperty("order_id")
     UUID orderId,
