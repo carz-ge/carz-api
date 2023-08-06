@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 
 import java.security.SecureRandom;
+import java.util.UUID;
 
 @Slf4j
 public class Secrets {
@@ -21,6 +22,8 @@ public class Secrets {
 
 
     public static void main(String[] args) {
+         log.info("new uuid {}", UUID.randomUUID());
+
         var res = base64("123", "456");
         log.info("encoded: {}", res);
         log.info("decoded: {}", decodeBase64(res));

@@ -15,6 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ManagerService {
     private final ManagerRepository managerRepository;
+    public static final String MANAGER_PHONE_PREFIX = "M_";
 
     public ManagerEntity createManager(UserEntity user, UUID providerId) {
         Optional<ManagerEntity> managerOptional = managerRepository.findByUserId(user.getId());
@@ -47,4 +48,14 @@ public class ManagerService {
 
 
 
+    public static String managerPhoneId(String phone) {
+        return MANAGER_PHONE_PREFIX + phone;
+    }
+
+    public static String managerPhone(String phone) {
+        if (!phone.startsWith(MANAGER_PHONE_PREFIX)) {
+            throw new GeneralException("Invalid manager phone");
+        }
+        return  phone;
+    }
 }

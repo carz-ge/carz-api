@@ -58,14 +58,12 @@ public class ProductPackageController {
 
     @BatchMapping(typeName = "Product")
     public Map<ProductSchema, List<ProductPackageSchema>> packages(List<ProductSchema> products) {
-        log.info("products: {}", products);
 
         var productIds = products.stream()
             .map(ProductSchema::id)
             .toList();
 
         List<ProductPackageSchema> packagesList = productService.batchGetProductPackages(productIds);
-        log.info("packagesList: {}", packagesList);
         Map<UUID, List<ProductPackageSchema>> groupedPackages = packagesList.stream()
             .collect(Collectors.groupingBy(ProductPackageSchema::productId));
 
@@ -73,13 +71,10 @@ public class ProductPackageController {
             .collect(Collectors.toMap(product -> product,
                 product -> groupedPackages.get(product.id())));
 
-        log.info("mappedResult: {}", mappedResult);
         return mappedResult;
     }
     @BatchMapping(typeName = "Order")
     public Map<OrderSchema, ProductPackageSchema> productPackage(List<OrderSchema> orders) {
-        log.info("productPackage orders: {}", orders);
-
         Set<UUID> packageIds = orders.stream()
             .map(OrderSchema::packageId)
             .collect(Collectors.toSet());

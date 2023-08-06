@@ -24,6 +24,7 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 @ConfigurationProperties(prefix = "app")
 public class AppConfig {
     private String appApi;
+    private String webUrl;
     public static final DateTimeFormatter TIME_FORMATTER = ofPattern("HH:mm");
     public static final DateTimeFormatter DATE_FORMATTER = ofPattern("yyyy-MM-dd");
 

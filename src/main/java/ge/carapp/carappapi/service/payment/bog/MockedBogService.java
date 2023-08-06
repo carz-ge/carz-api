@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.service.payment.bog;
 
+import ge.carapp.carappapi.config.AppConfig;
 import ge.carapp.carappapi.core.Language;
 import ge.carapp.carappapi.models.bog.AuthenticationResponse;
 import ge.carapp.carappapi.models.bog.details.OrderDetails;
@@ -10,16 +11,20 @@ import ge.carapp.carappapi.models.bog.order.OrderLinks;
 import ge.carapp.carappapi.models.bog.order.OrderRequest;
 import ge.carapp.carappapi.models.bog.order.OrderResponse;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Service
 @Profile("dev")
 public class MockedBogService implements IBogService {
+    public MockedBogService(AppConfig appConfig) {
+        this.appConfig = appConfig;
+    }
 
+    private final AppConfig appConfig;
     private ConcurrentHashMap<UUID, String> paymentIds = new ConcurrentHashMap<>();
 
 
@@ -28,7 +33,7 @@ public class MockedBogService implements IBogService {
         return Mono.just(
             AuthenticationResponse.builder()
                 .accessToken("TEST_ACCESS_TOKEN")
-                .expiresIn(Integer.valueOf(LocalDateTime.now().plus(2L, ChronoUnit.DAYS).toString()))
+                .expiresIn(123)
                 .tokenType("token")
                 .build()
 
@@ -42,7 +47,7 @@ public class MockedBogService implements IBogService {
 
         return Mono.just(OrderResponse.builder()
             .id(id)
-            .links(new OrderLinks(new BogLink("test link"), new BogLink("test link2")))
+            .links(new OrderLinks(new BogLink("test link"), new BogLink("%s/mock/payment/%s".formatted(appConfig.getWebUrl(), order.externalOrderId()))))
 
             .build());
     }
@@ -51,7 +56,7 @@ public class MockedBogService implements IBogService {
     public Mono<OrderResponse> createOrderBySavedCard(OrderRequest order, Language language, UUID orderId, String token) {
         return Mono.just(OrderResponse.builder()
             .id(UUID.randomUUID())
-            .links(new OrderLinks(new BogLink("test link"), new BogLink("test link2")))
+            .links(new OrderLinks(new BogLink("test link"), new BogLink("%s/mock/payment/%s".formatted(appConfig.getWebUrl(), order.externalOrderId()))))
             .build());
     }
 
@@ -77,7 +82,7 @@ public class MockedBogService implements IBogService {
     public Mono<OrderResponse> createAutomaticOrderBySavedCard(AutomaticOrderRequest order, UUID parentOrderId, String token) {
         return Mono.just(OrderResponse.builder()
             .id(UUID.randomUUID())
-            .links(new OrderLinks(new BogLink("test link"), new BogLink("test link2")))
+            .links(new OrderLinks(new BogLink("test link"), new BogLink("%s/mock/payment/%s".formatted(appConfig.getWebUrl(), order.externalOrderId()))))
             .build());
     }
 

@@ -84,7 +84,8 @@ logging:
                                 ExchangeFunctions: TRACE
 
 app:
-    appApi: ${APP_API_URL:http://localhost:8080}
+    appApi: ${APP_API_URL:https://api2.carz.ge}
+    webUrl: ${WEB_URL:https://carz.ge}
 
 aws:
     accessKeyId: ${AWS_ACCESS_KEY_ID:123}

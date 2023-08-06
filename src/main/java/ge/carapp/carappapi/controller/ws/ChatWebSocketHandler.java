@@ -2,9 +2,9 @@ package ge.carapp.carappapi.controller.ws;
 
 import ge.carapp.carappapi.security.CustomUserDetails;
 import ge.carapp.carappapi.service.chat.ChatService;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -45,7 +45,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, @NotNull TextMessage message) {
+    protected void handleTextMessage(@NotNull WebSocketSession session, @NotNull TextMessage message) {
         // Handle incoming WebSocket message
         log.info("handleTextMessage: {}", message);
 

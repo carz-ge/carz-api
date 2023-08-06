@@ -1,5 +1,6 @@
 package ge.carapp.carappapi.service.payment;
 
+import ge.carapp.carappapi.config.AppConfig;
 import ge.carapp.carappapi.config.ProfileConfig;
 import ge.carapp.carappapi.entity.CardEntity;
 import ge.carapp.carappapi.entity.OrderEntity;
@@ -50,6 +51,7 @@ public class PaymentService {
     private final IBogService bogService;
     private final CardService cardService;
     private final PaymentRepository paymentRepository;
+    private final AppConfig appConfig;
 
     public Mono<OrderProcessingResponse> createOrder(@NotNull UserEntity user,
                                                      @NotNull OrderRequest order,
@@ -85,7 +87,6 @@ public class PaymentService {
 
         Mono<OrderResponse> createOrderResult = authToken
             .flatMap(token -> bogService.createOrder(order, user.getLanguage(), token))
-            .log()
             .doOnError(e -> log.error("error occurred after creating order", e));
 
         if (saveCard) {
@@ -96,8 +97,7 @@ public class PaymentService {
                             return bogService.saveCardFromOrderForAutomaticPayments(res.id(), token);
                         }
                     )
-                )
-                .log();
+                );
         }
 
         return createOrderResult
@@ -120,7 +120,6 @@ public class PaymentService {
 
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.createOrderBySavedCard(order, user.getLanguage(), bogParentOrderId, token))
-            .log()
             .doOnError(e -> log.error("error occurred after creating order", e))
             .map(res -> {
                 String redirectLink = res.links().redirect().href();
@@ -143,7 +142,6 @@ public class PaymentService {
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.createAutomaticOrderBySavedCard(order, bogParentOrderId,
                 token))
-            .log()
             .doOnError(e -> log.error("error occurred after creating order", e))
             .map(res -> OrderProcessingResponse.builder()
                 .bogOrderId(res.id())
@@ -153,7 +151,9 @@ public class PaymentService {
 
 
     public Mono<OrderProcessingResponse> createOrder(@NotNull UserEntity user, @NotNull InitializePaymentInput input) {
-        OrderRequest order = createOrderRequest(input.getOrderId(),
+        OrderRequest order = createOrderRequest(
+            appConfig.getAppApi(),
+            input.getOrderId(),
             input.getUnitPrice(),
             input.getTotalAmount(),
             input.isAutomatic(),
@@ -164,7 +164,7 @@ public class PaymentService {
         return createNewOrder(user, order, input.getSaveCard());
     }
 
-    public static OrderRequest createOrderRequest(
+    public static OrderRequest createOrderRequest(String redirectBaseUrl,
         UUID orderId,
         double unitPrice,
         double totalAmount,
@@ -191,8 +191,8 @@ public class PaymentService {
             .build();
 
         RedirectUrls redirectUrls = RedirectUrls.builder()
-            .success("https://api2.carz.ge/payment/redirect/%s/success".formatted(orderId))
-            .fail("https://api2.carz.ge/payment/redirect/%s/reject".formatted(orderId))
+            .success("%s/payment/redirect/%s/success".formatted(redirectBaseUrl,orderId))
+            .fail("%s/payment/redirect/%s/reject".formatted(redirectBaseUrl, orderId))
             .build();
 
         Buyer buyer = Buyer.builder()
@@ -200,7 +200,7 @@ public class PaymentService {
             .build();
 
         return OrderRequest.builder()
-            .callbackUrl("https://api2.carz.ge/payment/%s".formatted(orderId))
+            .callbackUrl("%s/payment/%s".formatted(redirectBaseUrl, orderId))
             .externalOrderId(orderId.toString())
             .capture(isAutomatic ? "automatic" : "manual")
             .buyer(buyer)
@@ -214,7 +214,9 @@ public class PaymentService {
     public Mono<OrderProcessingResponse> createOrderBySavedCard(@NotNull UserEntity user, @NotNull InitializePaymentWithSavedCardsInput input) {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
 
-        OrderRequest order = createOrderRequest(input.getOrderId(),
+        OrderRequest order = createOrderRequest(
+            appConfig.getAppApi(),
+            input.getOrderId(),
             input.getUnitPrice(),
             input.getTotalAmount(),
             input.isAutomatic(),
@@ -225,7 +227,6 @@ public class PaymentService {
 
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.createOrderBySavedCard(order, user.getLanguage(), input.getBogOrderId(), token))
-            .log()
             .doOnError(e -> log.error("error occurred after creating order", e))
             .map(res -> {
                 UUID bogOrderId = res.id();
@@ -242,7 +243,6 @@ public class PaymentService {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.retrieveOrderDetails(orderId, token))
-            .log()
             .doOnError(e -> log.error("error occurred after retrieve Payment Info order", e))
             .map(PaymentInfoSchema::from);
     }
@@ -252,7 +252,6 @@ public class PaymentService {
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.saveCardFromOrderForAutomaticPayments(orderId, token) // TODO run parallel
                 .flatMap((r) -> bogService.saveCardFromOrder(orderId, token)))
-            .log()
             .doOnError(e -> log.error("error occurred after save Card", e));
 
     }
@@ -262,7 +261,6 @@ public class PaymentService {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.deleteSavedCard(orderId, token))
-            .log()
             .doOnError(e -> log.error("error occurred after remove Card", e));
 
     }
@@ -280,7 +278,6 @@ public class PaymentService {
                 }
                 return bogService.confirmPreAuthorization(orderId, token, onHoldAmount);
             })
-            .log()
             .doOnError(e -> log.error("error occurred after confirm PreAuthorization", e));
 
     }
@@ -290,7 +287,6 @@ public class PaymentService {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.rejectPreAuthorization(orderId, token))
-            .log()
             .doOnError(e -> log.error("error occurred after reject PreAuthorizationr", e));
 
     }
@@ -300,7 +296,6 @@ public class PaymentService {
         Mono<AuthenticationResponse> authentication = bogService.authenticate();
         return authentication.mapNotNull(AuthenticationResponse::accessToken)
             .flatMap(token -> bogService.refund(orderId, refundAmount, token))
-            .log()
             .doOnError(e -> log.error("error occurred after refund", e));
 
     }

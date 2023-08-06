@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Set;
 
+import static ge.carapp.carappapi.service.ManagerService.managerPhoneId;
+
 @Controller
 @RequiredArgsConstructor
 public class AuthController {
@@ -37,18 +39,18 @@ public class AuthController {
     @ExceptionHandler(GeneralException.class)
     public AuthenticationOutput authorize(@Argument AuthenticationInput input) {
         // Todo managers wouldn't be able to authenticate
-        return authService.authorize(input, USER_AND_ADMIN);
+        return authService.authorize(input.phone(), input.otp(), USER_AND_ADMIN);
     }
 
     @MutationMapping
     public SendOptOutput checkPhoneForManger(@Argument String phone) {
-        return authService.checkPhoneForManger(phone, MANAGER_AND_ADMIN);
+        return authService.checkPhoneForManger(managerPhoneId(phone), MANAGER_AND_ADMIN);
     }
 
     @MutationMapping
     @ExceptionHandler(GeneralException.class)
     public AuthenticationOutput authenticateManager(@Argument AuthenticationInput input) {
-        return authService.authorize(input, MANAGER_AND_ADMIN);
+        return authService.authorize(managerPhoneId(input.phone()), input.otp(), MANAGER_AND_ADMIN);
     }
 
 }

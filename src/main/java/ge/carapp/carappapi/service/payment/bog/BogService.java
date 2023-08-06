@@ -167,11 +167,9 @@ public class BogService implements IBogService{
                     }
 
                     return r.bodyToMono(String.class)
-                        .log()
                         .map(e -> false);
                 }
             )
-            .log()
             .doOnError(e -> {
                 log.info("handleResponse On Error: {}", e.getMessage());
                 if (e instanceof WebClientResponseException err) {
@@ -222,7 +220,6 @@ public class BogService implements IBogService{
     private static <T> Mono<T> handleResponse(WebClient.ResponseSpec retrieve, Class<T> responseClass) {
         return retrieve
             .toEntity(responseClass)
-            .log()
             .doOnError(e -> {
                 log.info("handleResponse On Error: {}", e.getMessage());
                 if (e instanceof WebClientResponseException err) {
@@ -243,11 +240,9 @@ public class BogService implements IBogService{
                     }
 
                     return r.bodyToMono(String.class)
-                        .log()
                         .map(e -> false);
                 }
             )
-            .log()
             .doOnError(e -> {
                 log.info("handleResponse On Error: {}", e.getMessage());
                 if (e instanceof WebClientResponseException err) {
@@ -269,11 +264,9 @@ public class BogService implements IBogService{
                     }
 
                     return r.bodyToMono(String.class)
-                        .log()
                         .map(e -> false);
                 }
             )
-            .log()
             .doOnError(e -> {
                 log.info("handleResponse On Error: {}", e.getMessage());
                 if (e instanceof WebClientResponseException err) {

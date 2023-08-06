@@ -57,8 +57,6 @@ public class CategoryController {
 
     @BatchMapping(typeName = "Product")
     public Map<ProductSchema, CategorySchema> category(List<ProductSchema> products) {
-        log.info("category products: {}", products);
-
         Set<UUID> categoryIds = products.stream()
             .map(ProductSchema::categoryId)
             .collect(Collectors.toSet());

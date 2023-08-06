@@ -1,12 +1,13 @@
 package ge.carapp.carappapi.controller.ws.manager;
 
+import ge.carapp.carappapi.controller.ws.WsUtils;
 import ge.carapp.carappapi.entity.ManagerEntity;
 import ge.carapp.carappapi.entity.UserEntity;
 import ge.carapp.carappapi.security.CustomUserDetails;
 import ge.carapp.carappapi.service.ManagerService;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -17,39 +18,49 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static ge.carapp.carappapi.controller.ws.WsUtils.clearClosedConnections;
 import static ge.carapp.carappapi.security.AuthenticatedUserProvider.authenticatedUserDetails;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ManagersOrderWebSocketHandler extends TextWebSocketHandler {
-    private final ConcurrentHashMap<UUID, ConcurrentHashMap<UUID, WebSocketSession>> providerManagerConnections =
-        new ConcurrentHashMap<>();
+    private static final int MAX_CONNECTION_PER_MANAGER = 2;
+
+    private final ConcurrentHashMap<UUID, Map<UUID, List<WebSocketSession>>> providerManagerConnections =
+            new ConcurrentHashMap<>();
 
     private final ManagerService managerService;
 
     @Override
-    public void afterConnectionEstablished(@NotNull WebSocketSession session) {
+    public void afterConnectionEstablished(@NotNull WebSocketSession session) throws IOException {
         ManagerEntity manager = getManagerFromSession(session);
 
 
-        ConcurrentHashMap<UUID, WebSocketSession> managerToConnection =
-            providerManagerConnections.computeIfAbsent(manager.getProviderId(), a -> new ConcurrentHashMap<>());
+        Map<UUID, List<WebSocketSession>> managerToConnection =
+                providerManagerConnections.computeIfAbsent(manager.getProviderId(), a -> new ConcurrentHashMap<>());
+        List<WebSocketSession> webSocketSessions = managerToConnection.computeIfAbsent(manager.getId(), key -> Collections.synchronizedList(new LinkedList<>()));
 
-        managerToConnection.put(manager.getId(), session);
+        clearClosedConnections(webSocketSessions, MAX_CONNECTION_PER_MANAGER);
+
+        webSocketSessions.add(session);
+
+        log.info("managerToConnection size {}", managerToConnection.size());
 
         // Handle new WebSocket connection
         log.info("afterConnectionEstablished MANAGER session: {}, {}, {}, {}, {}",
-            session.getId(),
-            session.getAttributes(),
-            session.getPrincipal(),
-            session.getAcceptedProtocol(),
-            session.getHandshakeHeaders());
+                session.getId(),
+                session.getAttributes(),
+                session.getPrincipal(),
+                session.getAcceptedProtocol(),
+                session.getHandshakeHeaders());
     }
 
     private ManagerEntity getManagerFromSession(@NotNull WebSocketSession session) {
@@ -58,47 +69,27 @@ public class ManagersOrderWebSocketHandler extends TextWebSocketHandler {
         return managerService.getManager(user);
     }
 
-    public boolean sendMessage(ManagerEntity manager, String message) {
-        ConcurrentHashMap<UUID, WebSocketSession> managerToConnections = providerManagerConnections.get(manager.getProviderId());
+    public boolean sendMessage(@NotNull ManagerEntity manager, String message) {
+        Map<UUID, List<WebSocketSession>> managerToConnections = providerManagerConnections.get(manager.getProviderId());
         if (managerToConnections == null) {
             return false;
         }
-        WebSocketSession webSocketSession = managerToConnections.get(manager.getId());
-        if (webSocketSession == null || !webSocketSession.isOpen()) {
-            return false;
-        }
-
-        try {
-            webSocketSession.sendMessage(new TextMessage(message));
-        } catch (IOException e) {
-            log.error("could not send message", e);
-            return false;
-        }
-        return true;
+        return WsUtils.sendMessage(managerToConnections, manager.getId(), message);
     }
 
     public List<UUID> sendMessageToAll(UUID providerId, String message) {
-        ConcurrentHashMap<UUID, WebSocketSession> managerToConnections = providerManagerConnections.get(providerId);
+        Map<UUID, List<WebSocketSession>> managerToConnections = providerManagerConnections.get(providerId);
         if (managerToConnections == null) {
             return Collections.emptyList();
         }
 
         List<UUID> success = new ArrayList<>();
 
-        managerToConnections.forEach((id, conn)-> {
-            WebSocketSession webSocketSession = managerToConnections.get(id);
-            if (webSocketSession == null || !webSocketSession.isOpen()) {
-                return;
-            }
-
-            try {
-                log.info("sending message to manager {}", id);
-                webSocketSession.sendMessage(new TextMessage(message));
+        managerToConnections.forEach((id, conn) -> {
+            log.info("sending message to manager {}", id);
+            if (WsUtils.sendMessage(managerToConnections, id, message)) {
                 success.add(id);
-            } catch (IOException e) {
-                log.error("could not send message", e);
             }
-
         });
 
         return success;
@@ -106,7 +97,7 @@ public class ManagersOrderWebSocketHandler extends TextWebSocketHandler {
 
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, @NotNull TextMessage message) throws IOException {
+    protected void handleTextMessage(@NotNull WebSocketSession session, @NotNull TextMessage message) throws IOException {
         // Handle incoming WebSocket message
         log.info("MANAGER handleTextMessage: {}", message);
         ManagerEntity manager = getManagerFromSession(session);
