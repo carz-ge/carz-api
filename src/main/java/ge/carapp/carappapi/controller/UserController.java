@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @MutationMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Boolean addDeviceToken(@Argument AddDeviceTokenInput input) {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         userService.addDeviceToken(authenticatedUser, input);
@@ -49,7 +49,7 @@ public class UserController {
     }
 
     @MutationMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Boolean removeUser() {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         userService.removeUser(authenticatedUser);
@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @MutationMapping
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Boolean deactivateUser() {
         UserEntity authenticatedUser = AuthenticatedUserProvider.getAuthenticatedUser();
         userService.deactivateUser(authenticatedUser);

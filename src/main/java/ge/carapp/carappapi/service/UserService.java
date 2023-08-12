@@ -71,6 +71,7 @@ public class UserService {
             throw new GeneralException("empty values to update");
         }
 
+        user.setShouldUpdateInfo(false);
         user = userRepository.save(user);
 
         return UserSchema.convert(user);
@@ -82,7 +83,11 @@ public class UserService {
             .findByPhone(phone);
 
         if (userEntityOptional.isPresent()) {
-            return new UserContainer(userEntityOptional.get(), false);
+            UserEntity userEntity = userEntityOptional.get();
+            if (Boolean.TRUE.equals(userEntity.getRemoved())) {
+                throw new GeneralException("user is removed");
+            }
+            return new UserContainer(userEntity, false);
         }
 
         final var creationTime = LocalDateTime.now();
@@ -90,6 +95,7 @@ public class UserService {
             .phone(phone)
             .userRole(UserRole.USER)
             .language(Language.KA)
+            .shouldUpdateInfo(true)
             .createdAt(creationTime)
             .updatedAt(creationTime)
             .build();
@@ -110,8 +116,7 @@ public class UserService {
             userDeviceRepository.save(userDeviceEntity);
 
         } catch (Exception e) {
-            log.error("could not save device token {}", user.getId());
-            e.printStackTrace();
+            log.error("could not save device token {} {}", user.getId(), e.getMessage());
             throw e;
         }
 
@@ -127,6 +132,8 @@ public class UserService {
     }
 
     public void removeUser(UserEntity user) {
+        log.info("Removing user: {}", user.getId());
+        user.setPhone("REM_"+ user.getPhone() + "_" + LocalDateTime.now());
         user.setRemoved(true);
         userRepository.save(user);
     }

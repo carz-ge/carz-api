@@ -65,12 +65,13 @@ public class AuthService {
         return AuthenticationOutput.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
+            .shouldUpdateUserInfo(user.getShouldUpdateInfo())
             .build();
     }
 
     public SendOptOutput checkPhoneForManger(String phone, Set<UserRole> managerAndAdmin) {
         Optional<UserEntity> user = userService.getUserByPhone(phone);
-        if (user.isEmpty() || !managerAndAdmin.contains(user.get().getUserRole())) {
+        if (user.isEmpty() || !managerAndAdmin.contains(user.get().getUserRole()) || Boolean.TRUE.equals(user.get().getRemoved())) {
             log.warn("Manager not found: {}", phone);
             return SendOptOutput.builder().sent(false).build();
         }

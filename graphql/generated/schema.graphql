@@ -12,6 +12,7 @@ input AuthenticationInput {
 type AuthenticationOutput {
   accessToken: String!
   refreshToken: String
+  shouldUpdateUserInfo: Boolean
 }
 
 type SendOptOutput {

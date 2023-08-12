@@ -44,6 +44,7 @@ public class UserEntity implements Serializable {
 
     private Boolean deactivated;
     private Boolean removed;
+    private Boolean shouldUpdateInfo;
 
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
