@@ -1,5 +1,7 @@
 debug: true
 spring:
+    devtools:
+        add-properties: false
     #  main:
     #      web-application-type: reactive
     mvc:
@@ -9,11 +11,18 @@ spring:
         url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/carapp_db}
         username: ${SPRING_DATASOURCE_USERNAME:carapp_super_user}
         password: ${SPRING_DATASOURCE_PASSWORD:test_db_password}
+    #        url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://car-app-db-cluster-7427.7tc.cockroachlabs.cloud:26257/carapp_db?sslmode=verify-full}
+    #        username: ${SPRING_DATASOURCE_USERNAME:car_app_user}
+    #        password: ${SPRING_DATASOURCE_PASSWORD:S7WLDtcVWruL1tam_LaAjg}
     #    hikari:
     #      maximum-pool-size: 1 #maximum pool size
     #      connection-timeout: 10000 #maximum number of milliseconds that a client will wait for a connection
     #      max-lifetime: 30000 #maximum idle time for connection
     #      connection-test-query: select 1
+
+    # spring.jpa.open-in-view is enabled by default.
+    # Therefore, database queries may be performed during view rendering.
+    #    Explicitly configure spring.jpa.open-in-view   to disable this warning
     jpa:
         show-sql: false
         hibernate:
@@ -21,7 +30,7 @@ spring:
         properties:
             hibernate:
                 dialect: org.hibernate.dialect.PostgreSQLDialect
-#                default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
+                default_schema: ${SPRING_JPA_SCHEMA:carapp_schema}
 
     graphql:
         path: "/graphql"
@@ -42,10 +51,6 @@ spring:
     security:
         user:
             password: qweasd
-
-    docker:
-        compose:
-            file: "./docker-compose.yml"
     mail:
         host: smtp.gmail.com
         port: 587
@@ -86,7 +91,6 @@ logging:
 app:
     appApi: ${APP_API_URL:https://api2.carz.ge}
     webUrl: ${WEB_URL:https://carz.ge}
-
 aws:
     accessKeyId: ${AWS_ACCESS_KEY_ID:123}
     secretAccessKey: ${AWS_SECRET_ACCESS_KEY:123}

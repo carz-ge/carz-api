@@ -44,4 +44,19 @@ public interface BookingRepository extends JpaRepository<BookingEntity, UUID> {
         "and booking.schedulingTime <= :time")
     List<BookingEntity> listAllPendingSchedule(UUID productId, LocalDate date, LocalTime time);
 
+    @Query("select booking " +
+            "from BookingEntity booking " +
+            "where booking.providerId = :providerId " +
+            "and booking.schedulingDate = :date " +
+            "and booking.schedulingTime >= :time")
+    List<BookingEntity> listAllByProviderAndDayAndTime(UUID providerId, LocalDate date, LocalTime time);
+
+    @Query("select booking " +
+            "from BookingEntity booking " +
+            "where booking.providerId = :providerId " +
+            "and booking.schedulingDate = :date ")
+    List<BookingEntity> listAllBookingsForDayAndTime(UUID providerId, LocalDate date);
+
+    List<BookingEntity> findAllByUserIdOrderByCreatedAtDesc(UUID userId);
+    List<BookingEntity> findAllByProviderIdOrderByCreatedAtDesc(UUID provider);
 }

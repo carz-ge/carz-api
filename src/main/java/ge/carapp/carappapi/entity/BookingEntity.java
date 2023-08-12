@@ -8,6 +8,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
@@ -34,8 +37,8 @@ public class BookingEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    @SequenceGenerator(name="SEQUENCE_ORDER_NUMBER", sequenceName="SEQUENCE_ORDER_NUMBER", allocationSize = 50)
+    @Column
+    @SequenceGenerator(name="SEQUENCE_ORDER_NUMBER", sequenceName="SEQUENCE_ORDER_NUMBER_SEQ", allocationSize = 50)
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQUENCE_ORDER_NUMBER")
     private String orderNumber;
 
@@ -63,4 +66,22 @@ public class BookingEntity {
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
+
+    @Column(name = "CREATED_AT", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "UPDATED_AT", nullable = false)
+    private LocalDateTime updatedAt;
+
+
+    @PrePersist
+    private void prePersist() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
