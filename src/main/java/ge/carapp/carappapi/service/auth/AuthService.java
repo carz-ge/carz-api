@@ -6,6 +6,7 @@ import ge.carapp.carappapi.entity.UserRole;
 import ge.carapp.carappapi.entity.datacontainers.UserContainer;
 import ge.carapp.carappapi.exception.NotAuthorizedException;
 import ge.carapp.carappapi.jwt.JwtService;
+import ge.carapp.carappapi.repository.UserRepository;
 import ge.carapp.carappapi.schema.graphql.AuthenticationOutput;
 import ge.carapp.carappapi.schema.graphql.SendOptOutput;
 import ge.carapp.carappapi.security.CustomUserDetails;
@@ -24,6 +25,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
+    private final UserRepository userRepository;
     private final UserService userService;
     private final OtpService otpService;
     private final JwtService jwtService;
@@ -50,6 +52,11 @@ public class AuthService {
 
         if (!roles.contains(user.getUserRole()) || !otpService.verifyOtp(user, otp)) {
             throw new NotAuthorizedException();
+        }
+
+        if (Boolean.TRUE.equals(user.getDeactivated()))  {
+            user.setDeactivated(false);
+            user = userRepository.save(user);
         }
 
         return getAuthenticationToken(user);
